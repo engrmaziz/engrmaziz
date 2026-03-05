@@ -11,7 +11,7 @@ I am a Professional Electrical Engineer (PEC) and Technical Manager pivoting int
 | :--- | :--- |
 | **AI / Machine Learning** | Gemini 3.1/2.5 Flash, PyTorch (LSTMs), GANs, K-Means, Groq LPU |
 | **Full-Stack Development** | Next.js 15 (App Router), TypeScript, FastAPI (Python), Node.js |
-| **Database & Auth** | Supabase, PostgreSQL (RLS), Vercel |
+| **Database & Auth** | Supabase, PostgreSQL (RLS), Vercel, Railway.app |
 | **Engineering Logic** | Financial Risk Modeling, Carbon Accounting, System Optimization |
 
 ---
