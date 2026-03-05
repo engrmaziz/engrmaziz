@@ -33,9 +33,10 @@ Next.js 15 boutique e-commerce engine featuring **zero-hydration PDF generation*
 ---
 
 ### 📈 GitHub Stats
+### 📈 GitHub Stats
 <p align="left">
-<img src="https://github-readme-stats.vercel.app/api?username=engrmaziz&show_icons=true&theme=tokyonight" alt="Musharraf's Stats" height="150" />
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=engrmaziz&layout=compact&theme=tokyonight" alt="Musharraf's Languages" height="150" />
+  <img src="https://github-readme-stats.vercel.app/api?username=engrmaziz&show_icons=true&theme=tokyonight" alt="Musharraf's Stats" height="150" />
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=engrmaziz&layout=compact&theme=tokyonight" alt="Musharraf's Languages" height="150" />
 </p>
 
 ---
