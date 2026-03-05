@@ -27,21 +27,27 @@ Enterprise-grade financial SaaS integrating **LSTM Neural Networks** and **GANs*
 #### [🍃 Green Navigator](https://github.com/engrmaziz/green-navigator)
 A B2B Carbon Reporting SaaS utilizing **Gemini 3.1 Flash OCR** to automate emission tracking from unstructured utility bills with localized grid factors.
 
-#### [🛒 Organic Harvest](https://github.com/engrmaziz/organic-harvest)
-Next.js 15 boutique e-commerce engine featuring **zero-hydration PDF generation** and localized CRM automation.
+#### [⚡ AI Chatbot (Groq)](https://github.com/engrmaziz/7aichatbot)
+High-performance inference engine using **Llama 3.3 70B** and the Groq LPU for near-instantaneous AI conversations.
 
 ---
 
-### 📈 GitHub Stats
-### 📈 GitHub Stats
+### 📈 GitHub Metrics & Activity
+
 <p align="left">
-  <img src="https://github-readme-stats.vercel.app/api?username=engrmaziz&show_icons=true&theme=tokyonight" alt="Musharraf's Stats" height="150" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=engrmaziz&layout=compact&theme=tokyonight" alt="Musharraf's Languages" height="150" />
+  <img src="https://img.shields.io/badge/Main_Language-TypeScript-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/AI_Focus-Gemini_3.1-emerald?style=for-the-badge&logo=google-gemini" alt="Gemini AI" />
+  <img src="https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+</p>
+
+<p align="left">
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=engrmaziz&theme=tokyonight&hide_border=true" alt="Musharraf's Activity Streak" />
 </p>
 
 ---
 
 ### 📫 Connect with Me
+- **LinkedIn:** [linkedin.com/in/musharrafaziz](https://www.linkedin.com/in/musharrafaziz)
 - **Portfolio:** [Check out my live work](https://engrmaziz.github.io/portfolio/)
 - **Focus:** Currently open to AI Engineering roles and high-impact technical collaborations.
 
