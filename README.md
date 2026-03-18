@@ -243,4 +243,3 @@ I'm on a mission to build AI-native tools that solve real problems at scale — 
 *"An engineer's job is to make hard things inevitable."*
 
 </div>
->>>>>>> 29b01aa5a5b14f12fb9e2bf12bc1f1ea3c8f1641
