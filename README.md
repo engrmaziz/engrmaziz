@@ -8,12 +8,14 @@
 <br/>
 
 <p>
-  <a href="https://www.linkedin.com/in/musharrafaziz">
-    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
-  </a>
   <a href="https://engrmaziz.github.io/portfolio/">
     <img src="https://img.shields.io/badge/Portfolio-FF5722?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Portfolio"/>
   </a>
+  &nbsp;
+  <a href="mailto:musharrafaziz@outlook.com">
+    <img src="https://img.shields.io/badge/Email-0078D4?style=for-the-badge&logo=microsoftoutlook&logoColor=white" alt="Email"/>
+  </a>
+  &nbsp;
   <img src="https://komarev.com/ghpvc/?username=engrmaziz&style=for-the-badge&color=00D9FF&label=PROFILE+VIEWS" alt="Profile Views" />
 </p>
 
@@ -34,13 +36,27 @@ My background in industrial systems taught me one thing: complexity must be tame
 
 ---
 
-## 🧠 What I'm Currently Building
+## 🧠 Core Expertise
+
+| Domain | Capabilities |
+| :--- | :--- |
+| 🤖 **Multimodal AI** | Audio · Image · Text threat intelligence with Gemini Flash |
+| 📊 **Predictive ML** | LSTM forecasting · GAN synthesis · K-Means clustering |
+| 👁️ **Computer Vision** | Real-time gesture recognition · Emotion detection · Air drawing |
+| 🔐 **Security Tooling** | Chrome extensions · Asset forensics · Domain analysis |
+| ⚡ **SaaS Architecture** | Next.js 15 App Router · FastAPI · Supabase RLS · Vercel |
+| 📐 **Engineering Systems** | Financial risk modeling · Carbon accounting · System optimization |
+
+---
+
+## 🚧 Currently Building
 
 | Project | Stack | Status |
 | :--- | :--- | :--- |
-| 🛡️ Overwatch AI — Multimodal Scam Detection | Gemini 2.5 Flash · TypeScript · FastAPI | 🟢 Active |
-| ⚡ AegisFlow — Financial SaaS + LSTM Forecasting | Next.js 15 · PyTorch · Supabase | 🟢 Active |
-| 🌍 VisaPath — AI-Powered Travel & Visa Optimizer | Next.js 15 · OpenAI · PostgreSQL | 🔵 In Progress |
+| 🦷 DENTL — AI Dental Practice Platform | Next.js 15 · TypeScript · Supabase | 🟢 Active |
+| 💳 PayVerify — Payment Intelligence Engine | Python · FastAPI · ML | 🟢 Active |
+| 🛡️ Overwatch AI — Multimodal Scam Detection | Gemini 2.5 Flash · TypeScript · FastAPI | 🟡 Advancing |
+| ⚡ AegisFlow — Financial SaaS + LSTM Forecasting | Next.js 15 · PyTorch · Supabase | 🟡 Advancing |
 
 ---
 
@@ -101,6 +117,60 @@ Real-time facial emotion recognition running **100% on-device** in the browser �
 
 </td>
 </tr>
+<tr>
+<td width="50%">
+
+### 🖐️ [Gesture Control](https://github.com/engrmaziz/gesture-control)
+Control your Windows PC with **hand gestures** via webcam — mouse movement, clicks, volume control, and window switching. Zero hardware required.
+
+`Python` `MediaPipe` `OpenCV` `PyAutoGUI`
+
+</td>
+<td width="50%">
+
+### 🎨 [Air Canvas](https://github.com/engrmaziz/air-canvas)
+Draw in mid-air using hand gestures captured by a webcam. Real-time computer vision pipeline with **zero latency** virtual drawing.
+
+`Python` `OpenCV` `WebRTC` `Computer Vision`
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 💳 [PayVerify](https://github.com/engrmaziz/payverify)
+Intelligent payment verification engine — ML-powered fraud signal extraction and transaction authenticity scoring for fintech pipelines.
+
+`Python` `FastAPI` `Machine Learning`
+
+</td>
+<td width="50%">
+
+### ⬇️ [Nexus](https://github.com/engrmaziz/nexus)
+High-performance download manager combining an **Electron desktop app** and browser extension — multi-format, multi-site, real-time processing.
+
+`JavaScript` `Electron` `Browser Extension`
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🌿 [Organic Harvest](https://github.com/engrmaziz/organic-harvest)
+Boutique e-commerce engine with **zero-hydration PDF generation**, localized WhatsApp CRM integration, and a custom admin order vault.
+
+`TypeScript` `Next.js 15` `WhatsApp API` `SaaS`
+
+</td>
+<td width="50%">
+
+### 🔍 [Domain Drainer](https://github.com/engrmaziz/domain-drainer)
+High-performance **Manifest V3 security tool** for researchers — instant inspect, analyze, and extract web assets via a hacker-style dev interface.
+
+`JavaScript` `Manifest V3` `Security Research`
+
+</td>
+</tr>
 </table>
 
 ---
@@ -130,23 +200,12 @@ Real-time facial emotion recognition running **100% on-device** in the browser �
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)
+
+**Mobile & Desktop**
+
+![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
 ![Electron](https://img.shields.io/badge/Electron-47848F?style=for-the-badge&logo=electron&logoColor=white)
-
----
-
-## 📊 GitHub Stats
-
-<div align="center">
-
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=engrmaziz&theme=tokyonight&hide_border=true&background=0D1117&ring=00D9FF&fire=FF6B6B&currStreakLabel=00D9FF" alt="GitHub Streak" />
-
-<br/><br/>
-
-<img src="https://github-readme-stats.vercel.app/api?username=engrmaziz&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=00D9FF&icon_color=00D9FF&text_color=FFFFFF&count_private=true" alt="GitHub Stats" />
-&nbsp;
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=engrmaziz&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=00D9FF&text_color=FFFFFF" alt="Top Languages" />
-
-</div>
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
 ---
 
@@ -154,16 +213,12 @@ Real-time facial emotion recognition running **100% on-device** in the browser �
 
 <div align="center">
 
-<a href="https://www.linkedin.com/in/musharrafaziz">
-  <img src="https://img.shields.io/badge/LinkedIn-Let's_Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
-</a>
-&nbsp;
 <a href="https://engrmaziz.github.io/portfolio/">
   <img src="https://img.shields.io/badge/Portfolio-View_My_Work-FF5722?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Portfolio"/>
 </a>
 &nbsp;
-<a href="mailto:engrmaziz@gmail.com">
-  <img src="https://img.shields.io/badge/Email-Reach_Out-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/>
+<a href="mailto:musharrafaziz@outlook.com">
+  <img src="https://img.shields.io/badge/Email-musharrafaziz%40outlook.com-0078D4?style=for-the-badge&logo=microsoftoutlook&logoColor=white" alt="Email"/>
 </a>
 
 </div>
