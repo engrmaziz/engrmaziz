@@ -1,12 +1,12 @@
 <div align="center">
 
 <a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=28&pause=1100&color=00D9FF&center=true&vCenter=true&width=760&lines=Musharraf+Aziz+%7C+AI+Engineer;Full-Stack+Builder+%7C+Automation+Engineer;Shipping+LLM+Systems+that+Solve+real+problems" alt="Musharraf Aziz typing banner" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=28&pause=1100&color=00D9FF&center=true&vCenter=true&width=760&lines=Musharraf+Aziz+%7C+AI+Engineer;Full-Stack+Builder+%7C+Automation+Engineer;Shipping+LLM+Systems+that+Solve+Real+Problems" alt="Musharraf Aziz typing banner" />
 </a>
 
 <br/>
 
-I build practical AI systems, full-stack SaaS products, and automation tools that are designed to be used — not just demoed.
+I build practical AI systems, full-stack SaaS products, and automation tools that ship.
 
 <br/>
 
@@ -15,6 +15,7 @@ I build practical AI systems, full-stack SaaS products, and automation tools tha
 <a href="https://www.linkedin.com/in/musharrafaziz"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
 &nbsp;
 <a href="mailto:musharrafaziz@outlook.com"><img src="https://img.shields.io/badge/Email-0078D4?style=for-the-badge&logo=microsoftoutlook&logoColor=white" alt="Email"/></a>
+&nbsp;
 <img src="https://komarev.com/ghpvc/?username=engrmaziz&style=for-the-badge&color=00D9FF&label=PROFILE+VIEWS" alt="Profile Views" />
 
 </div>
@@ -23,23 +24,23 @@ I build practical AI systems, full-stack SaaS products, and automation tools tha
 
 ## About Me
 
-I’m Musharraf Aziz — an AI Engineer focused on LLM systems, full-stack SaaS, and automation products.
+I’m Musharraf Aziz — an AI Engineer focused on LLM systems, SaaS products, and automation.
 
-- I build AI + workflow systems that improve decision speed and reduce manual ops.
-- I ship production-focused web products with Next.js, Python, and modern cloud tooling.
-- I publish practical open-source projects across AI, security tooling, and developer productivity.
+- I build LLM and workflow systems that reduce manual work.
+- I ship web products with Next.js, Python, and cloud-native tooling.
+- I publish open-source tools across AI, security, and developer productivity.
 
 ---
 
 ## Core Expertise
 
-| Area | What I build |
+| Area | Focus |
 |---|---|
-| AI Engineering | LLM guardrails, evaluation pipelines, RAG reliability |
-| Full-Stack SaaS | Next.js platforms, backend APIs, workflow automation |
-| Automation | Browser tooling, scripted ops, process acceleration |
-| Applied ML | Vision interfaces, model-driven scoring, real-time inference |
-| Security Tooling | Extension-based asset analysis and research tools |
+| AI Engineering | LLM guardrails, eval pipelines, RAG reliability |
+| Full-Stack SaaS | Next.js apps, API backends, workflow automation |
+| Automation | Browser tooling and scripted operations |
+| Applied ML | Vision interfaces and real-time inference |
+| Security Tooling | Extension-based asset analysis tools |
 
 ---
 
@@ -47,28 +48,28 @@ I’m Musharraf Aziz — an AI Engineer focused on LLM systems, full-stack SaaS,
 
 | Project | Value | Stack | Status |
 |---|---|---|---|
-| [LLM-GUARDRAIL-GATEWAY](https://github.com/engrmaziz/LLM-GUARDRAIL-GATEWAY) | Middleware boundary that enforces LLM safety, governance, and output structure before trust. | Python, Async APIs | ![Active](https://img.shields.io/badge/Active_Development-1f8bff?style=flat-square) |
-| [llm-eval-cicd](https://github.com/engrmaziz/llm-eval-cicd) | Lightweight CI-friendly LLM evaluation harness with metric-based quality checks. | Python, Deepeval, Gemini | ![Active](https://img.shields.io/badge/Active_Development-1f8bff?style=flat-square) |
-| [green-navigator](https://github.com/engrmaziz/green-navigator) | Carbon reporting SaaS that turns unstructured utility bills into usable compliance intelligence. | TypeScript, Next.js, OCR AI | ![Active](https://img.shields.io/badge/Active_Development-1f8bff?style=flat-square) |
-| [overwatch-ai](https://github.com/engrmaziz/overwatch-ai) | Multimodal scam detection command center for text, image, and audio threat signals. | TypeScript, LLM APIs | ![Active](https://img.shields.io/badge/Active_Development-1f8bff?style=flat-square) |
-| [chat-saved](https://github.com/engrmaziz/chat-saved) | Privacy-first Chrome extension for local chat extraction and one-click export. | JavaScript, Manifest V3 | ![Production Ready](https://img.shields.io/badge/Production_Ready-16a34a?style=flat-square) |
-| [Asset-Thief](https://github.com/engrmaziz/Asset-Thief) | Fast browser asset collection extension for scraping and exporting SVG/image resources. | JavaScript, Manifest V3 | ![Production Ready](https://img.shields.io/badge/Production_Ready-16a34a?style=flat-square) |
-| [organic-harvest](https://github.com/engrmaziz/organic-harvest) | Full-stack e-commerce platform with automated revenue recovery and lifecycle workflows. | TypeScript, Next.js, Supabase | ![Maintained](https://img.shields.io/badge/Maintained-0f766e?style=flat-square) |
-| [payverify](https://github.com/engrmaziz/payverify) | Payment verification system with frontend + API architecture for operational workflows. | Python, FastAPI, Next.js | ![Active](https://img.shields.io/badge/Active_Development-1f8bff?style=flat-square) |
-| [gesture-control](https://github.com/engrmaziz/gesture-control) | Webcam-based hand gesture control for desktop interaction and system commands. | Python, OpenCV, MediaPipe | ![Completed](https://img.shields.io/badge/Completed-6b7280?style=flat-square) |
-| [emotion-detector](https://github.com/engrmaziz/emotion-detector) | On-device browser emotion detection app with no backend dependency. | HTML, face-api.js, TensorFlow.js | ![Completed](https://img.shields.io/badge/Completed-6b7280?style=flat-square) |
+| [chat-saved](https://github.com/engrmaziz/chat-saved) | Chrome extension for local chat extraction and instant export. | JavaScript, Manifest V3 | ![Production Ready](https://img.shields.io/badge/Production%20Ready-16a34a?style=flat-square) |
+| [Asset-Thief](https://github.com/engrmaziz/Asset-Thief) | Browser extension for fast SVG/image asset discovery and download. | JavaScript, Manifest V3 | ![Production Ready](https://img.shields.io/badge/Production%20Ready-16a34a?style=flat-square) |
+| [organic-harvest](https://github.com/engrmaziz/organic-harvest) | E-commerce platform with automated cart recovery and lifecycle messaging. | TypeScript, Next.js, Supabase | ![Maintained](https://img.shields.io/badge/Maintained-0f766e?style=flat-square) |
+| [payverify](https://github.com/engrmaziz/payverify) | Payment verification workflow with Next.js frontend and FastAPI backend. | Python, FastAPI, Next.js | ![Active Development](https://img.shields.io/badge/Active%20Development-1f8bff?style=flat-square) |
+| [LLM-GUARDRAIL-GATEWAY](https://github.com/engrmaziz/LLM-GUARDRAIL-GATEWAY) | Guardrail middleware that validates LLM policy and output structure. | Python, Async APIs | ![Active Development](https://img.shields.io/badge/Active%20Development-1f8bff?style=flat-square) |
+| [llm-eval-cicd](https://github.com/engrmaziz/llm-eval-cicd) | CI evaluation harness for LLM relevancy, faithfulness, and hallucination checks. | Python, Deepeval, Gemini | ![Active Development](https://img.shields.io/badge/Active%20Development-1f8bff?style=flat-square) |
+| [green-navigator](https://github.com/engrmaziz/green-navigator) | Carbon reporting app that extracts bill data into structured insights. | TypeScript, Next.js, OCR AI | ![Active Development](https://img.shields.io/badge/Active%20Development-1f8bff?style=flat-square) |
+| [overwatch-ai](https://github.com/engrmaziz/overwatch-ai) | Multimodal threat analysis for text, image, and audio scam signals. | TypeScript, LLM APIs | ![Active Development](https://img.shields.io/badge/Active%20Development-1f8bff?style=flat-square) |
+| [gesture-control](https://github.com/engrmaziz/gesture-control) | Hand-gesture desktop control built with webcam computer vision. | Python, OpenCV, MediaPipe | ![Completed](https://img.shields.io/badge/Completed-6b7280?style=flat-square) |
+| [emotion-detector](https://github.com/engrmaziz/emotion-detector) | Browser emotion detection that runs fully on-device. | HTML, face-api.js, TensorFlow.js | ![Completed](https://img.shields.io/badge/Completed-6b7280?style=flat-square) |
 
 ---
 
 ## Project Portfolio
 
-<details open>
+<details>
 <summary><strong>AI &amp; LLM Systems</strong></summary>
 
 - [LLM-GUARDRAIL-GATEWAY](https://github.com/engrmaziz/LLM-GUARDRAIL-GATEWAY) — Active Development
 - [llm-eval-cicd](https://github.com/engrmaziz/llm-eval-cicd) — Active Development
-- [Self-Healing-RAG-Pipeline](https://github.com/engrmaziz/Self-Healing-RAG-Pipeline) — Active Development
 - [overwatch-ai](https://github.com/engrmaziz/overwatch-ai) — Active Development
+- [Self-Healing-RAG-Pipeline](https://github.com/engrmaziz/Self-Healing-RAG-Pipeline) — Active Development
 - [7aichatbot](https://github.com/engrmaziz/7aichatbot) — Maintained
 
 </details>
@@ -76,11 +77,11 @@ I’m Musharraf Aziz — an AI Engineer focused on LLM systems, full-stack SaaS,
 <details>
 <summary><strong>SaaS Platforms</strong></summary>
 
-- [green-navigator](https://github.com/engrmaziz/green-navigator) — Active Development
-- [payverify](https://github.com/engrmaziz/payverify) — Active Development
 - [organic-harvest](https://github.com/engrmaziz/organic-harvest) — Maintained
-- [AegisFlow](https://github.com/engrmaziz/AegisFlow) — Active Development
 - [DENTL](https://github.com/engrmaziz/DENTL) — Maintained
+- [payverify](https://github.com/engrmaziz/payverify) — Active Development
+- [green-navigator](https://github.com/engrmaziz/green-navigator) — Active Development
+- [AegisFlow](https://github.com/engrmaziz/AegisFlow) — Active Development
 
 </details>
 
@@ -114,9 +115,9 @@ I’m Musharraf Aziz — an AI Engineer focused on LLM systems, full-stack SaaS,
 
 ## Current Focus
 
-- Hardening LLM pipelines with policy + response-structure guardrails
-- Expanding CI evaluation workflows for LLM reliability and regression control
-- Shipping practical AI SaaS features with clear business outcomes
+- Hardening LLM pipelines with policy and response-structure guardrails
+- Expanding CI evaluation workflows to catch model regressions early
+- Shipping AI SaaS features tied to real user workflows
 
 ---
 
