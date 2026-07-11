@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/kg_edge.json",
+  "title": "Knowledge Graph Edge",
+  "description": "Schema for a graph edge.",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "relation": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "source",
+    "target",
+    "relation"
+  ],
+  "additionalProperties": false
+}

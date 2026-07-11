@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/seo_metadata.json",
+  "title": "SEO Metadata",
+  "description": "Schema for HTML meta tags.",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "canonical_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "og_image": {
+      "type": "string",
+      "format": "uri"
+    }
+  },
+  "required": [
+    "title",
+    "description"
+  ],
+  "additionalProperties": false
+}

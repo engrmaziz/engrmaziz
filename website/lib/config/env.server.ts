@@ -1,0 +1,77 @@
+import { z } from 'zod';
+
+const serverSchema = z.object({
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).default('dummy'),
+  SUPABASE_DB_PASSWORD: z.string().optional(),
+  GROQ_API_KEY: z.string().min(1).default('dummy'),
+  DEFAULT_FAST_MODEL: z.string().default('openai/gpt-oss-20b'),
+  DEFAULT_CHAT_MODEL: z.string().default('openai/gpt-oss-20b'),
+  DEFAULT_REASONING_MODEL: z.string().default('openai/gpt-oss-120b'),
+  GPT_OSS_20B_MODEL: z.string().default('openai/gpt-oss-20b'),
+  GPT_OSS_120B_MODEL: z.string().default('openai/gpt-oss-120b'),
+  JINA_API_KEY: z.string().min(1).default('dummy'),
+  JINA_EMBEDDING_MODEL: z.string().default('jina-embeddings-v2-base-en'),
+  RESEND_API_KEY: z.string().min(1).default('dummy'),
+  RESEND_FROM_EMAIL: z.string().email().optional(),
+  RESEND_REPLY_TO: z.string().email().optional(),
+  ADMIN_EMAIL: z.string().email().optional(),
+  RAG_EMAIL: z.string().email().optional(),
+  SANITY_API_READ_TOKEN: z.string().optional(),
+  SANITY_API_WRITE_TOKEN: z.string().optional(),
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_REFRESH_TOKEN: z.string().optional(),
+  GOOGLE_CALENDAR_ID: z.string().optional(),
+  TURNSTILE_SECRET_KEY: z.string().optional(),
+  CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
+  CLOUDFLARE_API_TOKEN: z.string().optional(),
+  RAG_DEFAULT_MODEL: z.string().default('openai/gpt-oss-120b'),
+  RAG_MAX_CONTEXT_TOKENS: z.coerce.number().default(4000),
+  RAG_MAX_RESULTS: z.coerce.number().default(5),
+  RAG_CHUNK_SIZE: z.coerce.number().default(1000),
+  RAG_CHUNK_OVERLAP: z.coerce.number().default(200),
+  RAG_TOP_K: z.coerce.number().default(10),
+  RAG_SIMILARITY_THRESHOLD: z.coerce.number().default(0.75),
+  MAX_UPLOAD_SIZE_MB: z.coerce.number().default(5),
+  ALLOWED_FILE_TYPES: z.string().default('pdf,docx,md,txt,csv,xlsx,pptx,png,jpeg'),
+  SESSION_TIMEOUT_MINUTES: z.coerce.number().default(60),
+  RATE_LIMIT_WINDOW_MS: z.coerce.number().default(60000),
+  RATE_LIMIT_MAX_REQUESTS: z.coerce.number().default(100),
+  ENCRYPTION_KEY: z.string().optional(),
+  JWT_SECRET: z.string().optional(),
+  ENABLE_RAG: z.coerce.boolean().default(true),
+  ENABLE_CHAT: z.coerce.boolean().default(true),
+  ENABLE_ADMIN: z.coerce.boolean().default(true),
+  ENABLE_BLOG: z.coerce.boolean().default(true),
+  ENABLE_APPOINTMENTS: z.coerce.boolean().default(true),
+  ENABLE_EMAIL: z.coerce.boolean().default(true),
+  ENABLE_UPLOADS: z.coerce.boolean().default(true),
+  ENABLE_ANALYTICS: z.coerce.boolean().default(false),
+  ENABLE_DEBUG: z.coerce.boolean().default(false),
+  HYBRID_SEARCH_ENABLED: z.coerce.boolean().default(true),
+  VECTOR_SEARCH_ENABLED: z.coerce.boolean().default(true),
+  BM25_ENABLED: z.coerce.boolean().default(true),
+  RERANKING_ENABLED: z.coerce.boolean().default(false),
+  LOG_LEVEL: z.string().default('info'),
+  ENABLE_REQUEST_LOGGING: z.coerce.boolean().default(true),
+  ENABLE_AI_LOGGING: z.coerce.boolean().default(true),
+  ENABLE_ERROR_LOGGING: z.coerce.boolean().default(true),
+  EMAIL_NOTIFICATIONS_ENABLED: z.coerce.boolean().default(true),
+  AUTO_REPLY_ENABLED: z.coerce.boolean().default(true),
+  LEAD_NOTIFICATION_ENABLED: z.coerce.boolean().default(true),
+  BLOG_POSTS_PER_PAGE: z.coerce.number().default(10),
+  RSS_ENABLED: z.coerce.boolean().default(true),
+  SITEMAP_ENABLED: z.coerce.boolean().default(true),
+  JSONLD_ENABLED: z.coerce.boolean().default(true),
+});
+
+const _serverEnv = serverSchema.safeParse(process.env);
+
+if (!_serverEnv.success) {
+  console.error('❌ Invalid server environment variables:', _serverEnv.error.format());
+  throw new Error('Invalid server environment variables');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const envServer = _serverEnv.data || ({} as any);

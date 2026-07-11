@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/timeline.json",
+  "title": "Timeline",
+  "description": "Schema for an event timeline.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "event_name": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "event_name",
+    "date"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/person.json",
+  "title": "Person",
+  "description": "Schema for a professional identity.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "location": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "title"
+  ],
+  "additionalProperties": false
+}

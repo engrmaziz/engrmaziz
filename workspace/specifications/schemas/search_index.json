@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/search_index.json",
+  "title": "Search Index",
+  "description": "Schema for a vector DB payload.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "text_chunk": {
+      "type": "string"
+    },
+    "embedding": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "metadata": {
+      "$ref": "metadata.json"
+    }
+  },
+  "required": [
+    "id",
+    "text_chunk"
+  ],
+  "additionalProperties": false
+}

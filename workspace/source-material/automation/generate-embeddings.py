@@ -1,0 +1,1 @@
+# Calls text-embedding-3-small to generate dense vectors.

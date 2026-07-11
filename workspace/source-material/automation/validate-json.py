@@ -1,0 +1,1 @@
+# Validates all JSON files against JSON Schema Draft 2020-12.

@@ -1,0 +1,1 @@
+# Synchronizes local JSON schemas with cloud environments.

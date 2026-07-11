@@ -1,0 +1,102 @@
+{
+  "id": "kb_master_json_001",
+  "version": "1.0.0",
+  "metadata": {
+    "created": "2026-07-08",
+    "updated": "2026-07-08",
+    "description": "Machine-readable master source of truth for the enterprise knowledge base."
+  },
+  "person": {
+    "id": "p_musharraf",
+    "name": "Musharraf Aziz",
+    "designation": "ENGR.",
+    "email": "musharrafaziz@outlook.com",
+    "phone": "+92 315 482 3517",
+    "location": "Lahore / Kasur, Pakistan",
+    "linkedin": "linkedin.com/in/musharrafazizq",
+    "github": "github.com/engrmaziz",
+    "aliases": ["AI Developer", "Machine Learning Engineer", "AI Integrator", "LLM Engineer", "GenAI Engineer", "Backend Engineer", "Full Stack SaaS Developer"]
+  },
+  "education": [
+    {
+      "id": "edu_comsats",
+      "institution": "COMSATS University Islamabad, Lahore Campus",
+      "degree": "B.Sc. (Hons.) Electrical Engineering",
+      "period": "Sep 2017 - Aug 2021",
+      "level": "EQF Level 6"
+    }
+  ],
+  "experience": [
+    {
+      "id": "exp_aihk",
+      "company": "Allama Iqbal Hospital Kasur",
+      "role": "AI Engineer & Operations Manager",
+      "period": "Aug 2024 - Present"
+    },
+    {
+      "id": "exp_novasole",
+      "company": "NovaSole Pakistan",
+      "role": "Software Engineer & IT Manager",
+      "period": "Dec 2023 - Aug 2024"
+    },
+    {
+      "id": "exp_ihsan",
+      "company": "Ihsan Solar Energy Pvt. Ltd.",
+      "role": "Team Lead, Quality Assurance & NOC Development",
+      "period": "Dec 2022 - Dec 2023"
+    },
+    {
+      "id": "exp_transworld",
+      "company": "Transworld Home (ISP)",
+      "role": "Team Lead, Technical Assistance Center",
+      "period": "Mar 2022 - Nov 2022"
+    },
+    {
+      "id": "exp_sybrid",
+      "company": "Sybrid",
+      "role": "Top Performer",
+      "period": "Nov 2021 - Jan 2022"
+    }
+  ],
+  "projects": [
+    { "id": "proj_aegisflow", "name": "AegisFlow", "domain": "FinTech SaaS" },
+    { "id": "proj_shbrag", "name": "Self-Healing RAG Pipeline (SHBRAG)", "domain": "AI/RAG" },
+    { "id": "proj_voicerag", "name": "VoiceRAG Core v1", "domain": "Enterprise Voice AI" },
+    { "id": "proj_auranode", "name": "AuraNode (Organic Harvest)", "domain": "E-Commerce Platform" },
+    { "id": "proj_dentl2", "name": "dentl2", "domain": "Healthcare SaaS" },
+    { "id": "proj_gitarcheologist", "name": "Git Archaeologist MCP", "domain": "MCP Server" },
+    { "id": "proj_llmguardrail", "name": "LLM Guardrail Gateway", "domain": "AI Security" }
+  ],
+  "services": [
+    { "id": "srv_ai", "name": "Enterprise AI Solutions (LLMs, Agents, RAG)" },
+    { "id": "srv_saas", "name": "Full-Stack Software Engineering (Web & SaaS)" },
+    { "id": "srv_automation", "name": "Workflow Automation & Integration" },
+    { "id": "srv_voice", "name": "AI Voice Agents & Conversational UI" },
+    { "id": "srv_consulting", "name": "Technical Consulting & Architecture Review" }
+  ],
+  "technologies": [
+    "LangGraph", "LangChain", "Next.js", "FastAPI", "Python", "TypeScript", "n8n", "MCP", "Supabase", "PostgreSQL", "React", "Docker", "PyTorch", "Qdrant", "ChromaDB"
+  ],
+  "certifications": [
+    "Google AI Professional Certificate", "AI Fluency: Framework & Foundations", "PyTorch & Deep Learning for Decision Makers (LFS116)", "McKinsey Forward Program", "Registered Electrical Engineer (PEC)", "RE101: Fundamental Math for Solar"
+  ],
+  "industries": [
+    "Healthcare", "FinTech", "E-Commerce", "Telecommunications", "Solar Energy", "Enterprise SaaS"
+  ],
+  "achievements": [
+    "Top Innovative FYP of the Year (IGNITE & HEC, 2021)",
+    "Productivity Leader Award (Jul 2023)",
+    "High Performance Excellence Award (Jun 2025)"
+  ],
+  "publications": [
+    "Arshad J., Aziz M., et al. Implementation of a LoRaWAN Based Smart Agriculture Decision Support System for Optimum Crop Yield. MDPI Sustainability, 2022; 14(2):827."
+  ],
+  "relationships": [
+    { "source": "p_musharraf", "target": "exp_aihk", "relation": "WORKED_AT" },
+    { "source": "exp_aihk", "target": "proj_voicerag", "relation": "DEPLOYED" },
+    { "source": "proj_voicerag", "target": "LangGraph", "relation": "BUILT_WITH" },
+    { "source": "LangGraph", "target": "srv_ai", "relation": "POWERS" }
+  ],
+  "tags": ["AI Engineer", "Software Architecture", "RAG", "Enterprise AI"],
+  "keywords": ["Hire AI Engineer USA", "Custom RAG Development Agency", "Next.js Enterprise Developer", "LangChain Developer for Hire", "n8n Automation Consultant"]
+}

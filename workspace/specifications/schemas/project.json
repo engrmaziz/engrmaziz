@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/project.json",
+  "title": "Project",
+  "description": "Schema for a portfolio project.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "github_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "deployed_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "is_nda": {
+      "type": "boolean",
+      "default": false
+    },
+    "related_skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "description"
+  ],
+  "additionalProperties": false
+}

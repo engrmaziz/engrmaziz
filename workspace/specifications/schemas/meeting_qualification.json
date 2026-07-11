@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/meeting_qualification.json",
+  "title": "Meeting Qualification",
+  "description": "Schema for a lead.",
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string"
+    },
+    "tech_stack": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "budget_range": {
+      "type": "string"
+    },
+    "pain_point": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_name",
+    "pain_point"
+  ],
+  "additionalProperties": false
+}

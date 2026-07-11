@@ -1,0 +1,32 @@
+{
+  "LLM": [
+    {"term": "Large Language Model", "context": "expert"},
+    {"term": "AI Model", "context": "beginner"},
+    {"term": "Foundation Model", "context": "technical"},
+    {"term": "Generative AI", "context": "client"}
+  ],
+  "RAG": [
+    {"term": "Retrieval-Augmented Generation", "context": "expert"},
+    {"term": "AI with custom data", "context": "client"},
+    {"term": "Document Search AI", "context": "beginner"}
+  ],
+  "FastAPI": [
+    {"term": "Python Backend", "context": "recruiter"},
+    {"term": "REST API framework", "context": "technical"}
+  ],
+  "Next.js": [
+    {"term": "React Framework", "context": "recruiter"},
+    {"term": "SSR React", "context": "technical"},
+    {"term": "Frontend Architecture", "context": "client"}
+  ],
+  "Vector Database": [
+    {"term": "Vector Store", "context": "technical"},
+    {"term": "Embedding Database", "context": "expert"},
+    {"term": "AI Database", "context": "beginner"}
+  ],
+  "Software Engineer": [
+    {"term": "Full Stack Developer", "context": "recruiter"},
+    {"term": "Backend Developer", "context": "recruiter"},
+    {"term": "Web Application Developer", "context": "client"}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "directories": [
+    "knowledge",
+    "schemas",
+    "assets",
+    "brain",
+    "rag",
+    "mcp",
+    "automation",
+    "evaluation"
+  ]
+}

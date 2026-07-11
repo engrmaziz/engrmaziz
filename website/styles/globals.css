@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Colors - Light Theme */
+    --color-bg-base: #F5F2ED;
+    --color-bg-elevated: #FFFFFF;
+    --color-text-primary: #1A1A18;
+    --color-text-secondary: #5C5850;
+    --color-accent: #C1652F;
+    --color-accent-hover: #A6531F;
+    --color-border-default: #E5E0D8;
+    --color-border-elevated: #E5E0D8;
+
+    /* Surfaces */
+    --surface-glass-bg: rgba(255, 255, 255, 0.6);
+    --surface-glass-border: rgba(255, 255, 255, 0.4);
+
+    /* Liquid Accent Background (low opacity) */
+    --liquid-accent-opacity: 0.15;
+
+    /* Spacing & Layout */
+    --nav-height: 4rem; /* 64px */
+    --container-width-default: 1200px;
+    --section-spacing-y: 6rem; /* 96px */
+    
+    /* Radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-full: 9999px;
+
+    /* Blur */
+    --blur-glass: 12px;
+    
+    /* Z-Index */
+    --z-below: -1;
+    --z-default: 1;
+    --z-above: 10;
+    --z-nav: 50;
+    --z-modal: 100;
+
+    /* Motion */
+    --motion-duration-fast: 200ms;
+    --motion-duration-normal: 300ms;
+    --motion-duration-slow: 400ms;
+    --motion-easing-default: cubic-bezier(0.16, 1, 0.3, 1);
+    --motion-easing-out: ease-out;
+  }
+
+  .dark {
+    /* Colors - Dark Theme */
+    --color-bg-base: #14140F;
+    --color-bg-elevated: #1C1C16;
+    --color-text-primary: #F0EDE6;
+    --color-text-secondary: #9A9689;
+    --color-accent: #E08A4F;
+    --color-accent-hover: #F0A366;
+    --color-border-default: #2E2E26;
+    --color-border-elevated: #2E2E26;
+
+    /* Surfaces */
+    --surface-glass-bg: rgba(28, 28, 22, 0.6);
+    --surface-glass-border: rgba(255, 255, 255, 0.1);
+  }
+
+  * {
+    @apply border-border-default;
+  }
+
+  body {
+    @apply bg-base text-primary antialiased overflow-x-hidden;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-bg-base);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-base;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border-default rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-secondary;
+  }
+
+  /* Focus Styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-base transition-shadow;
+  }
+}
+
+@layer components {
+  /* Glass Utility */
+  .glass-panel {
+    background-color: var(--surface-glass-bg);
+    backdrop-filter: blur(var(--blur-glass));
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    border: 1px solid var(--surface-glass-border);
+    @apply shadow-sm;
+  }
+
+  /* Link Underline Micro-Interaction */
+  .link-underline {
+    position: relative;
+    text-decoration: none;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor;
+    transform-origin: bottom right;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
+  /* Liquid Gradient Utilities */
+  .liquid-bg {
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-below);
+    background: radial-gradient(circle at 50% 50%, var(--color-accent), transparent 60%);
+    opacity: var(--liquid-accent-opacity);
+    filter: blur(80px);
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  /* Smooth scroll support */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* High Contrast / Reduced Motion overrides can be done via tailwind variants */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

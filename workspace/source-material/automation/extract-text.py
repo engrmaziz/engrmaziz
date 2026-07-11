@@ -1,0 +1,1 @@
+# Extracts chunked text from knowledge/markdown for embedding.

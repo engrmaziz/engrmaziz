@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/ai_response_template.json",
+  "title": "AI Response Template",
+  "description": "Schema for agent responses.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "intent": {
+      "type": "string"
+    },
+    "template_string": {
+      "type": "string"
+    },
+    "variables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "intent",
+    "template_string"
+  ],
+  "additionalProperties": false
+}

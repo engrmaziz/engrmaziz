@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/achievement.json",
+  "title": "Achievement",
+  "description": "Schema for a specific quantitative win.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "metric": {
+      "type": "string"
+    },
+    "context": {
+      "type": "string"
+    },
+    "project_ref": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "metric",
+    "context"
+  ],
+  "additionalProperties": false
+}

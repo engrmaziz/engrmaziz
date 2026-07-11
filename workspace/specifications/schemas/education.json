@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/education.json",
+  "title": "Education",
+  "description": "Schema for an academic degree.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "institution": {
+      "type": "string"
+    },
+    "degree": {
+      "type": "string"
+    },
+    "start_year": {
+      "type": "integer"
+    },
+    "end_year": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "institution",
+    "degree"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,9 @@
+{
+  "entities": [
+    "project",
+    "person",
+    "experience",
+    "skill",
+    "service"
+  ]
+}

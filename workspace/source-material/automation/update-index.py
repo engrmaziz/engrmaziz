@@ -1,0 +1,1 @@
+# Rebuilds the search index using Qdrant/Pinecone APIs.

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.musharraf.tech/schemas/certification.json",
+  "title": "Certification",
+  "description": "Schema for professional certifications.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "issuer": {
+      "type": "string"
+    },
+    "date_issued": {
+      "type": "string",
+      "format": "date"
+    },
+    "credential_url": {
+      "type": "string",
+      "format": "uri"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "issuer"
+  ],
+  "additionalProperties": false
+}
