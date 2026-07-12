@@ -17,7 +17,7 @@ export function ContactClient() {
           <div className="max-w-4xl">
             <Badge variant="outline" className="mb-4">Engagement & Inquiry</Badge>
             <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight">
-              Let&apos;s architect <br/> something robust.
+              Let&apos;s architect <br /> something robust.
             </h1>
             <p className="text-xl text-secondary leading-relaxed max-w-3xl">
               Currently accepting inquiries for high-complexity AI integration, deterministic RAG architecture, and scalable backend engineering projects.
@@ -58,7 +58,7 @@ export function ContactClient() {
                       </div>
                       <div>
                         <div className="text-xs font-bold uppercase tracking-wider text-secondary mb-1">Email</div>
-                        <a href="mailto:hello@example.com" className="text-sm font-medium text-primary hover:text-accent transition-colors">hello@example.com</a>
+                        <a href="mailto:io@maziz.me" className="text-sm font-medium text-primary hover:text-accent transition-colors">io@maziz.me</a>
                       </div>
                     </li>
                     <li className="flex items-start gap-4">
@@ -86,11 +86,11 @@ export function ContactClient() {
                 <div>
                   <h3 className="text-sm font-bold text-primary uppercase tracking-wider mb-6 border-b border-border-default pb-4">Digital Presence</h3>
                   <div className="flex flex-col gap-3">
-                    <a href="https://github.com" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 rounded-lg border border-border-default bg-elevated hover:border-accent/40 hover:bg-accent/5 transition-all group">
+                    <a href="https://github.com/engrmaziz" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 rounded-lg border border-border-default bg-elevated hover:border-accent/40 hover:bg-accent/5 transition-all group">
                       <Code className="w-5 h-5 text-secondary group-hover:text-accent" />
                       <span className="text-sm font-bold text-primary group-hover:text-accent">GitHub Profile</span>
                     </a>
-                    <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 rounded-lg border border-border-default bg-elevated hover:border-accent/40 hover:bg-accent/5 transition-all group">
+                    <a href="https://linkedin.com/in/musharrafazizq" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 rounded-lg border border-border-default bg-elevated hover:border-accent/40 hover:bg-accent/5 transition-all group">
                       <Briefcase className="w-5 h-5 text-secondary group-hover:text-accent" />
                       <span className="text-sm font-bold text-primary group-hover:text-accent">LinkedIn Network</span>
                     </a>
@@ -130,9 +130,14 @@ export function ContactClient() {
                 If you require an immediate technical consultation or architecture review, we can schedule a secure video conference.
               </p>
             </div>
-            <button className="px-8 py-4 bg-accent text-white font-bold rounded-lg hover:bg-accent/90 transition-colors shrink-0">
+            <a
+              href={process.env.NEXT_PUBLIC_BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 bg-accent text-[color:var(--color-bg-base)] font-bold rounded-lg hover:bg-accent/90 transition-colors shrink-0 cursor-pointer relative z-50 inline-flex items-center justify-center text-center"
+            >
               Request Calendar Invite
-            </button>
+            </a>
           </div>
         </Container>
       </Section>

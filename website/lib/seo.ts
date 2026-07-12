@@ -8,7 +8,7 @@ export const siteMetadata = {
   email: "hello@musharrafaziz.com",
   social: {
     github: "https://github.com/engrmaziz",
-    linkedin: "https://linkedin.com/in/engrmaziz"
+    linkedin: "https://linkedin.com/in/musharrafazizq"
   }
 };
 

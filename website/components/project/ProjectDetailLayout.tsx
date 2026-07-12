@@ -151,14 +151,14 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
 
           <div className="flex flex-wrap items-center gap-4">
             {project.sourceCode && (
-              <a href={project.sourceCode} target="_blank" rel="noopener noreferrer">
+              <a href={project.sourceCode} target="_blank" rel="noopener noreferrer" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm">
                 <Button variant="outline" className="gap-2">
                   <GitBranch className="w-4 h-4" /> View Repository
                 </Button>
               </a>
             )}
             {project.demoUrl && (
-              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm">
                 <Button variant="secondary" className="gap-2">
                   <ExternalLink className="w-4 h-4" /> Live Demo
                 </Button>
@@ -180,9 +180,9 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
                   key={sec.id}
                   href={`#${sec.id}`}
                   className={cn(
-                    "text-sm py-1.5 px-3 rounded-md transition-all duration-200 border-l-2",
+                    "text-sm py-1.5 px-3 rounded-md transition-all duration-200 border-l-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                     activeSection === sec.id
-                      ? "bg-accent/10 text-accent border-accent font-medium"
+                      ? "bg-elevated text-primary border-accent font-bold shadow-sm"
                       : "text-secondary hover:text-primary hover:bg-elevated border-transparent"
                   )}
                 >
@@ -231,13 +231,13 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
               if (sec.type === "cta") {
                 return (
                   <section key={sec.id} id={sec.id} className="mt-24 pt-12 border-t border-border-default scroll-mt-32">
-                    <div className="bg-primary text-base-inverted rounded-2xl p-8 md:p-12 text-center">
-                      <h2 className="text-3xl font-bold mb-4 text-base-inverted">Ready to build something robust?</h2>
-                      <p className="text-lg text-base-inverted/80 mb-8 max-w-2xl mx-auto">
+                    <div className="bg-elevated border border-border-default rounded-2xl p-8 md:p-12 text-center shadow-sm">
+                      <h2 className="text-3xl font-bold mb-4 text-primary">Ready to build something robust?</h2>
+                      <p className="text-lg text-secondary mb-8 max-w-2xl mx-auto">
                         Whether it&apos;s a complex RAG pipeline, a secure API gateway, or a scalable SaaS platform, let&apos;s discuss the architecture.
                       </p>
-                      <Link href="/contact">
-                        <Button variant="secondary" size="lg" className="bg-base text-primary hover:bg-border-default border-none px-8 font-bold">
+                      <Link href="/contact" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm inline-block">
+                        <Button variant="primary" size="lg" className="px-8 font-bold">
                           Schedule Architecture Review
                         </Button>
                       </Link>

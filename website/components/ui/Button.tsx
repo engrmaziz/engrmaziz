@@ -17,13 +17,13 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", isLoading, leftIcon, rightIcon, children, disabled, ...props }, ref) => {
     const baseStyles =
-      "inline-flex items-center justify-center rounded-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base disabled:opacity-50 disabled:pointer-events-none";
+      "inline-flex items-center justify-center rounded-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base disabled:opacity-50 disabled:pointer-events-none";
 
     const variants = {
-      primary: "bg-accent text-white hover:bg-accent-hover border border-transparent",
-      secondary: "bg-elevated text-primary hover:bg-border-default border border-border-default shadow-sm",
-      outline: "bg-transparent text-primary border border-accent hover:bg-accent/10",
-      ghost: "bg-transparent text-primary hover:bg-secondary/10 border border-transparent",
+      primary: "bg-accent text-[color:var(--color-bg-base)] hover:bg-accent-hover border border-transparent font-semibold shadow-sm",
+      secondary: "bg-elevated text-primary hover:bg-accent/5 border border-border-default shadow-sm",
+      outline: "bg-transparent border border-accent text-accent hover:bg-accent hover:text-[color:var(--color-bg-base)]",
+      ghost: "bg-transparent text-primary hover:bg-elevated border border-transparent",
       link: "bg-transparent text-accent underline-offset-4 hover:underline border-transparent !p-0 !h-auto",
     };
 

@@ -60,7 +60,7 @@ export default function BlogDetailPage({ params }: { params: { slug: string } })
     "author": [{
         "@type": "Person",
         "name": post.author,
-        "url": "https://example.com/about" // Placeholder
+        "url": "https://maziz.me/about" // Placeholder
       }]
   };
 

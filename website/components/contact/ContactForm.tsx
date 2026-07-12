@@ -78,14 +78,11 @@ export function ContactForm() {
           </select>
         </div>
         <div className="space-y-2">
-          <label htmlFor="timeline" className="text-xs font-bold uppercase tracking-wider text-primary">Timeline</label>
-          <select disabled={isSubmitting} id="timeline" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all appearance-none disabled:opacity-50">
-            <option value="">Select an option</option>
-            <option value="immediate">Immediate (1-2 weeks)</option>
-            <option value="1month">1 Month</option>
-            <option value="3months">1-3 Months</option>
-            <option value="flexible">Flexible</option>
-          </select>
+          <label htmlFor="timeline" className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-2">
+            Preferred Meeting Time
+            <span className="text-[10px] text-secondary font-medium tracking-normal bg-elevated border border-border-default px-1.5 py-0.5 rounded ml-auto">US EST (Washington)</span>
+          </label>
+          <input disabled={isSubmitting} type="datetime-local" id="timeline" className="w-full bg-base border border-border-default rounded-lg px-4 py-[11px] text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" />
         </div>
       </div>
 

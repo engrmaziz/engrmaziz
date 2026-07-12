@@ -172,10 +172,10 @@ export function ProjectsClient({ initialProjects }: { initialProjects: ProjectDa
                         <button
                           key={filter}
                           onClick={() => toggleFilter(filter)}
-                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base ${
                             isActive 
-                              ? 'bg-accent/10 border-accent text-accent' 
-                              : 'bg-elevated border-border-default text-secondary hover:border-accent/40 hover:text-primary'
+                              ? 'bg-accent border-transparent text-[color:var(--color-bg-base)] shadow-sm' 
+                              : 'bg-elevated border-border-default text-secondary hover:border-accent hover:text-accent hover:bg-accent/5'
                           }`}
                         >
                           {filter}
@@ -186,7 +186,7 @@ export function ProjectsClient({ initialProjects }: { initialProjects: ProjectDa
                   {activeFilters.size > 0 && (
                     <button 
                       onClick={() => setActiveFilters(new Set())}
-                      className="text-xs text-accent font-medium mt-4 hover:underline"
+                      className="text-xs text-secondary font-medium mt-4 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm transition-colors"
                     >
                       Clear all filters
                     </button>
@@ -244,24 +244,24 @@ export function ProjectsClient({ initialProjects }: { initialProjects: ProjectDa
       </Section>
 
       {/* ── ENGINEERING PHILOSOPHY & CTA ───────────────────────────────────── */}
-      <Section className="bg-primary text-base-inverted py-24">
+      <Section className="bg-elevated text-primary py-24 border-t border-border-default">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <CheckCircle className="w-12 h-12 text-accent mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Engineering is the art of constraints.
             </h2>
-            <p className="text-lg text-base-inverted/80 leading-relaxed mb-10">
+            <p className="text-lg text-secondary leading-relaxed mb-10">
               The architectures presented in these case studies don&apos;t emerge from unlimited resources — they emerge from building the tightest possible system within the sharpest possible boundaries.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link href="/services">
-                <Button variant="secondary" size="lg" className="bg-base text-primary hover:bg-border-default font-bold border-none px-8">
+                <Button variant="primary" size="lg" className="px-8">
                   View Technical Services
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" size="lg" className="border-base-inverted/30 text-base-inverted hover:bg-base-inverted/10 px-8">
+                <Button variant="secondary" size="lg" className="px-8">
                   Discuss a Project <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>

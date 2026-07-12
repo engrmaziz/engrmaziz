@@ -38,7 +38,7 @@ export function RelatedContent({
               <ul className="space-y-3">
                 {relatedServices.map(service => (
                   <li key={service}>
-                    <Link href="/services" className="text-sm text-secondary hover:text-accent transition-colors flex items-start gap-2">
+                    <Link href="/services" className="text-sm text-secondary hover:text-accent transition-all duration-200 flex items-start gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm">
                       <ArrowRight className="w-4 h-4 shrink-0 mt-0.5" />
                       {service}
                     </Link>
@@ -83,7 +83,7 @@ export function RelatedContent({
                   const title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
                   return (
                     <li key={slug}>
-                      <Link href={`/projects/${slug}`} className="text-sm text-secondary hover:text-accent transition-colors flex items-start gap-2">
+                      <Link href={`/projects/${slug}`} className="text-sm text-secondary hover:text-accent transition-all duration-200 flex items-start gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm">
                         <ArrowRight className="w-4 h-4 shrink-0 mt-0.5" />
                         {title}
                       </Link>

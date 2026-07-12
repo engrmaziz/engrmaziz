@@ -21,10 +21,10 @@ export default function ContactPage() {
       "@type": "Person",
       "name": "Musharraf Aziz",
       "jobTitle": "Senior Software Architect",
-      "url": "https://example.com",
+      "url": "https://maziz.me",
       "sameAs": [
         "https://github.com/engrmaziz",
-        "https://linkedin.com/in/engrmaziz"
+        "https://linkedin.com/in/musharrafazizq"
       ]
     }
   };

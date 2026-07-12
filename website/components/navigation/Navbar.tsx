@@ -27,6 +27,14 @@ export function Navbar() {
   const pathname = usePathname();
   const { isScrolled } = useScroll();
 
+  const isLinkActive = (href: string) => {
+    if (!pathname) return false;
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
   // Close mobile menu on route change
   React.useEffect(() => {
     setIsOpen(false);
@@ -71,7 +79,7 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-6">
             {NAV_LINKS.map((link) => {
-              const isActive = pathname?.startsWith(link.href);
+              const isActive = isLinkActive(link.href);
               return (
                 <li key={link.href}>
                   <Link
@@ -146,7 +154,7 @@ export function Navbar() {
             <div className="flex flex-col px-6 py-8 gap-6 h-full overflow-y-auto">
               <nav className="flex flex-col gap-4">
                 {NAV_LINKS.map((link) => {
-                  const isActive = pathname?.startsWith(link.href);
+                  const isActive = isLinkActive(link.href);
                   return (
                     <Link
                       key={link.href}

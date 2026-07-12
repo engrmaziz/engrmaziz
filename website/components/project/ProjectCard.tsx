@@ -129,7 +129,7 @@ export const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-secondary hover:text-primary transition-colors flex items-center gap-1 text-sm font-medium z-10 relative"
+                className="text-secondary hover:text-primary transition-all duration-200 flex items-center gap-1 text-sm font-medium z-10 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm"
                 onClick={(e) => e.stopPropagation()}
               >
                 <GitBranch className="w-4 h-4" />
@@ -142,7 +142,7 @@ export const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
                 href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-secondary hover:text-primary transition-colors flex items-center gap-1 text-sm font-medium z-10 relative"
+                className="text-secondary hover:text-primary transition-all duration-200 flex items-center gap-1 text-sm font-medium z-10 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm"
                 onClick={(e) => e.stopPropagation()}
               >
                 <ExternalLink className="w-4 h-4" />
@@ -150,8 +150,8 @@ export const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
               </a>
             )}
 
-            <Link href={href} className="ml-2 z-10 relative">
-              <span className="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold bg-primary text-base-inverted rounded-full hover:bg-accent hover:text-white transition-colors">
+            <Link href={href} className="ml-2 z-10 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-full">
+              <span className="inline-flex items-center justify-center px-4 py-1.5 text-xs font-bold bg-accent text-[color:var(--color-bg-base)] rounded-full hover:bg-accent-hover transition-all duration-200 shadow-sm border border-transparent">
                 Read Case Study
               </span>
             </Link>
