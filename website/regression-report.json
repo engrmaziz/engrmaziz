@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-07-14T14:25:57.934Z",
-  "gitCommit": "178799672d63738be894e723806d7fccf37b5172",
+  "timestamp": "2026-07-14T14:32:58.647Z",
+  "gitCommit": "a2285b916726ee480b06b40697d4b739a5c6b85a",
   "totalTests": 14,
   "passed": 14,
   "failed": 0,
-  "averageLatency": 4180.571428571428,
+  "averageLatency": 4422.214285714285,
   "results": [
     {
       "id": "retrieval_known_document",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 19294,
+      "durationMs": 20902,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 8441
+          "retrievalLatency": 8421
         },
         "memory": {
           "historyLoaded": 0,
@@ -29,7 +29,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 19293
+          "totalExecutionTime": 20901
         }
       }
     },
@@ -37,12 +37,12 @@
       "id": "retrieval_dense_retrieval",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 18892,
+      "durationMs": 20265,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 8682
+          "retrievalLatency": 8920
         },
         "memory": {
           "historyLoaded": 0,
@@ -56,7 +56,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 18892
+          "totalExecutionTime": 20265
         }
       }
     },
@@ -64,12 +64,12 @@
       "id": "retrieval_hybrid_retrieval",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 9539,
+      "durationMs": 9500,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 9
+          "retrievalLatency": 14
         },
         "memory": {
           "historyLoaded": 0,
@@ -83,7 +83,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 9538
+          "totalExecutionTime": 9500
         }
       }
     },
@@ -91,12 +91,12 @@
       "id": "memory_multi_turn_followup",
       "category": "Memory",
       "status": "PASS",
-      "durationMs": 996,
+      "durationMs": 1029,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 7
+          "retrievalLatency": 11
         },
         "memory": {
           "historyLoaded": 0,
@@ -110,7 +110,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 996
+          "totalExecutionTime": 1029
         }
       }
     },
@@ -118,12 +118,12 @@
       "id": "memory_summary_recall",
       "category": "Memory",
       "status": "PASS",
-      "durationMs": 1004,
+      "durationMs": 1014,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 6
+          "retrievalLatency": 5
         },
         "memory": {
           "historyLoaded": 0,
@@ -137,7 +137,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 1004
+          "totalExecutionTime": 1014
         }
       }
     },
@@ -145,12 +145,12 @@
       "id": "tool_calling_healthtool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 908,
+      "durationMs": 1010,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 9
+          "retrievalLatency": 5
         },
         "memory": {
           "historyLoaded": 0,
@@ -170,7 +170,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 906
+          "totalExecutionTime": 1010
         }
       }
     },
@@ -178,12 +178,12 @@
       "id": "tool_calling_timetool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 1141,
+      "durationMs": 1077,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 11
+          "retrievalLatency": 5
         },
         "memory": {
           "historyLoaded": 0,
@@ -203,7 +203,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 1141
+          "totalExecutionTime": 1077
         }
       }
     },
@@ -211,12 +211,12 @@
       "id": "tool_calling_echotool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 908,
+      "durationMs": 1015,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 10
+          "retrievalLatency": 4
         },
         "memory": {
           "historyLoaded": 0,
@@ -236,7 +236,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 908
+          "totalExecutionTime": 1015
         }
       }
     },
@@ -244,12 +244,12 @@
       "id": "tool_calling_tool_failure",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 1049,
+      "durationMs": 1008,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 9
+          "retrievalLatency": 4
         },
         "memory": {
           "historyLoaded": 0,
@@ -269,7 +269,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 1048
+          "totalExecutionTime": 1007
         }
       }
     },
@@ -277,12 +277,12 @@
       "id": "agent_runtime_no_tool",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 899,
+      "durationMs": 1016,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 11
+          "retrievalLatency": 5
         },
         "memory": {
           "historyLoaded": 0,
@@ -296,7 +296,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 899
+          "totalExecutionTime": 1016
         }
       }
     },
@@ -304,12 +304,12 @@
       "id": "agent_runtime_single_tool",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 1033,
+      "durationMs": 999,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 10
+          "retrievalLatency": 4
         },
         "memory": {
           "historyLoaded": 0,
@@ -329,7 +329,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 1033
+          "totalExecutionTime": 999
         }
       }
     },
@@ -337,7 +337,7 @@
       "id": "agent_runtime_multiple_tool",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 932,
+      "durationMs": 1020,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
@@ -365,7 +365,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 932
+          "totalExecutionTime": 1020
         }
       }
     },
@@ -373,7 +373,7 @@
       "id": "agent_runtime_max_tool_limit",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 1033,
+      "durationMs": 1024,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
@@ -404,7 +404,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 1033
+          "totalExecutionTime": 1024
         }
       }
     },
@@ -412,7 +412,7 @@
       "id": "agent_runtime_failure_recovery",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 900,
+      "durationMs": 1032,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
@@ -437,7 +437,7 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 900
+          "totalExecutionTime": 1032
         }
       }
     }
