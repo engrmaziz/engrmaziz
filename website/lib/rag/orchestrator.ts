@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { ragRetriever } from './retriever';
 import { ragDatabase } from './supabase';
 import { ragEmbedder } from './embedder';
-import { createAIClient } from '../ai/client';
+import { providerFactory } from '../providers';
 import { CONVERSATION_REWRITER_PROMPT } from './prompts';
 import { ragCache } from './cache';
 import { ragMemory } from './memory';
@@ -55,7 +55,7 @@ export interface RequestContext {
 
 export class RAGOrchestrator {
   async execute(requestBody: any): Promise<any> {
-    const aiClient = createAIClient();
+    const aiClient = providerFactory.getChatProvider();
     const requestId = randomUUID();
     const queryText = requestBody.query || '';
     const sessionId = requestBody.sessionId || '';

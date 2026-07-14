@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { AgentState } from './agent-state';
 import { AgentContext } from './types';
 import { RequestContext } from '../rag/orchestrator';
-import { createAIClient } from '../ai/client';
+import { providerFactory } from '../providers';
 import { toolPlanner } from '../tools/planner';
 import { toolExecutor } from '../tools/executor';
 import { promptBuilder } from '../rag/prompt-builder';
@@ -58,7 +58,7 @@ export class AgentRuntime {
     try {
       this.transition(ctx, AgentState.LLM);
 
-      const aiClient = createAIClient();
+      const aiClient = providerFactory.getChatProvider();
 
       while (ctx.currentState !== AgentState.COMPLETE && ctx.currentState !== AgentState.ERROR) {
         // 1. Timeout protection loop guard
@@ -89,7 +89,7 @@ export class AgentRuntime {
             );
 
             // Execute actual LLM Generation
-            const llmRes = await aiClient.generateComplexResponse(requestContext.prompt.messages);
+            const llmRes = await aiClient.generate({ messages: requestContext.prompt.messages });
             requestContext.response.assistantResponse = llmRes.content;
             (requestContext as any)._lastLlmModel = llmRes.model || 'unknown';
             

@@ -65,8 +65,8 @@ Do not invent information.`;
       }
 
       // Execute Threshold Summarization (Outside of the critical path!)
-      const { createAIClient } = await import('../ai/client');
-      const aiClient = createAIClient();
+      const { providerFactory } = await import('../providers');
+      const aiClient = providerFactory.getChatProvider();
       
       let payload = `--- CURRENT SUMMARY ---\n${conv.summary || 'None'}\n\n--- NEW MESSAGES TO ARCHIVE ---\n`;
       for (const msg of unsummarizedMessages) {
@@ -78,7 +78,7 @@ Do not invent information.`;
         { role: 'user', content: payload }
       ];
 
-      const res = await aiClient.generateComplexResponse(messages as any);
+      const res = await aiClient.generate({ messages: messages as any });
       const newSummary = res.content;
       
       const newCount = summarizedCount + unsummarizedMessages.length;

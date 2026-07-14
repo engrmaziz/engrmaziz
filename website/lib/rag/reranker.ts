@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { telemetryLogger } from '../telemetry';
+import { providerFactory } from '../providers';
+
 export interface RerankResult {
   index: number;
   document: string;
@@ -6,17 +9,9 @@ export interface RerankResult {
 }
 
 export class RAGReranker {
-  private apiKey: string;
-  private endpoint = 'https://api.jina.ai/v1/rerank';
-  private model = 'jina-reranker-v2-base-multilingual';
-
-  constructor() {
-    this.apiKey = process.env.JINA_API_KEY || '';
-  }
-
   /**
    * Reranks a query against a list of text documents retrieved from hybrid search.
-   * If the API fails or JINA_API_KEY is not configured, it gracefully falls back to 
+   * If the provider fails, it gracefully falls back to 
    * our local multi-factor scorer (merging pgvector cosine similarity and weighted lexical overlap).
    */
   async rerank(
@@ -26,48 +21,33 @@ export class RAGReranker {
   ): Promise<RerankResult[]> {
     if (searchResults.length === 0) return [];
     
-    const documents = searchResults.map((res) => res.chunk_text || res.content || '');
-
     // Check if reranker is enabled in env settings
     const enabled = process.env.RERANKING_ENABLED !== 'false';
-    if (!enabled || !this.apiKey) {
-      telemetryLogger.log('RAG', 'Jina Reranker disabled or key missing. Falling back to multi-factor local scoring.');
+    if (!enabled) {
+      telemetryLogger.log('RAG', 'Reranker disabled. Falling back to multi-factor local scoring.');
       return this.localRerank(query, searchResults, topN);
     }
 
     try {
-      const response = await fetch(this.endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`
-        },
-        body: JSON.stringify({
-          model: this.model,
-          query,
-          documents,
-          top_n: topN
-        })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Jina Reranker API error (Status ${response.status}): ${errorText}`);
-      }
-
-      const body = await response.json();
-      if (!body || !body.results) {
-        throw new Error('Invalid response structure returned by Jina AI Reranker API.');
-      }
-
-      return body.results.map((res: any) => ({
-        index: res.index,
-        document: documents[res.index] || '',
-        relevanceScore: res.relevance_score
+      const provider = providerFactory.getRerankerProvider();
+      
+      const documents = searchResults.map((res, index) => ({
+        text: res.chunk_text || res.content || '',
+        originalIndex: index,
+        ...res
       }));
 
+      const providerResults = await provider.rerank(query, documents);
+      
+      // Map back to RerankResult structure
+      return providerResults.map((doc, idx) => ({
+        index: doc.originalIndex !== undefined ? doc.originalIndex : idx,
+        document: doc.text,
+        relevanceScore: doc.relevanceScore || 0
+      })).slice(0, topN);
+
     } catch (err: any) {
-      telemetryLogger.error('RAG', 'Jina Reranker failed', err);
+      telemetryLogger.error('RAG', `Reranker provider failed: ${err.message}`, err);
       return this.localRerank(query, searchResults, topN);
     }
   }

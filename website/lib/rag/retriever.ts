@@ -77,10 +77,10 @@ export class RAGRetriever {
       // --- 1. HyDE (Hypothetical Document Embeddings) ---
       let hypotheticalDocument = normalizedQuery;
       try {
-        const { createAIClient } = await import('@/lib/ai/client');
-        const aiClient = createAIClient();
+        const { providerFactory } = await import('@/lib/providers');
+        const aiClient = providerFactory.getChatProvider();
         const hydePrompt = `You are a technical expert. Write a concise, factual excerpt (3-4 sentences) that directly answers the following query. Write it in the style of official technical documentation.\n\nQuery: ${normalizedQuery}`;
-        const hydeRes = await aiClient.generateSimpleResponse(hydePrompt);
+        const hydeRes = await aiClient.generate({ prompt: hydePrompt });
         if (hydeRes && hydeRes.content) {
           hypotheticalDocument = hydeRes.content.trim();
           telemetryLogger.log('RAG', `HyDE generated: "${hypotheticalDocument.substring(0, 50)}..."`);
@@ -170,10 +170,10 @@ export class RAGRetriever {
       // --- 8. CRAG (Corrective RAG) Context Evaluation ---
       let cragEval = 'RELEVANT';
       try {
-        const { createAIClient } = await import('@/lib/ai/client');
-        const aiClient = createAIClient();
+        const { providerFactory } = await import('@/lib/providers');
+        const aiClient = providerFactory.getChatProvider();
         const cragPrompt = `You are a grader evaluating the relevance of retrieved context to a user query. \n\nQuery: ${normalizedQuery}\n\nContext:\n${contextText}\n\nDoes the context contain sufficient relevant information to answer the query? Respond with exactly one word: "RELEVANT" or "IRRELEVANT".`;
-        const cragRes = await aiClient.generateSimpleResponse(cragPrompt);
+        const cragRes = await aiClient.generate({ prompt: cragPrompt });
         const evalScore = cragRes?.content?.trim().toUpperCase();
         if (evalScore && evalScore.includes('IRRELEVANT')) {
           cragEval = 'IRRELEVANT';

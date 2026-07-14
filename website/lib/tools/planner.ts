@@ -39,7 +39,9 @@ export class ToolPlanner {
       if (q.includes('schema_fail_test')) {
         return { tool: 'EchoTool', arguments: { repeat: 5 } };
       }
-    } else if (q.includes('multi_tool_test')) {
+    }
+    
+    if (q.includes('multi_tool_test')) {
       // To test exact bounds, we trigger two tool calls and then stop
       if (toolOutputs.length < 2) {
         return { tool: 'HealthTool', arguments: {} };

@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-07-14T13:41:14.554Z",
-  "gitCommit": "1cfec61d6b38dc02f41d51347fb5401b9bfce038",
+  "timestamp": "2026-07-14T13:53:51.510Z",
+  "gitCommit": "7351ae718c69c4f98ce6a0461ea68796d2a5523d",
   "totalTests": 14,
-  "passed": 12,
-  "failed": 2,
-  "averageLatency": 10366,
+  "passed": 13,
+  "failed": 1,
+  "averageLatency": 3826.9285714285716,
   "results": [
     {
       "id": "retrieval_known_document",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 8959,
+      "durationMs": 16001,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 3783
+          "retrievalLatency": 7046
         },
         "memory": {
           "historyLoaded": 0,
@@ -29,7 +29,7 @@
         "runtime": {
           "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 8956
+          "totalExecutionTime": 16000
         }
       }
     },
@@ -37,12 +37,12 @@
       "id": "retrieval_dense_retrieval",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 11241,
+      "durationMs": 16488,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 6073
+          "retrievalLatency": 7037
         },
         "memory": {
           "historyLoaded": 0,
@@ -56,7 +56,7 @@
         "runtime": {
           "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 11241
+          "totalExecutionTime": 16487
         }
       }
     },
@@ -64,12 +64,12 @@
       "id": "retrieval_hybrid_retrieval",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 17756,
+      "durationMs": 8215,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 12803
+          "retrievalLatency": 9
         },
         "memory": {
           "historyLoaded": 0,
@@ -83,7 +83,7 @@
         "runtime": {
           "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 17755
+          "totalExecutionTime": 8215
         }
       }
     },
@@ -91,12 +91,12 @@
       "id": "memory_multi_turn_followup",
       "category": "Memory",
       "status": "PASS",
-      "durationMs": 17272,
+      "durationMs": 1886,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 12005
+          "retrievalLatency": 11
         },
         "memory": {
           "historyLoaded": 0,
@@ -110,7 +110,7 @@
         "runtime": {
           "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 17272
+          "totalExecutionTime": 1886
         }
       }
     },
@@ -118,12 +118,12 @@
       "id": "memory_summary_recall",
       "category": "Memory",
       "status": "PASS",
-      "durationMs": 18204,
+      "durationMs": 1336,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 14380
+          "retrievalLatency": 13
         },
         "memory": {
           "historyLoaded": 0,
@@ -137,7 +137,7 @@
         "runtime": {
           "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 18202
+          "totalExecutionTime": 1336
         }
       }
     },
@@ -145,12 +145,12 @@
       "id": "tool_calling_healthtool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 8931,
+      "durationMs": 1380,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 3289
+          "retrievalLatency": 11
         },
         "memory": {
           "historyLoaded": 0,
@@ -170,7 +170,7 @@
         "runtime": {
           "llmPasses": 2,
           "toolCalls": 1,
-          "totalExecutionTime": 8930
+          "totalExecutionTime": 1380
         }
       }
     },
@@ -178,12 +178,12 @@
       "id": "tool_calling_timetool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 15510,
+      "durationMs": 1023,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 10532
+          "retrievalLatency": 3
         },
         "memory": {
           "historyLoaded": 0,
@@ -203,7 +203,7 @@
         "runtime": {
           "llmPasses": 2,
           "toolCalls": 1,
-          "totalExecutionTime": 15509
+          "totalExecutionTime": 1023
         }
       }
     },
@@ -211,12 +211,12 @@
       "id": "tool_calling_echotool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 8977,
+      "durationMs": 908,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 2562
+          "retrievalLatency": 16
         },
         "memory": {
           "historyLoaded": 0,
@@ -236,35 +236,40 @@
         "runtime": {
           "llmPasses": 2,
           "toolCalls": 1,
-          "totalExecutionTime": 8976
+          "totalExecutionTime": 908
         }
       }
     },
     {
       "id": "tool_calling_tool_failure",
       "category": "Tool Calling",
-      "status": "FAIL",
-      "durationMs": 2371,
-      "failureReason": "Expected tool not executed: \"EchoTool\"",
+      "status": "PASS",
+      "durationMs": 1166,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 4
         },
         "memory": {
           "historyLoaded": 0,
           "summaryUsed": false
         },
         "tools": {
-          "toolExecuted": [],
-          "toolSuccess": [],
-          "toolLatency": []
+          "toolExecuted": [
+            "EchoTool"
+          ],
+          "toolSuccess": [
+            false
+          ],
+          "toolLatency": [
+            0
+          ]
         },
         "runtime": {
-          "llmPasses": 0,
-          "toolCalls": 0,
-          "totalExecutionTime": 2371
+          "llmPasses": 2,
+          "toolCalls": 1,
+          "totalExecutionTime": 1165
         }
       }
     },
@@ -272,12 +277,12 @@
       "id": "agent_runtime_no_tool",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 7596,
+      "durationMs": 936,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 3456
+          "retrievalLatency": 4
         },
         "memory": {
           "historyLoaded": 0,
@@ -291,7 +296,7 @@
         "runtime": {
           "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 7596
+          "totalExecutionTime": 935
         }
       }
     },
@@ -299,12 +304,12 @@
       "id": "agent_runtime_single_tool",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 9829,
+      "durationMs": 1387,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 4696
+          "retrievalLatency": 7
         },
         "memory": {
           "historyLoaded": 0,
@@ -324,7 +329,7 @@
         "runtime": {
           "llmPasses": 2,
           "toolCalls": 1,
-          "totalExecutionTime": 9829
+          "totalExecutionTime": 1387
         }
       }
     },
@@ -332,13 +337,13 @@
       "id": "agent_runtime_multiple_tool",
       "category": "Agent Runtime",
       "status": "FAIL",
-      "durationMs": 3424,
+      "durationMs": 873,
       "failureReason": "Expected tool not executed: \"HealthTool\"",
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 4
         },
         "memory": {
           "historyLoaded": 0,
@@ -350,9 +355,9 @@
           "toolLatency": []
         },
         "runtime": {
-          "llmPasses": 0,
+          "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 3422
+          "totalExecutionTime": 872
         }
       }
     },
@@ -360,12 +365,12 @@
       "id": "agent_runtime_max_tool_limit",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 7219,
+      "durationMs": 992,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 2411
+          "retrievalLatency": 3
         },
         "memory": {
           "historyLoaded": 0,
@@ -391,7 +396,7 @@
         "runtime": {
           "llmPasses": 3,
           "toolCalls": 3,
-          "totalExecutionTime": 7218
+          "totalExecutionTime": 992
         }
       }
     },
@@ -399,12 +404,12 @@
       "id": "agent_runtime_failure_recovery",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 7835,
+      "durationMs": 986,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 1805
+          "retrievalLatency": 30
         },
         "memory": {
           "historyLoaded": 0,
@@ -424,7 +429,7 @@
         "runtime": {
           "llmPasses": 2,
           "toolCalls": 1,
-          "totalExecutionTime": 7835
+          "totalExecutionTime": 986
         }
       }
     }
