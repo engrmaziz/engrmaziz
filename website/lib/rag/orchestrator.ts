@@ -264,88 +264,24 @@ export class RAGOrchestrator {
     }
 
     // ==========================================
-    // STAGE 4: LLM INVOCATION (FIRST PASS)
+    // STAGE 4: AGENT RUNTIME EXECUTION
     // ==========================================
-    const startLlm = Date.now();
-    let llmRes: any;
     try {
-      llmRes = await aiClient.generateComplexResponse(ctx.prompt.messages);
-      ctx.response.assistantResponse = llmRes.content;
-      
-      ctx.executionContext.diagnostics.promptTokens = llmRes?.usage?.promptTokens || 0;
-      ctx.executionContext.diagnostics.completionTokens = llmRes?.usage?.completionTokens || 0;
-
-      ctx.executionContext.telemetry.llm.durationMs = Date.now() - startLlm;
-      ctx.executionContext.telemetry.llm.status = 'SUCCESS';
-      this.log('LLM', requestId, ctx.executionContext.telemetry.llm.durationMs, 'SUCCESS');
-    } catch (err: any) {
-      ctx.executionContext.telemetry.llm.durationMs = Date.now() - startLlm;
-      ctx.executionContext.telemetry.llm.status = 'ERROR';
-      ctx.executionContext.errors.push(`LLM Error: ${err.message}`);
-      this.log('LLM', requestId, ctx.executionContext.telemetry.llm.durationMs, 'ERROR', err.message);
-      throw err;
+      const { agentRuntime } = await import('../agent/agent-runtime');
+      await agentRuntime.execute(ctx);
+    } catch (agentErr: any) {
+      ctx.executionContext.errors.push(`AgentRuntime Fatal Error: ${agentErr.message}`);
     }
-
-    // ==========================================
-    // STAGE 4.5: TOOL CALLING
-    // ==========================================
-    const startPlanner = Date.now();
-    ctx.executionContext.telemetry.toolPlanning = { status: 'PENDING', durationMs: 0 };
-    ctx.executionContext.telemetry.toolExecution = { status: 'PENDING', durationMs: 0 };
-
-    try {
-      const { toolPlanner } = await import('../tools/planner');
-      const { toolExecutor } = await import('../tools/executor');
-      
-      // Deterministic planning based on query
-      const toolCall = await toolPlanner.plan(queryText, ctx.response.assistantResponse);
-      ctx.executionContext.telemetry.toolPlanning.durationMs = Date.now() - startPlanner;
-      ctx.executionContext.telemetry.toolPlanning.status = toolCall ? 'SUCCESS' : 'SKIPPED';
-      
-      if (toolCall) {
-        this.log('ToolPlanner', requestId, ctx.executionContext.telemetry.toolPlanning.durationMs, 'SUCCESS', `Chose tool ${toolCall.tool}`);
-        
-        const startExec = Date.now();
-        const toolResult = await toolExecutor.execute(toolCall, requestId);
-        ctx.response.toolOutputs.push(toolResult);
-        
-        ctx.executionContext.telemetry.toolExecution.durationMs = Date.now() - startExec;
-        ctx.executionContext.telemetry.toolExecution.status = toolResult.success ? 'SUCCESS' : 'ERROR';
-        this.log('ToolExecution', requestId, ctx.executionContext.telemetry.toolExecution.durationMs, toolResult.success ? 'SUCCESS' : 'ERROR', `Executed ${toolCall.tool}`);
-
-        // Optional Second LLM Pass
-        const startLlm2 = Date.now();
-        ctx.prompt.messages = promptBuilder.buildPrompt(
-          ctx.memory.summary || null,
-          ctx.memory.history,
-          ctx.retrieval.retrievedContext || '',
-          queryText,
-          ctx.response.toolOutputs
-        );
-        llmRes = await aiClient.generateComplexResponse(ctx.prompt.messages);
-        ctx.response.assistantResponse = llmRes.content;
-        
-        ctx.executionContext.diagnostics.promptTokens += (llmRes?.usage?.promptTokens || 0);
-        ctx.executionContext.diagnostics.completionTokens += (llmRes?.usage?.completionTokens || 0);
-        ctx.executionContext.telemetry.llm.durationMs += (Date.now() - startLlm2);
-      } else {
-        ctx.executionContext.telemetry.toolExecution.status = 'SKIPPED';
-      }
-    } catch (toolErr: any) {
-      // Catch framework-level errors gracefully
-      ctx.executionContext.errors.push(`ToolFramework Error: ${toolErr.message}`);
-    }
-
-    ctx.executionContext.diagnostics.totalTokens = ctx.executionContext.diagnostics.promptTokens + ctx.executionContext.diagnostics.completionTokens;
 
     // ==========================================
     // STAGE 5: PERSISTENCE
     // ==========================================
     const startPersistence = Date.now();
     try {
+      const llmModel = (ctx.executionContext as any).metadata?.agentContext?.lastLlmModel || 'unknown';
       if (sessionId && ctx.response.assistantResponse) {
         await ragMemory.saveUserMessage(sessionId, queryText);
-        await ragMemory.saveAssistantMessage(sessionId, ctx.response.assistantResponse, ctx.retrieval.citations, llmRes.model, ctx.executionContext.telemetry.llm.durationMs);
+        await ragMemory.saveAssistantMessage(sessionId, ctx.response.assistantResponse, ctx.retrieval.citations, llmModel, ctx.executionContext.telemetry.llm.durationMs);
       }
       
       if (queryVector.length > 0 && ctx.response.assistantResponse) {
@@ -375,13 +311,14 @@ export class RAGOrchestrator {
       const completionTokens = ctx.executionContext.diagnostics.completionTokens;
       const cost = ((promptTokens * 0.50) + (completionTokens * 0.80)) / 1000000;
 
+      const llmModel = (ctx.executionContext as any).metadata?.agentContext?.lastLlmModel || 'unknown';
       ragDatabase.logAnalytics({
         sessionId: sessionId || undefined,
         queryText: queryText,
         queryEmbedding: queryVector,
         responseText: ctx.response.assistantResponse,
         latencyMs: ctx.executionContext.telemetry.total.durationMs,
-        llmModel: llmRes?.model || 'unknown',
+        llmModel: llmModel,
         promptTokens: promptTokens,
         completionTokens: completionTokens,
         totalTokens: promptTokens + completionTokens,
