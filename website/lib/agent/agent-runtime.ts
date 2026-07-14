@@ -6,10 +6,11 @@ import { createAIClient } from '../ai/client';
 import { toolPlanner } from '../tools/planner';
 import { toolExecutor } from '../tools/executor';
 import { promptBuilder } from '../rag/prompt-builder';
+import { telemetryLogger } from '../telemetry';
 
 export class AgentRuntime {
   private log(ctx: AgentContext, nextState: AgentState, duration: number) {
-    console.log(`[AgentRuntime] executionId=${ctx.executionId} transition=${ctx.currentState}->${nextState} duration=${duration}ms tools=${ctx.toolCallsExecuted} llmPasses=${ctx.llmPassesExecuted} termReason=${ctx.terminationReason || 'none'}`);
+    telemetryLogger.log('AGENT', 'Transition', { executionId: ctx.executionId, transition: `${ctx.currentState}->${nextState}`, durationMs: duration, tools: ctx.toolCallsExecuted, llmPasses: ctx.llmPassesExecuted, termReason: ctx.terminationReason || 'none' });
   }
 
   private transition(ctx: AgentContext, nextState: AgentState) {
@@ -49,9 +50,10 @@ export class AgentRuntime {
     };
 
     // Ensure backwards compatibility with older orchestrator telemetry structures
-    requestContext.executionContext.telemetry.llm = { status: 'PENDING', durationMs: 0 };
-    requestContext.executionContext.telemetry.toolPlanning = { status: 'SKIPPED', durationMs: 0 };
-    requestContext.executionContext.telemetry.toolExecution = { status: 'SKIPPED', durationMs: 0 };
+    // Initialize agent stages in the RequestTrace
+    requestContext.executionContext.trace.startStage('Agent.LLM');
+    requestContext.executionContext.trace.startStage('Agent.ToolPlanning');
+    requestContext.executionContext.trace.startStage('Agent.ToolExecution');
 
     try {
       this.transition(ctx, AgentState.LLM);
@@ -95,16 +97,14 @@ export class AgentRuntime {
             requestContext.executionContext.diagnostics.completionTokens += (llmRes?.usage?.completionTokens || 0);
             requestContext.executionContext.diagnostics.totalTokens = requestContext.executionContext.diagnostics.promptTokens + requestContext.executionContext.diagnostics.completionTokens;
             
-            requestContext.executionContext.telemetry.llm!.durationMs += (Date.now() - startLlm);
-            requestContext.executionContext.telemetry.llm!.status = 'SUCCESS';
+            requestContext.executionContext.trace.endStage('Agent.LLM', true);
 
             // Planner detection directly owns the transition to TOOLS
             const startPlan = Date.now();
             const pendingToolCall = await toolPlanner.plan(requestContext.request.query, llmRes.content, requestContext.response.toolOutputs);
-            requestContext.executionContext.telemetry.toolPlanning!.durationMs += (Date.now() - startPlan);
+            requestContext.executionContext.trace.endStage('Agent.ToolPlanning', true);
             
             if (pendingToolCall) {
-              requestContext.executionContext.telemetry.toolPlanning!.status = 'SUCCESS';
               this.transition(ctx, AgentState.TOOLS);
             } else {
               this.transition(ctx, AgentState.FINAL_RESPONSE);
@@ -134,8 +134,7 @@ export class AgentRuntime {
             ctx.toolHistory.push(toolResult);
             requestContext.response.toolOutputs.push(toolResult);
             
-            requestContext.executionContext.telemetry.toolExecution!.durationMs += (Date.now() - startExec);
-            requestContext.executionContext.telemetry.toolExecution!.status = toolResult.success ? 'SUCCESS' : 'ERROR';
+            requestContext.executionContext.trace.endStage('Agent.ToolExecution', toolResult.success);
 
             // IMPORTANT: If tool fails, runtime does not crash. It transitions safely back to LLM.
             this.transition(ctx, AgentState.LLM);

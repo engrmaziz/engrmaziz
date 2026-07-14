@@ -7,14 +7,9 @@ import { CONVERSATION_REWRITER_PROMPT } from './prompts';
 import { ragCache } from './cache';
 import { ragMemory } from './memory';
 import { promptBuilder } from './prompt-builder';
-
-export interface StageTelemetry {
-  status: 'PENDING' | 'SUCCESS' | 'ERROR' | 'SKIPPED';
-  durationMs: number;
-}
+import { RequestTrace, telemetryLogger } from '../telemetry';
 
 export interface RequestContext {
-  // 1. Business Context
   request: {
     query: string;
     optimizedQuery: string;
@@ -36,20 +31,9 @@ export interface RequestContext {
     assistantResponse?: string;
     toolOutputs: any[];
   };
-
-  // 2. Execution Context (Operational Metadata)
   executionContext: {
     requestId: string;
-    telemetry: {
-      total: StageTelemetry;
-      memory: StageTelemetry;
-      retrieval: StageTelemetry;
-      promptAssembly: StageTelemetry;
-      llm: StageTelemetry;
-      toolPlanning?: StageTelemetry;
-      toolExecution?: StageTelemetry;
-      persistence: StageTelemetry;
-    };
+    trace: RequestTrace;
     flags: Record<string, boolean>;
     diagnostics: {
       denseCandidates: number;
@@ -65,17 +49,13 @@ export interface RequestContext {
     };
     versions: Record<string, string>;
     errors: string[];
+    metadata?: any;
   };
 }
 
 export class RAGOrchestrator {
-  private log(stage: string, reqId: string, duration: number, status: string, msg: string = '') {
-    console.log(`[RAG] requestId=${reqId} stage=${stage} duration=${duration}ms status=${status} ${msg}`);
-  }
-
   async execute(requestBody: any): Promise<any> {
     const aiClient = createAIClient();
-    const startTotal = Date.now();
     const requestId = randomUUID();
     const queryText = requestBody.query || '';
     const sessionId = requestBody.sessionId || '';
@@ -84,6 +64,9 @@ export class RAGOrchestrator {
     if (!queryText.trim()) {
       throw new Error('Query text cannot be empty.');
     }
+
+    const trace = new RequestTrace(requestId);
+    trace.startStage('Total');
 
     const ctx: RequestContext = {
       request: {
@@ -98,14 +81,7 @@ export class RAGOrchestrator {
       response: { toolOutputs: [] },
       executionContext: {
         requestId,
-        telemetry: {
-          total: { status: 'PENDING', durationMs: 0 },
-          memory: { status: 'PENDING', durationMs: 0 },
-          retrieval: { status: 'PENDING', durationMs: 0 },
-          promptAssembly: { status: 'PENDING', durationMs: 0 },
-          llm: { status: 'PENDING', durationMs: 0 },
-          persistence: { status: 'PENDING', durationMs: 0 }
-        },
+        trace,
         flags: { memory: true, rag: true, reranker: true, hyde: true, crag: true },
         diagnostics: {
           denseCandidates: 0,
@@ -130,12 +106,10 @@ export class RAGOrchestrator {
       }
     };
 
-    let conversation: any = null;
-
     // ==========================================
     // STAGE 1: MEMORY
     // ==========================================
-    const startMemory = Date.now();
+    trace.startStage('Memory');
     try {
       if (sessionId) {
         let conv = await ragMemory.loadConversation(sessionId);
@@ -165,14 +139,12 @@ export class RAGOrchestrator {
           }
         }
       }
-      ctx.executionContext.telemetry.memory.durationMs = Date.now() - startMemory;
-      ctx.executionContext.telemetry.memory.status = 'SUCCESS';
-      this.log('Memory', requestId, ctx.executionContext.telemetry.memory.durationMs, 'SUCCESS');
+      trace.endStage('Memory', true);
+      telemetryLogger.log('PIPELINE', 'Memory stage completed', { requestId, durationMs: trace.exportTrace().stages['Memory'].durationMs });
     } catch (err: any) {
-      ctx.executionContext.telemetry.memory.durationMs = Date.now() - startMemory;
-      ctx.executionContext.telemetry.memory.status = 'ERROR';
+      trace.endStage('Memory', false, err.message);
       ctx.executionContext.errors.push(`Memory Error: ${err.message}`);
-      this.log('Memory', requestId, ctx.executionContext.telemetry.memory.durationMs, 'ERROR', err.message);
+      telemetryLogger.error('PIPELINE', 'Memory stage failed', err, { requestId });
       throw err;
     }
 
@@ -183,24 +155,18 @@ export class RAGOrchestrator {
     try {
       queryVector = await ragEmbedder.embed(ctx.request.optimizedQuery);
       const cached = await ragCache.get(ctx.request.optimizedQuery, queryVector, 0.98);
-      if (cached) {
+      if (cached && !requestBody.flags?.bypassCache) {
         ctx.executionContext.diagnostics.cacheHit = true;
-        ctx.executionContext.telemetry.total.durationMs = Date.now() - startTotal;
-        ctx.executionContext.telemetry.total.status = 'SUCCESS';
+        trace.endStage('Total', true);
         
-        ctx.executionContext.telemetry.retrieval.status = 'SKIPPED';
-        ctx.executionContext.telemetry.promptAssembly.status = 'SKIPPED';
-        ctx.executionContext.telemetry.llm.status = 'SKIPPED';
-        ctx.executionContext.telemetry.persistence.status = 'SKIPPED';
-
-        this.log('Cache', requestId, ctx.executionContext.telemetry.total.durationMs, 'SUCCESS', 'Cache Hit');
+        telemetryLogger.log('PIPELINE', 'Semantic Cache hit', { requestId });
         
         ragDatabase.logAnalytics({
           sessionId: sessionId || undefined,
           queryText: queryText,
           queryEmbedding: queryVector,
           responseText: cached.responseText,
-          latencyMs: ctx.executionContext.telemetry.total.durationMs,
+          latencyMs: trace.exportTrace().stages['Total'].durationMs,
           llmModel: 'Semantic Cache',
           metadata: { 
             cacheHit: true, 
@@ -208,24 +174,24 @@ export class RAGOrchestrator {
             originalQuery: queryText,
             executionContext: ctx.executionContext 
           }
-        }).catch(err => console.error('[RAG] Failed to log cached telemetry:', err));
+        }).catch(err => telemetryLogger.error('RAG', 'Failed to log cached telemetry', err));
 
         return { 
           answer: cached.responseText, 
           citations: cached.metadata?.citations || [], 
           cacheHit: true, 
-          latencyMs: ctx.executionContext.telemetry.total.durationMs,
+          latencyMs: trace.exportTrace().stages['Total'].durationMs,
           context: ctx 
         };
       }
     } catch (cacheErr) {
-      console.warn('[RAG] Cache check failed, continuing search.', cacheErr);
+      telemetryLogger.error('PIPELINE', 'Cache check failed, continuing search.', cacheErr);
     }
 
     // ==========================================
     // STAGE 2: RETRIEVAL
     // ==========================================
-    const startRetrieval = Date.now();
+    trace.startStage('Retrieval');
     try {
       const retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 5, 0.3, filters);
       ctx.retrieval.retrievedContext = retrievalResult.contextText;
@@ -233,21 +199,19 @@ export class RAGOrchestrator {
       
       ctx.executionContext.diagnostics.finalContextChunks = retrievalResult.chunks.length;
       
-      ctx.executionContext.telemetry.retrieval.durationMs = Date.now() - startRetrieval;
-      ctx.executionContext.telemetry.retrieval.status = 'SUCCESS';
-      this.log('Retrieval', requestId, ctx.executionContext.telemetry.retrieval.durationMs, 'SUCCESS');
+      trace.endStage('Retrieval', true);
+      telemetryLogger.log('PIPELINE', 'Retrieval stage completed', { requestId, durationMs: trace.exportTrace().stages['Retrieval'].durationMs });
     } catch (err: any) {
-      ctx.executionContext.telemetry.retrieval.durationMs = Date.now() - startRetrieval;
-      ctx.executionContext.telemetry.retrieval.status = 'ERROR';
+      trace.endStage('Retrieval', false, err.message);
       ctx.executionContext.errors.push(`Retrieval Error: ${err.message}`);
-      this.log('Retrieval', requestId, ctx.executionContext.telemetry.retrieval.durationMs, 'ERROR', err.message);
+      telemetryLogger.error('PIPELINE', 'Retrieval stage failed', err, { requestId });
       throw err;
     }
 
     // ==========================================
     // STAGE 3: PROMPT ASSEMBLY
     // ==========================================
-    const startPrompt = Date.now();
+    trace.startStage('PromptAssembly');
     try {
       ctx.prompt.messages = promptBuilder.buildPrompt(
         ctx.memory.summary || null,
@@ -255,14 +219,12 @@ export class RAGOrchestrator {
         ctx.retrieval.retrievedContext || '',
         queryText
       );
-      ctx.executionContext.telemetry.promptAssembly.durationMs = Date.now() - startPrompt;
-      ctx.executionContext.telemetry.promptAssembly.status = 'SUCCESS';
-      this.log('PromptAssembly', requestId, ctx.executionContext.telemetry.promptAssembly.durationMs, 'SUCCESS');
+      trace.endStage('PromptAssembly', true);
+      telemetryLogger.log('PIPELINE', 'PromptAssembly stage completed', { requestId, durationMs: trace.exportTrace().stages['PromptAssembly'].durationMs });
     } catch (err: any) {
-      ctx.executionContext.telemetry.promptAssembly.durationMs = Date.now() - startPrompt;
-      ctx.executionContext.telemetry.promptAssembly.status = 'ERROR';
+      trace.endStage('PromptAssembly', false, err.message);
       ctx.executionContext.errors.push(`PromptAssembly Error: ${err.message}`);
-      this.log('PromptAssembly', requestId, ctx.executionContext.telemetry.promptAssembly.durationMs, 'ERROR', err.message);
+      telemetryLogger.error('PIPELINE', 'PromptAssembly stage failed', err, { requestId });
       throw err;
     }
 
@@ -274,21 +236,22 @@ export class RAGOrchestrator {
       await agentRuntime.execute(ctx);
     } catch (agentErr: any) {
       ctx.executionContext.errors.push(`AgentRuntime Fatal Error: ${agentErr.message}`);
+      telemetryLogger.error('AGENT', 'Fatal execution error', agentErr, { requestId });
     }
 
     // ==========================================
     // STAGE 5: PERSISTENCE
     // ==========================================
-    const startPersistence = Date.now();
+    trace.startStage('Persistence');
     try {
       const llmModel = (ctx.executionContext as any).metadata?.agentContext?.lastLlmModel || 'unknown';
       if (sessionId && ctx.response.assistantResponse) {
         await ragMemory.saveUserMessage(sessionId, queryText);
-        await ragMemory.saveAssistantMessage(sessionId, ctx.response.assistantResponse, ctx.retrieval.citations, llmModel, ctx.executionContext.telemetry.llm.durationMs);
+        await ragMemory.saveAssistantMessage(sessionId, ctx.response.assistantResponse, ctx.retrieval.citations, llmModel, trace.exportTrace().stages['Total']?.durationMs || 0);
         
         // Fire-and-forget memory pruning evaluation (0 ms synchronous penalty)
         const { ragSummary } = await import('./memory');
-        ragSummary.triggerAsyncSummarization(sessionId).catch(console.error);
+        ragSummary.triggerAsyncSummarization(sessionId).catch((err) => telemetryLogger.error('SUMMARY', 'triggerAsyncSummarization failed', err));
       }
       
       if (queryVector.length > 0 && ctx.response.assistantResponse) {
@@ -296,23 +259,27 @@ export class RAGOrchestrator {
           .catch(() => {});
       }
 
-      ctx.executionContext.telemetry.persistence.durationMs = Date.now() - startPersistence;
-      ctx.executionContext.telemetry.persistence.status = 'SUCCESS';
-      this.log('Persistence', requestId, ctx.executionContext.telemetry.persistence.durationMs, 'SUCCESS');
+      trace.endStage('Persistence', true);
+      telemetryLogger.log('PIPELINE', 'Persistence stage completed', { requestId, durationMs: trace.exportTrace().stages['Persistence'].durationMs });
     } catch (err: any) {
-      ctx.executionContext.telemetry.persistence.durationMs = Date.now() - startPersistence;
-      ctx.executionContext.telemetry.persistence.status = 'ERROR';
+      trace.endStage('Persistence', false, err.message);
       ctx.executionContext.errors.push(`Persistence Error: ${err.message}`);
-      this.log('Persistence', requestId, ctx.executionContext.telemetry.persistence.durationMs, 'ERROR', err.message);
+      telemetryLogger.error('PIPELINE', 'Persistence stage failed', err, { requestId });
       throw err;
     }
 
     // ==========================================
     // FINALIZE & TELEMETRY
     // ==========================================
-    ctx.executionContext.telemetry.total.durationMs = Date.now() - startTotal;
-    ctx.executionContext.telemetry.total.status = 'SUCCESS';
+    trace.endStage('Total', true);
     
+    // Attach metadata
+    trace.attachMetadata('diagnostics', ctx.executionContext.diagnostics);
+    trace.attachMetadata('versions', ctx.executionContext.versions);
+    if (ctx.executionContext.metadata?.agentContext) {
+      trace.attachMetadata('agentContext', ctx.executionContext.metadata.agentContext);
+    }
+
     if (queryVector.length > 0 && ctx.response.assistantResponse) {
       const promptTokens = ctx.executionContext.diagnostics.promptTokens;
       const completionTokens = ctx.executionContext.diagnostics.completionTokens;
@@ -324,7 +291,7 @@ export class RAGOrchestrator {
         queryText: queryText,
         queryEmbedding: queryVector,
         responseText: ctx.response.assistantResponse,
-        latencyMs: ctx.executionContext.telemetry.total.durationMs,
+        latencyMs: trace.exportTrace().stages['Total'].durationMs,
         llmModel: llmModel,
         promptTokens: promptTokens,
         completionTokens: completionTokens,
@@ -333,18 +300,18 @@ export class RAGOrchestrator {
         metadata: { 
           citations: ctx.retrieval.citations, 
           originalQuery: queryText, 
-          executionContext: ctx.executionContext 
+          trace: trace.exportTrace()
         }
-      }).catch((err) => console.error('[RAG] Failed to log final telemetry:', err));
+      }).catch((err) => telemetryLogger.error('PIPELINE', 'Failed to log final telemetry', err));
     }
 
-    this.log('Total', requestId, ctx.executionContext.telemetry.total.durationMs, 'SUCCESS');
+    telemetryLogger.log('PIPELINE', 'Total request completed', { requestId, durationMs: trace.exportTrace().stages['Total'].durationMs });
 
     return {
       answer: ctx.response.assistantResponse,
       citations: ctx.retrieval.citations,
       cacheHit: false,
-      latencyMs: ctx.executionContext.telemetry.total.durationMs,
+      latencyMs: trace.exportTrace().stages['Total'].durationMs,
       context: ctx
     };
   }

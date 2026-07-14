@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from 'fs';
 import * as path from 'path';
 import { ragPipeline } from './pipeline';
+import { telemetryLogger } from '../telemetry';
 
 export class RAGIndexer {
   private baseDir = path.resolve(process.cwd(), '../workspace/knowledge-base/markdown');
@@ -16,14 +16,14 @@ export class RAGIndexer {
     failed: number;
     errors: Array<{ file: string; error: string }>;
   }> {
-    console.log(`[RAGIndexer] Initializing crawler base: ${this.baseDir}`);
+    telemetryLogger.log('PIPELINE', `Initializing crawler base: ${this.baseDir}`);
     
     if (!fs.existsSync(this.baseDir)) {
       throw new Error(`Knowledge base path does not exist: ${this.baseDir}`);
     }
 
     const files = this.crawlDirectory(this.baseDir);
-    console.log(`[RAGIndexer] Found ${files.length} knowledge source files. starting indexing pipeline.`);
+    telemetryLogger.log('PIPELINE', `Found ${files.length} knowledge source files. starting indexing pipeline.`);
 
     let indexedCount = 0;
     let skippedCount = 0;
@@ -48,7 +48,7 @@ export class RAGIndexer {
         }
       } catch (err: any) {
         failedCount++;
-        console.error(`[RAGIndexer] Failed to index: ${filePath}. Error:`, err);
+        telemetryLogger.error('PIPELINE', `Failed to index: ${filePath}`, err);
         errors.push({
           file: path.basename(filePath),
           error: err.message || String(err)

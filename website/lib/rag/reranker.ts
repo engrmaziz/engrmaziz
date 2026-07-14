@@ -31,7 +31,7 @@ export class RAGReranker {
     // Check if reranker is enabled in env settings
     const enabled = process.env.RERANKING_ENABLED !== 'false';
     if (!enabled || !this.apiKey) {
-      console.log('Jina Reranker disabled or key missing. Falling back to multi-factor local scoring.');
+      telemetryLogger.log('RAG', 'Jina Reranker disabled or key missing. Falling back to multi-factor local scoring.');
       return this.localRerank(query, searchResults, topN);
     }
 
@@ -67,7 +67,7 @@ export class RAGReranker {
       }));
 
     } catch (err: any) {
-      console.warn('Rerank API failed, using local fallback multi-factor scorer:', err.message);
+      telemetryLogger.error('RAG', 'Jina Reranker failed', err);
       return this.localRerank(query, searchResults, topN);
     }
   }

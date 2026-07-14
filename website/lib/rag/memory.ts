@@ -1,4 +1,5 @@
 import { ragDatabase } from './supabase';
+import { telemetryLogger } from '../telemetry';
 
 export class ConversationMemoryService {
   async loadConversation(conversationId: string) {
@@ -82,10 +83,10 @@ Do not invent information.`;
       
       const newCount = summarizedCount + unsummarizedMessages.length;
       await ragDatabase.updateConversationSummary(conversationId, newSummary, newCount);
-      console.log(`[RAG:Summary] Compacted ${unsummarizedMessages.length} messages. Total offset now: ${newCount}`);
+      telemetryLogger.log('SUMMARY', `Compacted ${unsummarizedMessages.length} messages. Total offset now: ${newCount}`);
 
     } catch (e) {
-      console.error('[RAG:Summary] Async summarization failed', e);
+      telemetryLogger.error('SUMMARY', 'Async summarization failed', e);
     }
   }
 }

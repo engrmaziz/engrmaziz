@@ -2,6 +2,7 @@
 import { ragEmbedder } from './embedder';
 import { ragDatabase } from './supabase';
 import { ragReranker } from './reranker';
+import { telemetryLogger } from '../telemetry';
 import { ragContextBuilder } from './context-builder';
 
 export interface RetrievedChunk {
@@ -70,8 +71,8 @@ export class RAGRetriever {
       const normalizedQuery = this.normalizeQuery(query);
       const expandedQuery = this.expandQuery(query);
       
-      console.log(`[RAGRetriever] Normalized Query: "${normalizedQuery}"`);
-      console.log(`[RAGRetriever] Expanded Query: "${expandedQuery}"`);
+      telemetryLogger.log('RAG', `Normalized Query: "${normalizedQuery}"`);
+      telemetryLogger.log('RAG', `Expanded Query: "${expandedQuery}"`);
 
       // --- 1. HyDE (Hypothetical Document Embeddings) ---
       let hypotheticalDocument = normalizedQuery;
@@ -82,10 +83,10 @@ export class RAGRetriever {
         const hydeRes = await aiClient.generateSimpleResponse(hydePrompt);
         if (hydeRes && hydeRes.content) {
           hypotheticalDocument = hydeRes.content.trim();
-          console.log(`[RAGRetriever] HyDE generated: "${hypotheticalDocument.substring(0, 50)}..."`);
+          telemetryLogger.log('RAG', `HyDE generated: "${hypotheticalDocument.substring(0, 50)}..."`);
         }
       } catch (hydeErr) {
-        console.warn(`[RAGRetriever] HyDE generation failed, falling back to original query.`, hydeErr);
+        telemetryLogger.error('RAG', `HyDE generation failed, falling back to original query.`, hydeErr);
       }
 
       // 2. Generate Query Vector Embedding using the Hypothetical Document (or fallback to query)
@@ -97,8 +98,8 @@ export class RAGRetriever {
         ragDatabase.ftsSearch(expandedQuery, 50, filters)
       ]);
 
-      console.log(`[RAGRetriever] Dense match candidate count: ${denseResults.length}`);
-      console.log(`[RAGRetriever] Sparse match candidate count: ${sparseResults.length}`);
+      telemetryLogger.log('RAG', `Dense match candidate count: ${denseResults.length}`);
+      telemetryLogger.log('RAG', `Sparse match candidate count: ${sparseResults.length}`);
 
       // 4. Reciprocal Rank Fusion (RRF) Merging
       // RRF_Score = 1 / (60 + dense_rank) + 1 / (60 + sparse_rank)
@@ -176,12 +177,12 @@ export class RAGRetriever {
         const evalScore = cragRes?.content?.trim().toUpperCase();
         if (evalScore && evalScore.includes('IRRELEVANT')) {
           cragEval = 'IRRELEVANT';
-          console.warn(`[RAGRetriever] CRAG Evaluation marked context as IRRELEVANT.`);
+          telemetryLogger.log('RAG', `CRAG Evaluation marked context as IRRELEVANT.`);
         } else {
-          console.log(`[RAGRetriever] CRAG Evaluation marked context as RELEVANT.`);
+          telemetryLogger.log('RAG', `CRAG Evaluation marked context as RELEVANT.`);
         }
       } catch (cragErr) {
-        console.warn(`[RAGRetriever] CRAG evaluation failed, assuming RELEVANT.`, cragErr);
+        telemetryLogger.error('RAG', `CRAG evaluation failed, assuming RELEVANT.`, cragErr);
       }
 
       return {
@@ -192,7 +193,7 @@ export class RAGRetriever {
       };
 
     } catch (err: any) {
-      console.error('Retrieval operation failed:', err);
+      telemetryLogger.error('RAG', 'Retrieval operation failed', err);
       return { contextText: '', chunks: [], citations: [], cragEval: 'ERROR' };
     }
   }
