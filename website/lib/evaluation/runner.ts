@@ -19,7 +19,8 @@ export class EvaluationRunner {
         const result = await ragOrchestrator.execute({
           query: testCase.input,
           sessionId,
-          filters: {}
+          filters: {},
+          flags: { bypassCache: true }
         });
 
         const durationMs = Date.now() - start;

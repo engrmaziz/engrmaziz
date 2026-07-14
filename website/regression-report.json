@@ -1,22 +1,21 @@
 {
-  "timestamp": "2026-07-14T13:37:08.563Z",
-  "gitCommit": "77bc5be862ccf9f7708efafb5c3cded107100907",
+  "timestamp": "2026-07-14T13:41:14.554Z",
+  "gitCommit": "1cfec61d6b38dc02f41d51347fb5401b9bfce038",
   "totalTests": 14,
-  "passed": 0,
-  "failed": 14,
-  "averageLatency": 1201.2857142857142,
+  "passed": 12,
+  "failed": 2,
+  "averageLatency": 10366,
   "results": [
     {
       "id": "retrieval_known_document",
       "category": "Retrieval",
-      "status": "FAIL",
-      "durationMs": 1869,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_known_document-24b824f6-324b-406f-98c1-102c31d8144b\"",
+      "status": "PASS",
+      "durationMs": 8959,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 3783
         },
         "memory": {
           "historyLoaded": 0,
@@ -28,23 +27,22 @@
           "toolLatency": []
         },
         "runtime": {
-          "llmPasses": 0,
+          "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 1869
+          "totalExecutionTime": 8956
         }
       }
     },
     {
       "id": "retrieval_dense_retrieval",
       "category": "Retrieval",
-      "status": "FAIL",
-      "durationMs": 1519,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_dense_retrieval-09659568-0c16-4b76-a02c-262fd0511f63\"",
+      "status": "PASS",
+      "durationMs": 11241,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 6073
         },
         "memory": {
           "historyLoaded": 0,
@@ -56,23 +54,22 @@
           "toolLatency": []
         },
         "runtime": {
-          "llmPasses": 0,
+          "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 1519
+          "totalExecutionTime": 11241
         }
       }
     },
     {
       "id": "retrieval_hybrid_retrieval",
       "category": "Retrieval",
-      "status": "FAIL",
-      "durationMs": 1155,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_hybrid_retrieval-6835d278-4e39-4a1b-96a2-af0399fce5a7\"",
+      "status": "PASS",
+      "durationMs": 17756,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 12803
         },
         "memory": {
           "historyLoaded": 0,
@@ -84,23 +81,22 @@
           "toolLatency": []
         },
         "runtime": {
-          "llmPasses": 0,
+          "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 1155
+          "totalExecutionTime": 17755
         }
       }
     },
     {
       "id": "memory_multi_turn_followup",
       "category": "Memory",
-      "status": "FAIL",
-      "durationMs": 1246,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-memory_multi_turn_followup-bdba9e94-4af2-450b-84c5-ca75186c8606\"",
+      "status": "PASS",
+      "durationMs": 17272,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 12005
         },
         "memory": {
           "historyLoaded": 0,
@@ -112,23 +108,22 @@
           "toolLatency": []
         },
         "runtime": {
-          "llmPasses": 0,
+          "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 1246
+          "totalExecutionTime": 17272
         }
       }
     },
     {
       "id": "memory_summary_recall",
       "category": "Memory",
-      "status": "FAIL",
-      "durationMs": 1104,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-memory_summary_recall-88592e83-7f0f-405c-a4c4-0a6b16f83881\"",
+      "status": "PASS",
+      "durationMs": 18204,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 14380
         },
         "memory": {
           "historyLoaded": 0,
@@ -140,93 +135,108 @@
           "toolLatency": []
         },
         "runtime": {
-          "llmPasses": 0,
+          "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 1104
+          "totalExecutionTime": 18202
         }
       }
     },
     {
       "id": "tool_calling_healthtool",
       "category": "Tool Calling",
-      "status": "FAIL",
-      "durationMs": 1134,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_healthtool-9380f580-005c-455d-863e-32d240ba2a51\"",
+      "status": "PASS",
+      "durationMs": 8931,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 3289
         },
         "memory": {
           "historyLoaded": 0,
           "summaryUsed": false
         },
         "tools": {
-          "toolExecuted": [],
-          "toolSuccess": [],
-          "toolLatency": []
+          "toolExecuted": [
+            "HealthTool"
+          ],
+          "toolSuccess": [
+            false
+          ],
+          "toolLatency": [
+            0
+          ]
         },
         "runtime": {
-          "llmPasses": 0,
-          "toolCalls": 0,
-          "totalExecutionTime": 1134
+          "llmPasses": 2,
+          "toolCalls": 1,
+          "totalExecutionTime": 8930
         }
       }
     },
     {
       "id": "tool_calling_timetool",
       "category": "Tool Calling",
-      "status": "FAIL",
-      "durationMs": 1069,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_timetool-8091c3aa-5041-4ed5-bbd0-e7c407b4fc3d\"",
+      "status": "PASS",
+      "durationMs": 15510,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 10532
         },
         "memory": {
           "historyLoaded": 0,
           "summaryUsed": false
         },
         "tools": {
-          "toolExecuted": [],
-          "toolSuccess": [],
-          "toolLatency": []
+          "toolExecuted": [
+            "TimeTool"
+          ],
+          "toolSuccess": [
+            false
+          ],
+          "toolLatency": [
+            0
+          ]
         },
         "runtime": {
-          "llmPasses": 0,
-          "toolCalls": 0,
-          "totalExecutionTime": 1069
+          "llmPasses": 2,
+          "toolCalls": 1,
+          "totalExecutionTime": 15509
         }
       }
     },
     {
       "id": "tool_calling_echotool",
       "category": "Tool Calling",
-      "status": "FAIL",
-      "durationMs": 1104,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_echotool-559f5c66-cfcb-43e2-864d-2259a61aafa4\"",
+      "status": "PASS",
+      "durationMs": 8977,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 2562
         },
         "memory": {
           "historyLoaded": 0,
           "summaryUsed": false
         },
         "tools": {
-          "toolExecuted": [],
-          "toolSuccess": [],
-          "toolLatency": []
+          "toolExecuted": [
+            "EchoTool"
+          ],
+          "toolSuccess": [
+            false
+          ],
+          "toolLatency": [
+            0
+          ]
         },
         "runtime": {
-          "llmPasses": 0,
-          "toolCalls": 0,
-          "totalExecutionTime": 1104
+          "llmPasses": 2,
+          "toolCalls": 1,
+          "totalExecutionTime": 8976
         }
       }
     },
@@ -234,8 +244,8 @@
       "id": "tool_calling_tool_failure",
       "category": "Tool Calling",
       "status": "FAIL",
-      "durationMs": 1152,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_tool_failure-bc32f6c0-14d9-40ab-9540-df609f86f833\"",
+      "durationMs": 2371,
+      "failureReason": "Expected tool not executed: \"EchoTool\"",
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
@@ -254,21 +264,20 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 1152
+          "totalExecutionTime": 2371
         }
       }
     },
     {
       "id": "agent_runtime_no_tool",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 1046,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_no_tool-ca2c8234-c2ce-44a1-8bf4-910388aa4e06\"",
+      "status": "PASS",
+      "durationMs": 7596,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 3456
         },
         "memory": {
           "historyLoaded": 0,
@@ -280,37 +289,42 @@
           "toolLatency": []
         },
         "runtime": {
-          "llmPasses": 0,
+          "llmPasses": 1,
           "toolCalls": 0,
-          "totalExecutionTime": 1046
+          "totalExecutionTime": 7596
         }
       }
     },
     {
       "id": "agent_runtime_single_tool",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 1160,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_single_tool-280bafe6-6f23-4d5f-bf9f-e1cd6b929ebb\"",
+      "status": "PASS",
+      "durationMs": 9829,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 4696
         },
         "memory": {
           "historyLoaded": 0,
           "summaryUsed": false
         },
         "tools": {
-          "toolExecuted": [],
-          "toolSuccess": [],
-          "toolLatency": []
+          "toolExecuted": [
+            "TimeTool"
+          ],
+          "toolSuccess": [
+            false
+          ],
+          "toolLatency": [
+            0
+          ]
         },
         "runtime": {
-          "llmPasses": 0,
-          "toolCalls": 0,
-          "totalExecutionTime": 1160
+          "llmPasses": 2,
+          "toolCalls": 1,
+          "totalExecutionTime": 9829
         }
       }
     },
@@ -318,8 +332,8 @@
       "id": "agent_runtime_multiple_tool",
       "category": "Agent Runtime",
       "status": "FAIL",
-      "durationMs": 1030,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_multiple_tool-519f0099-5fed-4f9f-bde5-020c6c7d7e5d\"",
+      "durationMs": 3424,
+      "failureReason": "Expected tool not executed: \"HealthTool\"",
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
@@ -338,63 +352,79 @@
         "runtime": {
           "llmPasses": 0,
           "toolCalls": 0,
-          "totalExecutionTime": 1030
+          "totalExecutionTime": 3422
         }
       }
     },
     {
       "id": "agent_runtime_max_tool_limit",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 1097,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_max_tool_limit-9a7700cc-bcfb-4feb-bdfe-1e3bfc09ef93\"",
+      "status": "PASS",
+      "durationMs": 7219,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 2411
         },
         "memory": {
           "historyLoaded": 0,
           "summaryUsed": false
         },
         "tools": {
-          "toolExecuted": [],
-          "toolSuccess": [],
-          "toolLatency": []
+          "toolExecuted": [
+            "HealthTool",
+            "HealthTool",
+            "HealthTool"
+          ],
+          "toolSuccess": [
+            false,
+            false,
+            false
+          ],
+          "toolLatency": [
+            0,
+            0,
+            0
+          ]
         },
         "runtime": {
-          "llmPasses": 0,
-          "toolCalls": 0,
-          "totalExecutionTime": 1097
+          "llmPasses": 3,
+          "toolCalls": 3,
+          "totalExecutionTime": 7218
         }
       }
     },
     {
       "id": "agent_runtime_failure_recovery",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 1133,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_failure_recovery-b038b82a-283b-44f2-8d1f-e382caccc876\"",
+      "status": "PASS",
+      "durationMs": 7835,
       "metrics": {
         "retrieval": {
           "denseCandidates": 0,
           "sparseCandidates": 0,
-          "retrievalLatency": 0
+          "retrievalLatency": 1805
         },
         "memory": {
           "historyLoaded": 0,
           "summaryUsed": false
         },
         "tools": {
-          "toolExecuted": [],
-          "toolSuccess": [],
-          "toolLatency": []
+          "toolExecuted": [
+            "EchoTool"
+          ],
+          "toolSuccess": [
+            false
+          ],
+          "toolLatency": [
+            0
+          ]
         },
         "runtime": {
-          "llmPasses": 0,
-          "toolCalls": 0,
-          "totalExecutionTime": 1133
+          "llmPasses": 2,
+          "toolCalls": 1,
+          "totalExecutionTime": 7835
         }
       }
     }
