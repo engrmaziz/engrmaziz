@@ -230,11 +230,10 @@ export class RAGOrchestrator {
     }
 
     // ==========================================
-    // STAGE 4: AGENT ROUTING & EXECUTION
+    // STAGE 4: WORKFLOW ORCHESTRATION & AGENT EXECUTION
     // ==========================================
     try {
-      const { agentRouter } = await import('../agents');
-      const agent = agentRouter.route(ctx);
+      const { workflowRouter, createWorkflowContext } = await import('../workflows');
       
       const agentContext = {
         requestContext: ctx,
@@ -248,11 +247,15 @@ export class RAGOrchestrator {
         trace: ctx.executionContext.trace
       };
       
-      const response = await agent.execute(agentContext);
+      const workflowCtx = createWorkflowContext(ctx, agentContext, trace);
+      const workflow = workflowRouter.route(workflowCtx);
+      const workflowResult = await workflow.execute(workflowCtx);
+      
+      const response = workflowResult.response;
       ctx.response.assistantResponse = response.content;
       ctx.executionContext.metadata = ctx.executionContext.metadata || {};
       ctx.executionContext.metadata.agentContext = {
-         agentId: agent.id,
+         agentId: 'workflow-managed',
          lastLlmModel: response.model || 'unknown'
       };
     } catch (agentErr: any) {
