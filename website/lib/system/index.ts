@@ -6,3 +6,6 @@ export * from './version';
 export * from './health';
 export * from './readiness';
 export * from './startup';
+export * from './runtime';
+export * from './diagnostics';
+export * from './shutdown';

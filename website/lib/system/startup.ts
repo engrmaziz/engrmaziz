@@ -1,5 +1,6 @@
 import { checkHealth } from './health';
 import { checkReadiness } from './readiness';
+import { getSystemVersion } from './version';
 import { telemetryLogger } from '../telemetry';
 
 import { providerRegistry } from '../providers/registry';
@@ -46,6 +47,23 @@ export function validateStartup() {
   if (readiness.status !== 'ready') {
     throw new Error(`Startup failed: Readiness check did not pass. Details: ${JSON.stringify(readiness.dependencies)}`);
   }
+
+  // 4. Print Deterministic Startup Banner
+  const versionInfo = getSystemVersion();
+  const providers = providerRegistry.listProviders().join(', ');
+  const agents = agentRegistry.list().join(', ');
+  const tools = toolRegistry.listDefinitions().map(t => t.name).join(', ');
+
+  console.log('==========================================');
+  console.log(`APPLICATION STARTUP`);
+  console.log('==========================================');
+  console.log(`Version:     ${versionInfo.version}`);
+  console.log(`Commit:      ${versionInfo.commit}`);
+  console.log(`Environment: ${versionInfo.environment}`);
+  console.log(`Providers:   ${providers}`);
+  console.log(`Agents:      ${agents}`);
+  console.log(`Tools:       ${tools}`);
+  console.log('==========================================');
 
   telemetryLogger.log('SYSTEM', 'Startup validation completed successfully');
 }
