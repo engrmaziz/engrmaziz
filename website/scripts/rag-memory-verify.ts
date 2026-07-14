@@ -71,7 +71,7 @@ async function verifyMemorySummarization() {
     assert(recallReq.context.response.assistantResponse.toLowerCase().includes('postgresql'), "LLM successfully recalled fact from the archived summary!");
 
     console.log("\n--- TEST 5: Double Summarization (No Recursive Loss) ---");
-    // Inject 22 more messages (Total 53, 30 summarized, 23 unsummarized)
+    // Inject 22 more messages (Total 55, 30 summarized, 25 unsummarized due to previous tests)
     for (let i = 0; i < 11; i++) {
       await ragMemory.saveUserMessage(sessionId, `We also need to implement Redis caching.`);
       await ragMemory.saveAssistantMessage(sessionId, `Redis caching added to requirements.`);
@@ -80,7 +80,7 @@ async function verifyMemorySummarization() {
     await ragSummary.triggerAsyncSummarization(sessionId);
     
     const conv5 = await ragMemory.loadConversation(sessionId);
-    assert(conv5.summary_message_count === 53, "Message count accurately updated to 53.");
+    assert(conv5.summary_message_count === 55, "Message count accurately updated to 55.");
     assert(conv5.summary.toLowerCase().includes('postgresql') && conv5.summary.toLowerCase().includes('redis'), "Unified summary retained both OLD facts and NEW facts without recursive loss.");
 
     console.log(`\n==========================================`);
