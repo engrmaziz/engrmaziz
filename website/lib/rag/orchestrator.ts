@@ -229,13 +229,33 @@ export class RAGOrchestrator {
     }
 
     // ==========================================
-    // STAGE 4: AGENT RUNTIME EXECUTION
+    // STAGE 4: AGENT ROUTING & EXECUTION
     // ==========================================
     try {
-      const { agentRuntime } = await import('../agent/agent-runtime');
-      await agentRuntime.execute(ctx);
+      const { agentRouter } = await import('../agents');
+      const agent = agentRouter.route(ctx);
+      
+      const agentContext = {
+        requestContext: ctx,
+        conversationHistory: ctx.memory.history,
+        conversationSummary: ctx.memory.summary,
+        retrievalResults: {
+          contextText: ctx.retrieval.retrievedContext,
+          citations: ctx.retrieval.citations
+        },
+        toolResults: ctx.response.toolOutputs,
+        trace: ctx.executionContext.trace
+      };
+      
+      const response = await agent.execute(agentContext);
+      ctx.response.assistantResponse = response.content;
+      ctx.executionContext.metadata = ctx.executionContext.metadata || {};
+      ctx.executionContext.metadata.agentContext = {
+         agentId: agent.id,
+         lastLlmModel: response.model || 'unknown'
+      };
     } catch (agentErr: any) {
-      ctx.executionContext.errors.push(`AgentRuntime Fatal Error: ${agentErr.message}`);
+      ctx.executionContext.errors.push(`Agent Fatal Error: ${agentErr.message}`);
       telemetryLogger.error('AGENT', 'Fatal execution error', agentErr, { requestId });
     }
 
