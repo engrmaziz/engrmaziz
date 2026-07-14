@@ -1,87 +1,100 @@
 import { loadEnvConfig } from '@next/env';
 loadEnvConfig(process.cwd());
 
+import { ragOrchestrator } from '../lib/rag/orchestrator';
+import { ragSummary, ragMemory } from '../lib/rag/memory';
 import { randomUUID } from 'crypto';
-import { ragMemory } from '../lib/rag/memory';
-import { promptBuilder } from '../lib/rag/prompt-builder';
 import { ragDatabase } from '../lib/rag/supabase';
 
-async function verifyMemoryPipeline() {
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function verifyMemorySummarization() {
   console.log("\n==========================================");
-  console.log("ENTERPRISE MEMORY END-TO-END VERIFICATION");
+  console.log("LONG-TERM MEMORY & SUMMARIZATION VERIFICATION");
   console.log("==========================================\n");
 
-  const sessionId = randomUUID();
-  console.log(`[1] Creating conversation: ${sessionId}`);
-  
-  const conversation = await ragMemory.createConversation(sessionId);
-  if (!conversation) {
-    throw new Error("Failed to create conversation.");
+  let passed = 0;
+  let failed = 0;
+
+  function assert(condition: boolean, msg: string) {
+    if (condition) {
+      console.log(`[✓] ${msg}`);
+      passed++;
+    } else {
+      console.error(`[✗] ${msg}`);
+      failed++;
+    }
   }
 
-  console.log(`[2] Simulating API User Turn 1`);
-  const query1 = "What is AegisFlow architecture?";
-  
-  // Save User message
-  await ragMemory.saveUserMessage(sessionId, query1);
-  console.log(` ✓ User message saved: "${query1}"`);
+  try {
+    const sessionId = randomUUID();
+    
+    console.log("--- TEST 1: Under Limit ---");
+    // Insert 5 messages manually
+    await ragMemory.createConversation(sessionId);
+    for (let i = 0; i < 5; i++) {
+      await ragMemory.saveUserMessage(sessionId, `Hello ${i}`);
+      await ragMemory.saveAssistantMessage(sessionId, `Hi ${i}`);
+    }
+    
+    // Trigger summarizer
+    await ragSummary.triggerAsyncSummarization(sessionId);
+    const conv1 = await ragMemory.loadConversation(sessionId);
+    assert(!conv1.summary, "No summary generated for short conversation.");
+    assert(conv1.summary_message_count === 0 || conv1.summary_message_count === null, "Message count remains 0.");
 
-  // Retrieve Context Dummy (to simulate retrieval layer working identically)
-  const contextText = "[DOCUMENT: Architecture.md | URL: /arch]\n---\nAegisFlow is our core routing framework.";
-  const citations = [{ title: "Architecture", url: "/arch", category: "engineering" }];
+    console.log("\n--- TEST 2: Exceeds Limit ---");
+    // Insert 20 more messages to cross the 20 threshold
+    for (let i = 0; i < 10; i++) {
+      await ragMemory.saveUserMessage(sessionId, `We decided to use PostgreSQL for the database.`);
+      await ragMemory.saveAssistantMessage(sessionId, `Acknowledged, PostgreSQL recorded as the database.`);
+    }
+    await ragSummary.triggerAsyncSummarization(sessionId);
+    
+    const conv2 = await ragMemory.loadConversation(sessionId);
+    assert(!!conv2.summary, "Summary successfully generated once limit exceeded.");
+    assert(conv2.summary_message_count === 30, "Summary message count tracks exact number of archived messages (30).");
+    assert(conv2.summary.toLowerCase().includes('postgresql'), "Summary successfully preserved critical factual decisions.");
 
-  // Fetch recent messages to build prompt
-  let recentMessages = await ragMemory.loadRecentMessages(sessionId, 6);
-  if (recentMessages.length !== 1) {
-    throw new Error("Message count mismatch after user insert.");
+    console.log("\n--- TEST 3: Conversation Continues ---");
+    await ragMemory.saveUserMessage(sessionId, "Are there any unresolved issues?");
+    await ragSummary.triggerAsyncSummarization(sessionId);
+    
+    const conv3 = await ragMemory.loadConversation(sessionId);
+    assert(conv3.summary_message_count === 30, "Summarizer ignored the new message because it's under the threshold.");
+    
+    console.log("\n--- TEST 4: Context Recall ---");
+    await sleep(2000); // safety buffer for rate limits
+    const recallReq = await ragOrchestrator.execute({ query: "What database did we decide to use?", sessionId });
+    assert(recallReq.context.memory.history.length === 1, "Orchestrator fetched exactly the 1 unsummarized message.");
+    assert(!!recallReq.context.memory.summary, "Orchestrator successfully loaded the unified summary into the PromptBuilder.");
+    assert(recallReq.context.response.assistantResponse.toLowerCase().includes('postgresql'), "LLM successfully recalled fact from the archived summary!");
+
+    console.log("\n--- TEST 5: Double Summarization (No Recursive Loss) ---");
+    // Inject 22 more messages (Total 53, 30 summarized, 23 unsummarized)
+    for (let i = 0; i < 11; i++) {
+      await ragMemory.saveUserMessage(sessionId, `We also need to implement Redis caching.`);
+      await ragMemory.saveAssistantMessage(sessionId, `Redis caching added to requirements.`);
+    }
+    await sleep(2000); // LLM buffer
+    await ragSummary.triggerAsyncSummarization(sessionId);
+    
+    const conv5 = await ragMemory.loadConversation(sessionId);
+    assert(conv5.summary_message_count === 53, "Message count accurately updated to 53.");
+    assert(conv5.summary.toLowerCase().includes('postgresql') && conv5.summary.toLowerCase().includes('redis'), "Unified summary retained both OLD facts and NEW facts without recursive loss.");
+
+    console.log(`\n==========================================`);
+    if (failed === 0) {
+      console.log(`SUCCESS: ${passed}/${passed} memory checks passed. Pruning limits are robust.`);
+      process.exit(0);
+    } else {
+      console.log(`FAILED: ${failed} checks failed.`);
+      process.exit(1);
+    }
+  } catch (error: any) {
+    console.error("\n[!] FATAL TEST ERROR:", error);
+    process.exit(1);
   }
-  console.log(` ✓ Retrieved ${recentMessages.length} messages from DB.`);
-
-  // Build prompt
-  let messagesPayload = promptBuilder.buildPrompt(conversation.summary, recentMessages.slice(0, -1), contextText, query1);
-  if (messagesPayload[0].role !== 'system' || messagesPayload[messagesPayload.length-1].role !== 'user') {
-    throw new Error("Prompt builder order failed.");
-  }
-  console.log(` ✓ Prompt correctly assembled: System -> Summary -> Context -> History -> User`);
-
-  const answer1 = "AegisFlow is a robust routing framework.";
-  await ragMemory.saveAssistantMessage(sessionId, answer1, citations, "mock-llm", 400);
-  console.log(` ✓ Assistant response saved.\n`);
-
-  console.log(`[3] Simulating API User Turn 2 (Follow-up)`);
-  const query2 = "What framework is it based on?";
-  await ragMemory.saveUserMessage(sessionId, query2);
-  console.log(` ✓ User follow-up saved: "${query2}"`);
-
-  // Retrieve Context
-  const contextText2 = "[DOCUMENT: Architecture.md | URL: /arch]\n---\nAegisFlow relies on LangGraph.";
-
-  recentMessages = await ragMemory.loadRecentMessages(sessionId, 6);
-  if (recentMessages.length !== 3) {
-    throw new Error("Follow-up message count mismatch.");
-  }
-  
-  messagesPayload = promptBuilder.buildPrompt(conversation.summary, recentMessages.slice(0, -1), contextText2, query2);
-  const sysContent = messagesPayload[0].content;
-  const historyContent = messagesPayload.map(m => m.content).join(" ");
-  
-  if (!historyContent.includes(answer1)) {
-    throw new Error("Prompt payload did not contain previous conversation memory.");
-  }
-  
-  const answer2 = "It is based on LangGraph.";
-  await ragMemory.saveAssistantMessage(sessionId, answer2, citations, "mock-llm", 300);
-  console.log(` ✓ Assistant follow-up response saved. Prompt contained previous context.\n`);
-
-  console.log(`[4] Validation Checks passed`);
-  console.log(` ✓ Conversations persist`);
-  console.log(` ✓ Messages persist`);
-  console.log(` ✓ Follow-ups reference memory`);
-  console.log(` ✓ Retrieval layer completely bypassed by builder`);
-  console.log(` ✓ Prompt order strict\n`);
-  
-  console.log("SUCCESS: Enterprise Memory Phase 1 Verified.");
-  process.exit(0);
 }
 
-verifyMemoryPipeline().catch(console.error);
+verifyMemorySummarization().catch(console.error);

@@ -393,6 +393,14 @@ export class RAGDatabase {
     return rows;
   }
 
+  async getUnsummarizedMessages(conversationId: string, offset: number) {
+    const { rows } = await pgPool.query(
+      'SELECT * FROM public.messages WHERE conversation_id = $1 ORDER BY created_at ASC OFFSET $2', 
+      [conversationId, offset]
+    );
+    return rows;
+  }
+
   async insertMessage(conversationId: string, role: string, content: string, citations: any = null, model: string | null = null, latency: number | null = null) {
     const query = `
       INSERT INTO public.messages (conversation_id, role, content, citations, model, latency)
@@ -410,9 +418,9 @@ export class RAGDatabase {
     return rows[0];
   }
 
-  async updateConversationSummary(id: string, summary: string) {
-    const query = `UPDATE public.conversations SET summary = $2, updated_at = NOW() WHERE id = $1 RETURNING *`;
-    const { rows } = await pgPool.query(query, [id, summary]);
+  async updateConversationSummary(id: string, summary: string, messageCount: number) {
+    const query = `UPDATE public.conversations SET summary = $2, summary_message_count = $3, summary_updated_at = NOW(), updated_at = NOW() WHERE id = $1 RETURNING *`;
+    const { rows } = await pgPool.query(query, [id, summary, messageCount]);
     return rows[0];
   }
 }

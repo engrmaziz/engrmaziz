@@ -138,12 +138,15 @@ export class RAGOrchestrator {
     const startMemory = Date.now();
     try {
       if (sessionId) {
-        conversation = await ragMemory.loadConversation(sessionId);
-        if (!conversation) {
-          conversation = await ragMemory.createConversation(sessionId);
+        let conv = await ragMemory.loadConversation(sessionId);
+        if (!conv) {
+          conv = await ragMemory.createConversation(sessionId);
         }
-        ctx.memory.summary = conversation?.summary || undefined;
-        ctx.memory.history = await ragMemory.loadRecentMessages(sessionId, 6);
+        
+        ctx.memory.summary = conv?.summary || undefined;
+        const summarizedCount = conv?.summary_message_count || 0;
+        ctx.memory.history = await ragMemory.loadUnsummarizedMessages(sessionId, summarizedCount);
+        
         ctx.executionContext.diagnostics.memoryMessagesLoaded = ctx.memory.history.length;
         ctx.executionContext.diagnostics.summaryUsed = !!ctx.memory.summary;
 
@@ -282,6 +285,10 @@ export class RAGOrchestrator {
       if (sessionId && ctx.response.assistantResponse) {
         await ragMemory.saveUserMessage(sessionId, queryText);
         await ragMemory.saveAssistantMessage(sessionId, ctx.response.assistantResponse, ctx.retrieval.citations, llmModel, ctx.executionContext.telemetry.llm.durationMs);
+        
+        // Fire-and-forget memory pruning evaluation (0 ms synchronous penalty)
+        const { ragSummary } = await import('./memory');
+        ragSummary.triggerAsyncSummarization(sessionId).catch(console.error);
       }
       
       if (queryVector.length > 0 && ctx.response.assistantResponse) {
