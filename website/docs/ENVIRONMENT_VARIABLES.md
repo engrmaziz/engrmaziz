@@ -43,7 +43,7 @@ The project utilizes `zod` for strict runtime environment variable validation.
 | Variable | Required | Client/Server | Purpose | Example |
 |---|---|---|---|---|
 | `JINA_API_KEY` | Yes | Server | Key for generating dense vectors | `jina_...` |
-| `JINA_EMBEDDING_MODEL` | No | Server | Defaults to jina-embeddings-v2-base-en | `jina-embeddings-v2-base-en` |
+| `JINA_EMBEDDING_MODEL` | No | Server | Defaults to jina-embeddings-v4 | `jina-embeddings-v4` |
 
 ## Resend (Email Automation)
 

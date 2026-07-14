@@ -4,7 +4,7 @@
 
 **AI Engineer · Enterprise Backend Architect · Registered Engineer (PEC)**
 
-Lahore / Kasur, Pakistan · Open to Staff/Principal Roles & Enterprise Consulting
+Lahore / Kasur, Pakistan · Open to AI/ML Roles & Enterprise Consulting
 
 *I architect deterministic AI systems and high-throughput backend infrastructure.*
 *Zero hallucinations. Sub-second latency. Production-grade reliability.*

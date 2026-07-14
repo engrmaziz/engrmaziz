@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Antigravity Website Portfolio & Enterprise RAG Engine
 
-## Getting Started
+This is the Next.js production codebase for Musharraf Aziz's professional portfolio and AI Engineering showcase.
 
-First, run the development server:
+---
 
+## 🛠 Tech Stack
+*   **Frontend & Routing**: Next.js 15 (App Router, Server Actions, Client Components)
+*   **Styling**: Vanilla CSS (Tailored glassmorphism, responsive designs)
+*   **Database & Vectors**: Supabase, PostgreSQL, `pgvector`
+*   **Vector Embeddings**: Jina Embeddings v4 (1024-dimension MRL truncation)
+*   **Reranking**: Jina Rerank v2 API / Multi-Factor Local Fallback
+*   **LLM Inference**: Groq LPU Inference (GPT-OSS models)
+
+---
+
+## 🔍 RAG Infrastructure CLI Commands
+
+Our system includes production CLI commands to index, monitor, and query the knowledge base locally:
+
+### 1. Ingestion Crawl Indexer
+Crawls all markdown files under `../workspace/knowledge-base/markdown/` and index them into the database:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run rag:index
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Check System Health & Metrics
+Query the database metrics, active embedding model details, and latency pings:
+```bash
+npm run rag:status
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Context Search Tool
+Test hybrid search queries and examine relevance scoring:
+```bash
+npm run rag:search "Your technical search query here"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📂 Architecture Guides
+For detailed documentation on the RAG system pipelines, Reciprocal Rank Fusion formulas, element chunkers, semantic caching, and logs, see [RAG_ARCHITECTURE.md](docs/RAG_ARCHITECTURE.md).

@@ -127,15 +127,14 @@ export class RAGOrchestrator {
         context.telemetry.totalMs = Date.now() - startTotal;
         this.log('Cache', requestId, context.telemetry.totalMs, true, 'Cache Hit');
         
-        ragDatabase.insertLog({
-          session_id: sessionId,
-          query_text: queryText,
-          query_embedding: queryVector,
-          response_text: cached.responseText,
-          latency_ms: context.telemetry.totalMs,
-          llm_model: 'Semantic Cache',
-          metadata: { cacheHit: true, similarity: cached.similarity, originalQuery: queryText },
-          cache_hit: true
+        ragDatabase.logAnalytics({
+          sessionId: sessionId || undefined,
+          queryText: queryText,
+          queryEmbedding: queryVector,
+          responseText: cached.responseText,
+          latencyMs: context.telemetry.totalMs || 0,
+          llmModel: 'Semantic Cache',
+          metadata: { cacheHit: true, similarity: cached.similarity, originalQuery: queryText }
         }).catch(err => console.error('[RAG] Failed to log cached telemetry:', err));
 
         return { answer: cached.responseText, citations: cached.metadata?.citations || [], cacheHit: true, latencyMs: context.telemetry.totalMs };
@@ -232,20 +231,19 @@ export class RAGOrchestrator {
       const completionTokens = llmRes?.usage?.completionTokens || 0;
       const cost = ((promptTokens * 0.50) + (completionTokens * 0.80)) / 1000000;
 
-      ragDatabase.insertLog({
-        session_id: sessionId,
-        query_text: queryText,
-        query_embedding: queryVector,
-        response_text: context.assistantResponse,
-        latency_ms: context.telemetry.totalMs,
-        llm_model: llmRes?.model || 'unknown',
-        prompt_tokens: promptTokens,
-        completion_tokens: completionTokens,
-        total_tokens: promptTokens + completionTokens,
+      ragDatabase.logAnalytics({
+        sessionId: sessionId || undefined,
+        queryText: queryText,
+        queryEmbedding: queryVector,
+        responseText: context.assistantResponse,
+        latencyMs: context.telemetry.totalMs || 0,
+        llmModel: llmRes?.model || 'unknown',
+        promptTokens: promptTokens,
+        completionTokens: completionTokens,
+        totalTokens: promptTokens + completionTokens,
         cost: cost,
-        metadata: { citations: context.citations, originalQuery: queryText, telemetry: context.telemetry },
-        cache_hit: false
-      }).catch(() => {});
+        metadata: { citations: context.citations, originalQuery: queryText, telemetry: context.telemetry }
+      }).catch((err) => console.error('[RAG] Failed to log final telemetry:', err));
     }
 
     this.log('Total', requestId, context.telemetry.totalMs, true);

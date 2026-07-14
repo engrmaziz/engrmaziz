@@ -11,7 +11,7 @@ const serverSchema = z.object({
   GPT_OSS_20B_MODEL: z.string().default('openai/gpt-oss-20b'),
   GPT_OSS_120B_MODEL: z.string().default('openai/gpt-oss-120b'),
   JINA_API_KEY: z.string().min(1).default('dummy'),
-  JINA_EMBEDDING_MODEL: z.string().default('jina-embeddings-v2-base-en'),
+  JINA_EMBEDDING_MODEL: z.string().default('jina-embeddings-v4'),
   RESEND_API_KEY: z.string().min(1).default('dummy'),
   RESEND_FROM_EMAIL: z.string().email().optional(),
   RESEND_REPLY_TO: z.string().email().optional(),

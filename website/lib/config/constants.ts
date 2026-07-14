@@ -8,7 +8,7 @@ export const CONFIG = {
     },
     embeddings: {
       provider: 'jina-embeddings',
-      dimensions: 768
+      dimensions: 1024
     }
   },
   email: {

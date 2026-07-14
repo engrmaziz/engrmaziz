@@ -7,6 +7,7 @@ import { Navbar } from "@/components/navigation/Navbar";
 import { Footer } from "@/components/navigation/Footer";
 import { ScrollProgress } from "@/components/navigation/ScrollProgress";
 import { generatePersonSchema, generateWebSiteSchema, siteMetadata } from "@/lib/seo";
+import { RAGXIndicator } from "@/components/rag/RAGXIndicator";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -111,6 +112,7 @@ export default function RootLayout({
           <AppShell navbar={<Navbar />} footer={<Footer />}>
             {children}
           </AppShell>
+          <RAGXIndicator />
         </ThemeProvider>
       </body>
     </html>

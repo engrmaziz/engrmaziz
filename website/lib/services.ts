@@ -59,7 +59,7 @@ function parseMarkdownFile(filePath: string): BaseContent {
   // Convert backslashes to forward slashes for URLs
   const normalizedPath = relativePath.replace(/\\/g, '/');
   
-  let slugArray = normalizedPath.replace(/\.md$/, '').split('/');
+  const slugArray = normalizedPath.replace(/\.md$/, '').split('/');
   if (slugArray[slugArray.length - 1] === 'index') {
     slugArray.pop();
   }

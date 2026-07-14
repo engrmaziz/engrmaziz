@@ -53,7 +53,7 @@ export class IngestionPipeline {
         });
 
         await db.insert('embeddings', {
-          embedding_model: 'jina-embeddings-v2-base-en',
+          embedding_model: 'jina-embeddings-v4',
           document_id: docRecord.id,
           chunk_id: chunkRecord.id,
           vector: vector,
