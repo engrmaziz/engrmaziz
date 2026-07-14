@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { telemetryLogger } from '../telemetry';
 import { providerFactory } from '../providers';
+import { systemConfig } from '../system';
 
 export interface RerankResult {
   index: number;
@@ -22,7 +23,7 @@ export class RAGReranker {
     if (searchResults.length === 0) return [];
     
     // Check if reranker is enabled in env settings
-    const enabled = process.env.RERANKING_ENABLED !== 'false';
+    const enabled = systemConfig.RERANKING_ENABLED;
     if (!enabled) {
       telemetryLogger.log('RAG', 'Reranker disabled. Falling back to multi-factor local scoring.');
       return this.localRerank(query, searchResults, topN);

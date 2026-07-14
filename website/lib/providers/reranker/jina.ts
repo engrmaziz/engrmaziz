@@ -1,5 +1,6 @@
 import { RerankerProvider, Document } from '../types';
 import { ProviderExecutionError, ProviderConfigurationError } from '../errors';
+import { systemConfig } from '../../system/config';
 
 export class JinaRerankerProvider implements RerankerProvider {
   readonly name = 'JinaRerankerProvider';
@@ -8,7 +9,7 @@ export class JinaRerankerProvider implements RerankerProvider {
   private model = 'jina-reranker-v2-base-multilingual';
 
   constructor() {
-    this.apiKey = process.env.JINA_API_KEY || '';
+    this.apiKey = systemConfig.JINA_API_KEY || '';
   }
 
   async rerank(query: string, documents: Document[]): Promise<Document[]> {

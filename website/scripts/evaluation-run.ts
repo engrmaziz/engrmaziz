@@ -2,8 +2,10 @@ import { loadEnvConfig } from '@next/env';
 loadEnvConfig(process.cwd());
 
 import { evaluationDataset, EvaluationRunner, generateReport } from '../lib/evaluation';
+import { validateStartup } from '../lib/system';
 
 async function executeEvaluation() {
+  validateStartup();
   console.log('==========================================');
   console.log('ENTERPRISE EVALUATION & REGRESSION SUITE');
   console.log('==========================================');

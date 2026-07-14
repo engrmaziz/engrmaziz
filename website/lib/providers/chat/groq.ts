@@ -1,5 +1,6 @@
-import { ChatProvider, ChatRequest, ChatResponse } from '../types';
+import { ChatProvider, ChatRequest, ChatResponse, ChatMessage } from '../types';
 import { ProviderExecutionError, ProviderConfigurationError } from '../errors';
+import { systemConfig } from '../../system';
 
 export class GroqChatProvider implements ChatProvider {
   readonly name = 'GroqChatProvider';
@@ -7,7 +8,7 @@ export class GroqChatProvider implements ChatProvider {
   private endpoint = 'https://api.groq.com/openai/v1/chat/completions';
 
   constructor() {
-    this.apiKey = process.env.GROQ_API_KEY || '';
+    this.apiKey = systemConfig.GROQ_API_KEY || '';
   }
 
   async generate(request: ChatRequest): Promise<ChatResponse> {
@@ -16,8 +17,8 @@ export class GroqChatProvider implements ChatProvider {
     }
 
     const model = request.messages 
-      ? process.env.DEFAULT_REASONING_MODEL || 'openai/gpt-oss-120b'
-      : process.env.DEFAULT_FAST_MODEL || 'openai/gpt-oss-20b';
+      ? systemConfig.DEFAULT_REASONING_MODEL
+      : systemConfig.DEFAULT_FAST_MODEL;
 
     const messages = request.messages || [{ role: 'user', content: request.prompt }];
 

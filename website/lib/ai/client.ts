@@ -2,6 +2,7 @@
 import { AIProvider, AIChatMessage, AIChatResponse } from './provider';
 import { CONFIG } from '@/lib/config/constants';
 import { logger } from '@/lib/utils/logger';
+import { systemConfig } from '../system';
 
 // Default mock/stub provider for sandbox/test environments
 export class DefaultAIProvider implements AIProvider {
@@ -33,17 +34,17 @@ export class GroqProvider implements AIProvider {
   private endpoint = 'https://api.groq.com/openai/v1/chat/completions';
 
   constructor() {
-    this.apiKey = process.env.GROQ_API_KEY || '';
+    this.apiKey = systemConfig.GROQ_API_KEY || '';
   }
 
   async generateSimpleResponse(prompt: string, context?: any): Promise<AIChatResponse> {
-    const model = process.env.DEFAULT_FAST_MODEL || CONFIG.ai.models.fast || 'openai/gpt-oss-20b';
+    const model = systemConfig.DEFAULT_FAST_MODEL || CONFIG.ai.models.fast || 'openai/gpt-oss-20b';
     const messages: AIChatMessage[] = [{ role: 'user', content: prompt }];
     return this.callCompletions(model, messages);
   }
 
   async generateComplexResponse(messages: AIChatMessage[], context?: any): Promise<AIChatResponse> {
-    const model = process.env.DEFAULT_REASONING_MODEL || CONFIG.ai.models.reasoning || 'openai/gpt-oss-120b';
+    const model = systemConfig.DEFAULT_REASONING_MODEL || CONFIG.ai.models.reasoning || 'openai/gpt-oss-120b';
     return this.callCompletions(model, messages);
   }
 
@@ -96,7 +97,7 @@ export class GroqProvider implements AIProvider {
 }
 
 export function createAIClient(): AIProvider {
-  if (process.env.GROQ_API_KEY) {
+  if (systemConfig.GROQ_API_KEY) {
     return new GroqProvider();
   }
   return new DefaultAIProvider();

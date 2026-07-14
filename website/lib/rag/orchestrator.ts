@@ -8,6 +8,7 @@ import { ragCache } from './cache';
 import { ragMemory } from './memory';
 import { promptBuilder } from './prompt-builder';
 import { RequestTrace, telemetryLogger } from '../telemetry';
+import { systemConfig } from '../system';
 
 export interface RequestContext {
   request: {
@@ -98,7 +99,7 @@ export class RAGOrchestrator {
         versions: {
           pipeline: '1.2.0',
           prompt: '1.0.0',
-          embeddingModel: process.env.EMBEDDING_MODEL || 'jina-embeddings-v4',
+          embeddingModel: systemConfig.EMBEDDING_MODEL,
           rerankerVersion: 'local-rrf-fallback',
           retrieverVersion: '1.0.0'
         },

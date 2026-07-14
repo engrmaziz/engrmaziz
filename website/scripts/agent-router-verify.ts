@@ -1,7 +1,9 @@
 import { agentRegistry, agentRouter } from '../lib/agents';
+import { validateStartup } from '../lib/system';
 import { logger } from '../lib/utils/logger';
 
 async function verifyAgentRouter() {
+  validateStartup();
   logger.info('Starting Agent Router Verification...');
 
   // 1. Agent registration succeeds

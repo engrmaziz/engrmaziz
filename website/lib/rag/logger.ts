@@ -1,5 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-function-type */
+import { systemConfig } from '../system/config';
+
+type LogLevel = 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
 
 export interface LogContext {
   [key: string]: any;
@@ -22,7 +24,7 @@ export class RAGLogger {
   }
 
   debug(message: string, context?: LogContext) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (systemConfig.NODE_ENV !== 'production') {
       console.debug(this.formatMessage('debug', message, context));
     }
   }

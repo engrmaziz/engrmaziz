@@ -1,5 +1,6 @@
 import { EmbeddingProvider } from '../types';
 import { ProviderExecutionError, ProviderConfigurationError } from '../errors';
+import { systemConfig } from '../../system/config';
 import { createLogger } from '../../rag/logger';
 
 const log = createLogger('JinaEmbeddingProvider');
@@ -11,8 +12,8 @@ export class JinaEmbeddingProvider implements EmbeddingProvider {
   private endpoint = 'https://api.jina.ai/v1/embeddings';
 
   constructor() {
-    this.apiKey = process.env.JINA_API_KEY || '';
-    this.model = process.env.JINA_EMBEDDING_MODEL || 'jina-embeddings-v4';
+    this.apiKey = systemConfig.JINA_API_KEY || '';
+    this.model = systemConfig.JINA_EMBEDDING_MODEL;
   }
 
   async embed(text: string): Promise<number[]> {

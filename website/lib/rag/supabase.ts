@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Pool } from 'pg';
+import { systemConfig } from '../system';
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const url = systemConfig.NEXT_PUBLIC_SUPABASE_URL || '';
 const projectRef = url.match(/https:\/\/([a-z0-9]+)\.supabase\.co/)?.[1] || 'mrtfycddgwpvezbaxbdl';
 const username = `postgres.${projectRef}`;
-const password = process.env.SUPABASE_DB_PASSWORD || 'Ptcl@2728229';
+const password = systemConfig.SUPABASE_DB_PASSWORD || '';
 const host = `aws-0-ap-northeast-1.pooler.supabase.com`;
 const connectionString = `postgresql://${username}:${password}@${host}:5432/postgres`;
 
+// Use service role key if available for backend ops
+const key = systemConfig.SUPABASE_SERVICE_ROLE_KEY || 'dummy';
 // Export a single connection pool for the server
 export const pgPool = new Pool({
   connectionString,

@@ -4,6 +4,8 @@ import { ragDatabase } from './supabase';
 import { ragReranker } from './reranker';
 import { telemetryLogger } from '../telemetry';
 import { ragContextBuilder } from './context-builder';
+import { providerFactory } from '../providers';
+import { systemConfig } from '../system';
 
 export interface RetrievedChunk {
   chunkId: string;
@@ -164,7 +166,7 @@ export class RAGRetriever {
       // 7. Build optimized context block and extract citations using the Context Builder
       const { contextText, citations } = ragContextBuilder.buildContext(
         finalChunks as any,
-        parseInt(process.env.RAG_MAX_CONTEXT_TOKENS || '6000', 10)
+        systemConfig.RAG_MAX_CONTEXT_TOKENS
       );
 
       // --- 8. CRAG (Corrective RAG) Context Evaluation ---

@@ -4,6 +4,7 @@ import { ragChunker } from './chunker';
 import { ragEmbedder } from './embedder';
 import { ragDatabase } from './supabase';
 import { createLogger } from './logger';
+import { systemConfig } from '../system';
 import * as crypto from 'crypto';
 
 const log = createLogger('Pipeline');
@@ -77,8 +78,8 @@ export class RAGPipeline {
 
     try {
       // 4. Semantic Chunking
-      const maxTokens = parseInt(process.env.RAG_CHUNK_SIZE || '800', 10);
-      const overlapTokens = parseInt(process.env.RAG_CHUNK_OVERLAP || '120', 10);
+      const maxTokens = systemConfig.RAG_CHUNK_SIZE;
+      const overlapTokens = systemConfig.RAG_CHUNK_OVERLAP;
       
       const chunks = ragChunker.chunk(parsed.content, parsed.documentType, maxTokens, overlapTokens);
       log.info(`Semantic split complete: ${chunks.length} chunks generated.`);
@@ -158,7 +159,7 @@ export class RAGPipeline {
         }));
 
         const dbEmbeddingsToInsert = vectors.map((vector, idx) => ({
-          embedding_model: process.env.JINA_EMBEDDING_MODEL || 'jina-embeddings-v4',
+          embedding_model: systemConfig.JINA_EMBEDDING_MODEL,
           document_id: docRecord!.id!,
           vector,
           version: documentMetadata.version,

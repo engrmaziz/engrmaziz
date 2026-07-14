@@ -1,7 +1,9 @@
 import { providerRegistry, providerFactory, ProviderNotRegisteredError, ProviderConfigurationError } from '../lib/providers';
+import { validateStartup } from '../lib/system';
 import { logger } from '../lib/utils/logger';
 
 async function verifyProviders() {
+  validateStartup();
   logger.info('Starting Provider Abstraction Layer Verification...');
 
   // 1. Verify registry contents

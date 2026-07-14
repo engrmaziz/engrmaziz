@@ -1,22 +1,13 @@
 import { ChatProvider, EmbeddingProvider, RerankerProvider } from './types';
 import { providerRegistry } from './registry';
 import { ProviderConfigurationError } from './errors';
+import { systemConfig } from '../system';
 
-// Initialize the registry
-import { GroqChatProvider } from './chat/groq';
-import { DefaultChatProvider } from './chat/default';
-import { JinaEmbeddingProvider } from './embedding/jina';
-import { JinaRerankerProvider } from './reranker/jina';
-
-// Register available providers
-providerRegistry.registerProvider('groq', new GroqChatProvider());
-providerRegistry.registerProvider('default', new DefaultChatProvider());
-providerRegistry.registerProvider('jina_embedding', new JinaEmbeddingProvider());
-providerRegistry.registerProvider('jina_reranker', new JinaRerankerProvider());
+// Removed automatic registration. Handled by system/startup.ts
 
 export class ProviderFactory {
   getChatProvider(): ChatProvider {
-    const providerId = process.env.CHAT_PROVIDER || 'default';
+    const providerId = systemConfig.CHAT_PROVIDER;
     try {
       return providerRegistry.getProvider<ChatProvider>(providerId);
     } catch (e) {
@@ -25,7 +16,7 @@ export class ProviderFactory {
   }
 
   getEmbeddingProvider(): EmbeddingProvider {
-    const providerId = process.env.EMBEDDING_PROVIDER || 'jina_embedding';
+    const providerId = systemConfig.EMBEDDING_PROVIDER;
     try {
       return providerRegistry.getProvider<EmbeddingProvider>(providerId);
     } catch (e) {
@@ -34,7 +25,7 @@ export class ProviderFactory {
   }
 
   getRerankerProvider(): RerankerProvider {
-    const providerId = process.env.RERANKER_PROVIDER || 'jina_reranker';
+    const providerId = systemConfig.RERANKER_PROVIDER;
     try {
       return providerRegistry.getProvider<RerankerProvider>(providerId);
     } catch (e) {
