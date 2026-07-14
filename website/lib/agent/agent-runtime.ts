@@ -175,6 +175,18 @@ export class AgentRuntime {
       ctx.finishedAt = Date.now();
       requestContext.executionContext.errors.push(`AgentRuntime Exception: ${err.message}`);
       this.transition(ctx, AgentState.ERROR);
+
+      (requestContext.executionContext as any).metadata = requestContext.executionContext.metadata || {};
+      (requestContext.executionContext as any).metadata.agentContext = {
+        executionId: ctx.executionId,
+        startedAt: ctx.startedAt,
+        finishedAt: ctx.finishedAt,
+        terminationReason: ctx.terminationReason,
+        toolCallsExecuted: ctx.toolCallsExecuted,
+        llmPassesExecuted: ctx.llmPassesExecuted,
+        stateTransitions: ctx.stateTransitions,
+        lastLlmModel: (requestContext as any)._lastLlmModel
+      };
     }
   }
 }
