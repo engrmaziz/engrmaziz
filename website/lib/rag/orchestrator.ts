@@ -46,6 +46,8 @@ export interface RequestContext {
       retrieval: StageTelemetry;
       promptAssembly: StageTelemetry;
       llm: StageTelemetry;
+      toolPlanning?: StageTelemetry;
+      toolExecution?: StageTelemetry;
       persistence: StageTelemetry;
     };
     flags: Record<string, boolean>;
@@ -262,7 +264,7 @@ export class RAGOrchestrator {
     }
 
     // ==========================================
-    // STAGE 4: LLM INVOCATION
+    // STAGE 4: LLM INVOCATION (FIRST PASS)
     // ==========================================
     const startLlm = Date.now();
     let llmRes: any;
@@ -272,7 +274,6 @@ export class RAGOrchestrator {
       
       ctx.executionContext.diagnostics.promptTokens = llmRes?.usage?.promptTokens || 0;
       ctx.executionContext.diagnostics.completionTokens = llmRes?.usage?.completionTokens || 0;
-      ctx.executionContext.diagnostics.totalTokens = (llmRes?.usage?.promptTokens || 0) + (llmRes?.usage?.completionTokens || 0);
 
       ctx.executionContext.telemetry.llm.durationMs = Date.now() - startLlm;
       ctx.executionContext.telemetry.llm.status = 'SUCCESS';
@@ -284,6 +285,58 @@ export class RAGOrchestrator {
       this.log('LLM', requestId, ctx.executionContext.telemetry.llm.durationMs, 'ERROR', err.message);
       throw err;
     }
+
+    // ==========================================
+    // STAGE 4.5: TOOL CALLING
+    // ==========================================
+    const startPlanner = Date.now();
+    ctx.executionContext.telemetry.toolPlanning = { status: 'PENDING', durationMs: 0 };
+    ctx.executionContext.telemetry.toolExecution = { status: 'PENDING', durationMs: 0 };
+
+    try {
+      const { toolPlanner } = await import('../tools/planner');
+      const { toolExecutor } = await import('../tools/executor');
+      
+      // Deterministic planning based on query
+      const toolCall = await toolPlanner.plan(queryText, ctx.response.assistantResponse);
+      ctx.executionContext.telemetry.toolPlanning.durationMs = Date.now() - startPlanner;
+      ctx.executionContext.telemetry.toolPlanning.status = toolCall ? 'SUCCESS' : 'SKIPPED';
+      
+      if (toolCall) {
+        this.log('ToolPlanner', requestId, ctx.executionContext.telemetry.toolPlanning.durationMs, 'SUCCESS', `Chose tool ${toolCall.tool}`);
+        
+        const startExec = Date.now();
+        const toolResult = await toolExecutor.execute(toolCall, requestId);
+        ctx.response.toolOutputs.push(toolResult);
+        
+        ctx.executionContext.telemetry.toolExecution.durationMs = Date.now() - startExec;
+        ctx.executionContext.telemetry.toolExecution.status = toolResult.success ? 'SUCCESS' : 'ERROR';
+        this.log('ToolExecution', requestId, ctx.executionContext.telemetry.toolExecution.durationMs, toolResult.success ? 'SUCCESS' : 'ERROR', `Executed ${toolCall.tool}`);
+
+        // Optional Second LLM Pass
+        const startLlm2 = Date.now();
+        ctx.prompt.messages = promptBuilder.buildPrompt(
+          ctx.memory.summary || null,
+          ctx.memory.history,
+          ctx.retrieval.retrievedContext || '',
+          queryText,
+          ctx.response.toolOutputs
+        );
+        llmRes = await aiClient.generateComplexResponse(ctx.prompt.messages);
+        ctx.response.assistantResponse = llmRes.content;
+        
+        ctx.executionContext.diagnostics.promptTokens += (llmRes?.usage?.promptTokens || 0);
+        ctx.executionContext.diagnostics.completionTokens += (llmRes?.usage?.completionTokens || 0);
+        ctx.executionContext.telemetry.llm.durationMs += (Date.now() - startLlm2);
+      } else {
+        ctx.executionContext.telemetry.toolExecution.status = 'SKIPPED';
+      }
+    } catch (toolErr: any) {
+      // Catch framework-level errors gracefully
+      ctx.executionContext.errors.push(`ToolFramework Error: ${toolErr.message}`);
+    }
+
+    ctx.executionContext.diagnostics.totalTokens = ctx.executionContext.diagnostics.promptTokens + ctx.executionContext.diagnostics.completionTokens;
 
     // ==========================================
     // STAGE 5: PERSISTENCE

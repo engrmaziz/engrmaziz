@@ -9,7 +9,8 @@ export class PromptBuilder {
     summary: string | null,
     recentMessages: { role: string; content: string }[],
     ragContext: string,
-    currentQuery: string
+    currentQuery: string,
+    toolOutputs: any[] = []
   ): { role: 'system' | 'user' | 'assistant'; content: string }[] {
     let systemContent = RAG_SYSTEM_PROMPT.replace('{context}', 'See context below.');
     
@@ -18,6 +19,13 @@ export class PromptBuilder {
     }
 
     systemContent += `\n\n--- RAG Context ---\n${ragContext}`;
+
+    if (toolOutputs && toolOutputs.length > 0) {
+      systemContent += `\n\n--- Tool Execution Results ---\n`;
+      for (const t of toolOutputs) {
+        systemContent += `Tool [${t.toolName}]: ${JSON.stringify(t.output || t.error)}\n`;
+      }
+    }
 
     const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
       { role: 'system', content: systemContent }
