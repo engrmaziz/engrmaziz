@@ -94,60 +94,27 @@ export class RAGRetriever {
       // 2. Generate Query Vector Embedding using the Hypothetical Document (or fallback to query)
       const queryEmbedding = await ragEmbedder.embed(hypotheticalDocument);
 
-      // 3. Parallel Dense Vector Search & Sparse BM25 Text Search
-      const [denseResults, sparseResults] = await Promise.all([
-        ragDatabase.matchEmbeddings(queryEmbedding, threshold, 50, filters),
-        ragDatabase.ftsSearch(expandedQuery, 50, filters)
-      ]);
-
-      telemetryLogger.log('RAG', `Dense match candidate count: ${denseResults.length}`);
-      telemetryLogger.log('RAG', `Sparse match candidate count: ${sparseResults.length}`);
-
-      // 4. Reciprocal Rank Fusion (RRF) Merging
-      // RRF_Score = 1 / (60 + dense_rank) + 1 / (60 + sparse_rank)
-      const rrfRegistry: Record<string, { rankDense?: number; rankSparse?: number; item: any }> = {};
-
-      denseResults.forEach((res, rankIdx) => {
-        const id = res.chunk_id;
-        if (!rrfRegistry[id]) {
-          rrfRegistry[id] = { item: res };
-        }
-        rrfRegistry[id]!.rankDense = rankIdx + 1;
+      // 3. Deterministic Vector Retrieval Pipeline
+      const { retrievalPipeline } = await import('../retrieval/pipeline');
+      
+      const retrievalResult = await retrievalPipeline.retrieve({
+        queryEmbedding,
+        limit: 50,
+        threshold,
+        filters,
+        strategy: 'vector_only'
       });
 
-      sparseResults.forEach((res, rankIdx) => {
-        const id = res.chunk_id;
-        if (!rrfRegistry[id]) {
-          rrfRegistry[id] = { item: res };
-        }
-        rrfRegistry[id]!.rankSparse = rankIdx + 1;
-      });
+      telemetryLogger.log('RAG', `Deterministic retrieval candidate count: ${retrievalResult.statistics.candidateCount}`);
 
-      const fusedCandidates = Object.values(rrfRegistry).map(({ rankDense, rankSparse, item }) => {
-        const rrfDense = rankDense ? 1 / (60 + rankDense) : 0;
-        const rrfSparse = rankSparse ? 1 / (60 + rankSparse) : 0;
-        const rrfScore = rrfDense + rrfSparse;
-        
-        // Retain original pgvector cosine similarity score for local fallback reranking
-        const similarity = item.similarity || item.score || 0.0;
-
-        return {
-          ...item,
-          similarity,
-          rrfScore
-        };
-      });
-
-      // Sort by RRF score descending and take the top 15 candidate matches
-      const top15Candidates = fusedCandidates
-        .sort((a, b) => b.rrfScore - a.rrfScore)
-        .slice(0, 15);
+      // Take the top 15 normalized candidates
+      const top15Candidates = retrievalResult.candidates.slice(0, 15);
 
       if (top15Candidates.length === 0) {
         return { contextText: '', chunks: [], citations: [], cragEval: 'IRRELEVANT' };
       }
 
-      // 5. Execute Reranker to filter down to the best candidates
+      // 4. Execute Reranker to filter down to the best candidates
       const rerankedResults = await ragReranker.rerank(normalizedQuery, top15Candidates, limit);
 
       // 6. Map reranked indices to original database records
