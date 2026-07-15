@@ -19,6 +19,8 @@ export const systemConfigSchema = z.object({
   RESEND_FROM_EMAIL: z.string().email().optional(),
   ADMIN_EMAIL: z.string().email().optional(),
   ADMIN_API_TOKEN: z.string().optional().default('dummy-admin-token'),
+  GIT_COMMIT: z.string().optional().default('unknown'),
+  BUILD_TIMESTAMP: z.string().optional().default(new Date().toISOString()),
 
   // RAG Limits
   RAG_CHUNK_SIZE: z.coerce.number().default(SystemConstants.DEFAULT_CHUNK_SIZE),

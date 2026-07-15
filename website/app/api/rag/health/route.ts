@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { NextResponse } from 'next/server';
 import { ragDatabase } from '@/lib/rag/supabase';
+import { systemConfig } from '@/lib/system/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,12 +23,12 @@ export async function GET() {
   }
 
   // 2. Jina AI API verification
-  if (process.env.JINA_API_KEY && process.env.JINA_API_KEY.length > 10) {
+  if (systemConfig.JINA_API_KEY && systemConfig.JINA_API_KEY !== 'dummy' && systemConfig.JINA_API_KEY.length > 10) {
     status.jina = 'ONLINE';
   }
 
   // 3. Groq API validation
-  if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.length > 10) {
+  if (systemConfig.GROQ_API_KEY && systemConfig.GROQ_API_KEY !== 'dummy' && systemConfig.GROQ_API_KEY.length > 10) {
     status.groq = 'ONLINE';
   }
 

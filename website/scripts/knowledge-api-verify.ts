@@ -4,6 +4,7 @@ loadEnvConfig(process.cwd());
 import { POST } from '../app/api/admin/knowledge/route';
 import { GET, DELETE } from '../app/api/admin/knowledge/[id]/route';
 import { knowledgeService } from '../lib/knowledge/service';
+import { systemConfig } from '../lib/system/config';
 import { storagePipeline } from '../lib/storage/pipeline';
 import { VectorRepository } from '../lib/storage/repository';
 import { logger } from '../lib/utils/logger';
@@ -52,9 +53,12 @@ async function verifyKnowledgeAPI() {
     };
   };
 
+const authHeader = { 'Authorization': `Bearer ${systemConfig.ADMIN_API_TOKEN}` };
+
   // 2. Test POST
   const postReq = new Request('http://localhost/api/admin/knowledge', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeader },
     body: JSON.stringify({ id: 'valid-doc', type: 'markdown', content: 'test content' })
   });
   const postRes = await POST(postReq);
@@ -66,6 +70,7 @@ async function verifyKnowledgeAPI() {
   // 3. Test POST Validation Error
   const postInvalidReq = new Request('http://localhost/api/admin/knowledge', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeader },
     body: JSON.stringify({ id: 'invalid-doc', type: 'markdown', content: 'test content' })
   });
   const postInvalidRes = await POST(postInvalidReq);
@@ -75,6 +80,7 @@ async function verifyKnowledgeAPI() {
   // 4. Test POST Execution Error
   const postErrorReq = new Request('http://localhost/api/admin/knowledge', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeader },
     body: JSON.stringify({ id: 'error-doc', type: 'markdown', content: 'test content' })
   });
   const postErrorRes = await POST(postErrorReq);
@@ -82,7 +88,9 @@ async function verifyKnowledgeAPI() {
   logger.info('[PASS] POST execution error mapped to 500');
 
   // 5. Test GET
-  const getReq = new Request('http://localhost/api/admin/knowledge/valid-doc');
+  const getReq = new Request('http://localhost/api/admin/knowledge/valid-doc', {
+    headers: authHeader
+  });
   const getRes = await GET(getReq, { params: { id: 'valid-doc' } });
   if (getRes.status !== 200) throw new Error(`Expected 200, got ${getRes.status}`);
   const getBody = await getRes.json();
@@ -90,13 +98,18 @@ async function verifyKnowledgeAPI() {
   logger.info('[PASS] GET /api/admin/knowledge/[id]');
 
   // 6. Test GET Not Found
-  const getMissingReq = new Request('http://localhost/api/admin/knowledge/missing-doc');
+  const getMissingReq = new Request('http://localhost/api/admin/knowledge/missing-doc', {
+    headers: authHeader
+  });
   const getMissingRes = await GET(getMissingReq, { params: { id: 'missing-doc' } });
   if (getMissingRes.status !== 404) throw new Error(`Expected 404, got ${getMissingRes.status}`);
   logger.info('[PASS] GET missing document mapped to 404');
 
   // 7. Test DELETE
-  const delReq = new Request('http://localhost/api/admin/knowledge/valid-doc', { method: 'DELETE' });
+  const delReq = new Request('http://localhost/api/admin/knowledge/valid-doc', { 
+    method: 'DELETE',
+    headers: authHeader
+  });
   const delRes = await DELETE(delReq, { params: { id: 'valid-doc' } });
   if (delRes.status !== 200) throw new Error(`Expected 200, got ${delRes.status}`);
   const delBody = await delRes.json();
@@ -104,7 +117,10 @@ async function verifyKnowledgeAPI() {
   logger.info('[PASS] DELETE /api/admin/knowledge/[id]');
 
   // 8. Test DELETE Execution Error
-  const delErrorReq = new Request('http://localhost/api/admin/knowledge/error-doc', { method: 'DELETE' });
+  const delErrorReq = new Request('http://localhost/api/admin/knowledge/error-doc', { 
+    method: 'DELETE',
+    headers: authHeader
+  });
   const delErrorRes = await DELETE(delErrorReq, { params: { id: 'error-doc' } });
   if (delErrorRes.status !== 500) throw new Error(`Expected 500, got ${delErrorRes.status}`);
   logger.info('[PASS] DELETE execution error mapped to 500');

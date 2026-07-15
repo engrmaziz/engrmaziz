@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { ragDatabase } from '@/lib/rag/supabase';
 import { supabase } from '@/lib/db/supabase';
+import { systemConfig } from '@/lib/system/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ export async function GET() {
     return NextResponse.json({
       status: 'ONLINE',
       latency,
-      embeddingModel: process.env.JINA_EMBEDDING_MODEL || 'jina-embeddings-v4',
+      embeddingModel: systemConfig.JINA_EMBEDDING_MODEL || 'jina-embeddings-v4',
       documents: status.documents,
       chunks: status.chunks,
       lastSync: status.latestSync,
