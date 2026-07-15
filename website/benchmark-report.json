@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-15T07:09:45.524Z",
+  "timestamp": "2026-07-15T07:09:21.748Z",
   "gitCommit": "4ec3e03f5cc2e2ff454839ac6654e4c15d342518",
   "suiteId": "regression_suite_v1",
   "statistics": {
@@ -7,7 +7,7 @@
     "passed": 0,
     "failed": 14,
     "successRate": 0,
-    "averageLatency": 936.7857142857143,
+    "averageLatency": 991.3571428571429,
     "averageRetrievalCount": 0,
     "averageLlmCalls": 0,
     "toolInvocationCount": 0,
@@ -18,7 +18,7 @@
       "id": "agent_runtime_failure_recovery",
       "category": "Agent Runtime",
       "status": "FAIL",
-      "durationMs": 1011,
+      "durationMs": 834,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_failure_recovery\"",
       "metrics": {
         "retrievalCount": 0,
@@ -30,7 +30,7 @@
       "id": "agent_runtime_max_tool_limit",
       "category": "Agent Runtime",
       "status": "FAIL",
-      "durationMs": 877,
+      "durationMs": 943,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_max_tool_limit\"",
       "metrics": {
         "retrievalCount": 0,
@@ -42,7 +42,7 @@
       "id": "agent_runtime_multiple_tool",
       "category": "Agent Runtime",
       "status": "FAIL",
-      "durationMs": 875,
+      "durationMs": 930,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_multiple_tool\"",
       "metrics": {
         "retrievalCount": 0,
@@ -54,7 +54,7 @@
       "id": "agent_runtime_no_tool",
       "category": "Agent Runtime",
       "status": "FAIL",
-      "durationMs": 965,
+      "durationMs": 998,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_no_tool\"",
       "metrics": {
         "retrievalCount": 0,
@@ -66,7 +66,7 @@
       "id": "agent_runtime_single_tool",
       "category": "Agent Runtime",
       "status": "FAIL",
-      "durationMs": 940,
+      "durationMs": 956,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_single_tool\"",
       "metrics": {
         "retrievalCount": 0,
@@ -78,7 +78,7 @@
       "id": "memory_multi_turn_followup",
       "category": "Memory",
       "status": "FAIL",
-      "durationMs": 853,
+      "durationMs": 921,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-memory_multi_turn_followup\"",
       "metrics": {
         "retrievalCount": 0,
@@ -90,7 +90,7 @@
       "id": "memory_summary_recall",
       "category": "Memory",
       "status": "FAIL",
-      "durationMs": 965,
+      "durationMs": 905,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-memory_summary_recall\"",
       "metrics": {
         "retrievalCount": 0,
@@ -102,7 +102,7 @@
       "id": "retrieval_dense_retrieval",
       "category": "Retrieval",
       "status": "FAIL",
-      "durationMs": 930,
+      "durationMs": 1547,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_dense_retrieval\"",
       "metrics": {
         "retrievalCount": 0,
@@ -114,7 +114,7 @@
       "id": "retrieval_hybrid_retrieval",
       "category": "Retrieval",
       "status": "FAIL",
-      "durationMs": 886,
+      "durationMs": 986,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_hybrid_retrieval\"",
       "metrics": {
         "retrievalCount": 0,
@@ -126,7 +126,7 @@
       "id": "retrieval_known_document",
       "category": "Retrieval",
       "status": "FAIL",
-      "durationMs": 1026,
+      "durationMs": 1009,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_known_document\"",
       "metrics": {
         "retrievalCount": 0,
@@ -138,7 +138,7 @@
       "id": "tool_calling_echotool",
       "category": "Tool Calling",
       "status": "FAIL",
-      "durationMs": 904,
+      "durationMs": 995,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_echotool\"",
       "metrics": {
         "retrievalCount": 0,
@@ -150,7 +150,7 @@
       "id": "tool_calling_healthtool",
       "category": "Tool Calling",
       "status": "FAIL",
-      "durationMs": 959,
+      "durationMs": 993,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_healthtool\"",
       "metrics": {
         "retrievalCount": 0,
@@ -162,7 +162,7 @@
       "id": "tool_calling_timetool",
       "category": "Tool Calling",
       "status": "FAIL",
-      "durationMs": 954,
+      "durationMs": 1002,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_timetool\"",
       "metrics": {
         "retrievalCount": 0,
@@ -174,7 +174,7 @@
       "id": "tool_calling_tool_failure",
       "category": "Tool Calling",
       "status": "FAIL",
-      "durationMs": 970,
+      "durationMs": 860,
       "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_tool_failure\"",
       "metrics": {
         "retrievalCount": 0,

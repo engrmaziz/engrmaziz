@@ -1,24 +1,36 @@
 import { ragOrchestrator } from '../rag/orchestrator';
-import { EvaluationCase, EvaluationResult, RegressionReport } from './types';
-import { extractMetrics, populateToolMetricsFromResponse } from './metrics';
+import { EvaluationSuite, EvaluationReport, EvaluationResult, EvaluationStatistics } from './types';
+import { EvaluationValidator } from './validator';
+import { EvaluationExecutionError } from './errors';
+import { extractRetrievalCount, extractLlmCalls, extractToolCalls } from './metrics';
 import { randomUUID } from 'crypto';
 
 export class EvaluationRunner {
-  async runDataset(dataset: EvaluationCase[]): Promise<RegressionReport> {
+  private validator: EvaluationValidator;
+
+  constructor() {
+    this.validator = new EvaluationValidator();
+  }
+
+  public async runSuite(suite: EvaluationSuite): Promise<EvaluationReport> {
+    this.validator.validate(suite);
+
     const results: EvaluationResult[] = [];
     let passed = 0;
     let failed = 0;
     let totalLatency = 0;
+    let totalRetrievalCount = 0;
+    let totalLlmCalls = 0;
+    let totalToolInvocationCount = 0;
+    let errorCount = 0;
 
-    for (const testCase of dataset) {
-      console.log(`\n[Runner] Executing test: ${testCase.id} (${testCase.category})`);
-      const sessionId = randomUUID();
+    for (const testCase of suite.cases) {
       const start = Date.now();
 
       try {
         const result = await ragOrchestrator.execute({
           query: testCase.input,
-          sessionId,
+          sessionId: randomUUID(),
           filters: {},
           flags: { bypassCache: true }
         });
@@ -27,14 +39,22 @@ export class EvaluationRunner {
         totalLatency += durationMs;
 
         const traceExport = result.context.executionContext.trace.exportTrace();
-        const metrics = extractMetrics(traceExport);
-        populateToolMetricsFromResponse(metrics, result.context.response.toolOutputs);
+
+        // Pass tool outputs to trace context to extract metrics if missing
+        traceExport.metadata['toolOutputs'] = result.context.response.toolOutputs;
+
+        const retrievalCount = extractRetrievalCount(traceExport);
+        const llmCalls = extractLlmCalls(traceExport);
+        const toolCalls = extractToolCalls(traceExport);
+
+        totalRetrievalCount += retrievalCount;
+        totalLlmCalls += llmCalls;
+        totalToolInvocationCount += toolCalls;
 
         // Deterministic Assertions
         let status: 'PASS' | 'FAIL' = 'PASS';
         let failureReason: string | undefined;
 
-        // 1. Check Expected Facts in Response
         const lowerResponse = (result.answer || '').toLowerCase();
         for (const fact of testCase.expectedFacts) {
           if (!lowerResponse.includes(fact.toLowerCase())) {
@@ -44,9 +64,8 @@ export class EvaluationRunner {
           }
         }
 
-        // 2. Check Expected Tools Executed
         if (status === 'PASS' && testCase.expectedTools.length > 0) {
-          const executedTools = metrics.tools.toolExecuted;
+          const executedTools = (result.context.response.toolOutputs || []).map((t: any) => t.toolName);
           for (const expectedTool of testCase.expectedTools) {
             if (!executedTools.includes(expectedTool)) {
               status = 'FAIL';
@@ -56,7 +75,6 @@ export class EvaluationRunner {
           }
         }
 
-        // 3. Check Expected Documents
         if (status === 'PASS' && testCase.expectedDocuments.length > 0) {
           const citations = result.citations || [];
           const sourcePaths = citations.map((c: any) => c.source || '');
@@ -69,14 +87,6 @@ export class EvaluationRunner {
             }
           }
         }
-        
-        // 4. Structural Integrity checks
-        if (status === 'PASS') {
-          if (testCase.category === 'Retrieval' && metrics.retrieval.denseCandidates === 0 && testCase.id !== 'retrieval_dense_retrieval') {
-             // For standard tests, dense candidates should be > 0. Wait, "retrieval_dense_retrieval" might not match docs if DB is empty but we'll see.
-             // Actually, I'll avoid over-asserting here unless specified.
-          }
-        }
 
         results.push({
           id: testCase.id,
@@ -84,18 +94,21 @@ export class EvaluationRunner {
           status,
           durationMs,
           failureReason,
-          metrics
+          metrics: {
+            retrievalCount,
+            llmCalls,
+            toolCalls
+          }
         });
 
         if (status === 'PASS') passed++;
         else failed++;
-        
-        console.log(`[Runner] Result: ${status} ${failureReason ? `(${failureReason})` : ''} - ${durationMs}ms`);
 
       } catch (err: any) {
         const durationMs = Date.now() - start;
         totalLatency += durationMs;
         failed++;
+        errorCount++;
         
         results.push({
           id: testCase.id,
@@ -103,34 +116,33 @@ export class EvaluationRunner {
           status: 'FAIL',
           durationMs,
           failureReason: `Pipeline Exception: ${err.message}`,
-          metrics: {
-            retrieval: { denseCandidates: 0, sparseCandidates: 0, retrievalLatency: 0 },
-            memory: { historyLoaded: 0, summaryUsed: false },
-            tools: { toolExecuted: [], toolSuccess: [], toolLatency: [] },
-            runtime: { llmPasses: 0, toolCalls: 0, totalExecutionTime: durationMs }
-          }
+          metrics: { retrievalCount: 0, llmCalls: 0, toolCalls: 0 }
         });
-        console.log(`[Runner] Result: FAIL (Exception: ${err.message}) - ${durationMs}ms`);
       }
     }
 
-    // Attempt to grab git commit
-    let gitCommit = null;
-    try {
-      const { execSync } = require('child_process');
-      gitCommit = execSync('git rev-parse HEAD').toString().trim();
-    } catch {
-      // ignore
-    }
+    // Stable Sorting
+    results.sort((a, b) => a.id.localeCompare(b.id));
 
-    return {
-      timestamp: new Date().toISOString(),
-      gitCommit,
-      totalTests: dataset.length,
+    const totalTests = suite.cases.length;
+    const statistics: EvaluationStatistics = {
+      totalTests,
       passed,
       failed,
-      averageLatency: dataset.length > 0 ? totalLatency / dataset.length : 0,
-      results
+      successRate: totalTests > 0 ? passed / totalTests : 0,
+      averageLatency: totalTests > 0 ? totalLatency / totalTests : 0,
+      averageRetrievalCount: totalTests > 0 ? totalRetrievalCount / totalTests : 0,
+      averageLlmCalls: totalTests > 0 ? totalLlmCalls / totalTests : 0,
+      toolInvocationCount: totalToolInvocationCount,
+      errorCount
     };
+
+    return Object.freeze({
+      timestamp: new Date().toISOString(),
+      gitCommit: null, // Let external scripts append this if desired, keeping runner pure
+      suiteId: suite.id,
+      statistics: Object.freeze(statistics),
+      results: Object.freeze(results) as any
+    });
   }
 }
