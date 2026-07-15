@@ -65,6 +65,12 @@ export interface EmbeddingRecord {
 }
 
 export class RAGDatabase {
+  async getDocumentById(id: string): Promise<DocumentRecord | null> {
+    const query = 'SELECT * FROM public.documents WHERE id = $1 LIMIT 1';
+    const { rows } = await pgPool.query(query, [id]);
+    return rows[0] || null;
+  }
+
   async getDocumentByChecksum(checksum: string): Promise<DocumentRecord | null> {
     const query = 'SELECT * FROM public.documents WHERE checksum = $1 LIMIT 1';
     const { rows } = await pgPool.query(query, [checksum]);

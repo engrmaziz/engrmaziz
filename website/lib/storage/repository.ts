@@ -50,7 +50,18 @@ export class VectorRepository {
     try {
       await ragDatabase.deleteDocument(documentId);
     } catch (err: any) {
-      throw new StorageExecutionError(`Failed to delete document ${documentId}: ${err.message}`);
+      throw new StorageExecutionError(`Failed to delete document from vector database: ${err.message}`);
+    }
+  }
+
+  /**
+   * Fetches document metadata strictly without retrieval logic.
+   */
+  public async getDocumentMetadata(documentId: string): Promise<any | null> {
+    try {
+      return await ragDatabase.getDocumentById(documentId);
+    } catch (err: any) {
+      throw new StorageExecutionError(`Failed to fetch document metadata: ${err.message}`);
     }
   }
 }
