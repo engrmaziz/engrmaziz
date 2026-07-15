@@ -1,25 +1,24 @@
 {
-  "timestamp": "2026-07-15T07:09:21.748Z",
-  "gitCommit": "4ec3e03f5cc2e2ff454839ac6654e4c15d342518",
+  "timestamp": "2026-07-15T08:07:29.730Z",
+  "gitCommit": "1f5dbf00203e1f78a987788de3a71af20f95e1e9",
   "suiteId": "regression_suite_v1",
   "statistics": {
     "totalTests": 14,
-    "passed": 0,
-    "failed": 14,
-    "successRate": 0,
-    "averageLatency": 991.3571428571429,
+    "passed": 14,
+    "failed": 0,
+    "successRate": 1,
+    "averageLatency": 5078.785714285715,
     "averageRetrievalCount": 0,
     "averageLlmCalls": 0,
     "toolInvocationCount": 0,
-    "errorCount": 14
+    "errorCount": 0
   },
   "results": [
     {
       "id": "agent_runtime_failure_recovery",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 834,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_failure_recovery\"",
+      "status": "PASS",
+      "durationMs": 1137,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -29,9 +28,8 @@
     {
       "id": "agent_runtime_max_tool_limit",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 943,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_max_tool_limit\"",
+      "status": "PASS",
+      "durationMs": 936,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -41,9 +39,8 @@
     {
       "id": "agent_runtime_multiple_tool",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 930,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_multiple_tool\"",
+      "status": "PASS",
+      "durationMs": 1582,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -53,9 +50,8 @@
     {
       "id": "agent_runtime_no_tool",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 998,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_no_tool\"",
+      "status": "PASS",
+      "durationMs": 1133,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -65,9 +61,8 @@
     {
       "id": "agent_runtime_single_tool",
       "category": "Agent Runtime",
-      "status": "FAIL",
-      "durationMs": 956,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-agent_runtime_single_tool\"",
+      "status": "PASS",
+      "durationMs": 1090,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -77,9 +72,8 @@
     {
       "id": "memory_multi_turn_followup",
       "category": "Memory",
-      "status": "FAIL",
-      "durationMs": 921,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-memory_multi_turn_followup\"",
+      "status": "PASS",
+      "durationMs": 1198,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -89,9 +83,8 @@
     {
       "id": "memory_summary_recall",
       "category": "Memory",
-      "status": "FAIL",
-      "durationMs": 905,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-memory_summary_recall\"",
+      "status": "PASS",
+      "durationMs": 1107,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -101,9 +94,8 @@
     {
       "id": "retrieval_dense_retrieval",
       "category": "Retrieval",
-      "status": "FAIL",
-      "durationMs": 1547,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_dense_retrieval\"",
+      "status": "PASS",
+      "durationMs": 21365,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -113,9 +105,8 @@
     {
       "id": "retrieval_hybrid_retrieval",
       "category": "Retrieval",
-      "status": "FAIL",
-      "durationMs": 986,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_hybrid_retrieval\"",
+      "status": "PASS",
+      "durationMs": 9696,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -125,9 +116,8 @@
     {
       "id": "retrieval_known_document",
       "category": "Retrieval",
-      "status": "FAIL",
-      "durationMs": 1009,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-retrieval_known_document\"",
+      "status": "PASS",
+      "durationMs": 27356,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -137,9 +127,8 @@
     {
       "id": "tool_calling_echotool",
       "category": "Tool Calling",
-      "status": "FAIL",
-      "durationMs": 995,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_echotool\"",
+      "status": "PASS",
+      "durationMs": 1191,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -149,9 +138,8 @@
     {
       "id": "tool_calling_healthtool",
       "category": "Tool Calling",
-      "status": "FAIL",
-      "durationMs": 993,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_healthtool\"",
+      "status": "PASS",
+      "durationMs": 996,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -161,9 +149,8 @@
     {
       "id": "tool_calling_timetool",
       "category": "Tool Calling",
-      "status": "FAIL",
-      "durationMs": 1002,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_timetool\"",
+      "status": "PASS",
+      "durationMs": 1123,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -173,9 +160,8 @@
     {
       "id": "tool_calling_tool_failure",
       "category": "Tool Calling",
-      "status": "FAIL",
-      "durationMs": 860,
-      "failureReason": "Pipeline Exception: invalid input syntax for type uuid: \"eval-tool_calling_tool_failure\"",
+      "status": "PASS",
+      "durationMs": 1193,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,

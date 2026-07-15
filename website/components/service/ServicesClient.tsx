@@ -175,14 +175,14 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
         </Container>
       </Section>
 
-      <Section className="bg-primary text-base-inverted py-24">
+      <Section className="bg-primary text-[color:var(--color-bg-base)] py-24">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <CheckCircle className="w-12 h-12 text-accent mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[color:var(--color-bg-base)]">
               Ready to architect your solution?
             </h2>
-            <p className="text-lg text-base-inverted/80 leading-relaxed mb-10">
+            <p className="text-lg text-[color:var(--color-bg-base)] opacity-80 leading-relaxed mb-10">
               Stop settling for quick-fixes and brittle code. Let&apos;s build infrastructure that scales with your business logic gracefully.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
