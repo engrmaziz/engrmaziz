@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CheckCircle2, Server, Database, Code2, Layers, Cpu, Zap, Link as LinkIcon, Smartphone, Network } from "lucide-react";
 import { Accordion } from "@/components/ui/Accordion";
-import { Mermaid } from "@/components/ui/Mermaid";
+import { MarkdownComponents } from "@/components/markdown/MarkdownComponents";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
@@ -46,10 +46,7 @@ function parseFAQ(content: string) {
   return items;
 }
 
-function extractMermaid(content: string) {
-  const match = content.match(/```mermaid\n([\s\S]*?)```/);
-  return match ? match[1] : null;
-}
+
 
 const icons = [Server, Database, Code2, Layers, Cpu, Zap, Smartphone, Network];
 
@@ -79,10 +76,10 @@ export function DynamicSectionRenderer({ title, content, index, slug = "" }: Sec
             return (
               <div key={i} className="bg-elevated p-6 rounded-xl border border-border-default hover:border-accent/50 transition-colors shadow-sm">
                 <Icon className="w-8 h-8 text-accent mb-4" />
-                <h4 className="text-lg font-bold text-primary mb-2 prose prose-sm prose-a:text-primary hover:prose-a:text-accent m-0 p-0 leading-tight">
+                <div role="heading" aria-level={4} className="text-lg font-bold text-primary mb-2 prose prose-sm prose-a:text-primary hover:prose-a:text-accent m-0 p-0 leading-tight">
                   <ReactMarkdown>{item.title}</ReactMarkdown>
-                </h4>
-                <p className="text-secondary text-sm leading-relaxed"><ReactMarkdown>{item.description}</ReactMarkdown></p>
+                </div>
+                <div className="text-secondary text-sm leading-relaxed prose prose-sm dark:prose-invert prose-p:my-0"><ReactMarkdown>{item.description}</ReactMarkdown></div>
               </div>
             );
           })}
@@ -91,9 +88,7 @@ export function DynamicSectionRenderer({ title, content, index, slug = "" }: Sec
     }
   }
 
-  // 3. Architecture (Mermaid Rendering + 3D Tech Image)
   if (t.includes('architecture')) {
-    const mermaidCode = extractMermaid(content);
     // If it's a child service, slug might be 'ai-agents/whatsapp-agents'. Let's extract the last part.
     const serviceName = slug.split('/').pop() || 'ai-agents';
     // Fallback to pillar image if child image doesn't exist
@@ -122,18 +117,14 @@ export function DynamicSectionRenderer({ title, content, index, slug = "" }: Sec
           />
         </div>
 
-        {/* Prose Content */}
-        {(() => {
-          const remainingContent = mermaidCode ? content.replace(/```mermaid\n[\s\S]*?```/, '') : content;
-          return remainingContent.trim() ? (
-            <div className="prose prose-lg dark:prose-invert max-w-none prose-p:text-secondary">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{remainingContent}</ReactMarkdown>
-            </div>
-          ) : null;
-        })()}
-
-        {/* Technical Mermaid Diagram */}
-        {mermaidCode && <Mermaid chart={mermaidCode} />}
+        {/* Prose Content (Includes Mermaid automatically) */}
+        {content.trim() ? (
+          <div className="prose prose-lg dark:prose-invert max-w-none prose-p:text-secondary">
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
+              {content}
+            </ReactMarkdown>
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -143,7 +134,7 @@ export function DynamicSectionRenderer({ title, content, index, slug = "" }: Sec
     <div className={cn(
       "prose prose-lg dark:prose-invert max-w-none prose-headings:text-primary prose-p:text-secondary prose-a:text-accent prose-strong:text-primary prose-ul:text-secondary prose-li:marker:text-accent",
     )}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
         {content}
       </ReactMarkdown>
     </div>

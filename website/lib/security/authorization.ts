@@ -1,4 +1,4 @@
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 import { AuthenticatedUser, Permission, AuthorizationResult } from './types';
 import { AuthenticationError, AuthorizationError, ForbiddenError } from './errors';
 import { PERMISSIONS } from './policies';

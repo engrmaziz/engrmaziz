@@ -4,7 +4,7 @@ import { ragChunker } from './chunker';
 import { ragEmbedder } from './embedder';
 import { ragDatabase } from './supabase';
 import { createLogger } from './logger';
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 import * as crypto from 'crypto';
 
 const log = createLogger('Pipeline');

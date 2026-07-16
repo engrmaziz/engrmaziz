@@ -8,7 +8,7 @@ import { ragCache } from './cache';
 import { ragMemory } from './memory';
 import { promptBuilder } from './prompt-builder';
 import { RequestTrace, telemetryLogger } from '../telemetry';
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 
 export interface RequestContext {
   request: {
@@ -134,7 +134,7 @@ export class RAGOrchestrator {
             .replace('{history}', historyStr)
             .replace('{query}', queryText);
           
-          const rewriteRes = await aiClient.generateSimpleResponse(rewritePrompt);
+          const rewriteRes = await aiClient.generate({ prompt: rewritePrompt });
           if (rewriteRes && rewriteRes.content) {
             ctx.request.optimizedQuery = rewriteRes.content.trim();
           }
@@ -194,7 +194,7 @@ export class RAGOrchestrator {
     // ==========================================
     trace.startStage('Retrieval');
     try {
-      const retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 5, 0.3, filters);
+      const retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 5, 0.3, filters, queryVector);
       ctx.retrieval.retrievedContext = retrievalResult.contextText;
       ctx.retrieval.citations = retrievalResult.citations;
       
@@ -252,7 +252,11 @@ export class RAGOrchestrator {
       const workflowResult = await workflow.execute(workflowCtx);
       
       const response = workflowResult.response;
-      ctx.response.assistantResponse = response.content;
+      
+      // Apply deterministic application-layer citation formatting
+      const { CitationFormatter } = await import('./citation-formatter');
+      ctx.response.assistantResponse = CitationFormatter.format(response.content, ctx.retrieval.citations);
+      
       ctx.executionContext.metadata = ctx.executionContext.metadata || {};
       ctx.executionContext.metadata.agentContext = {
          agentId: 'workflow-managed',

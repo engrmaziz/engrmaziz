@@ -19,8 +19,29 @@ export class ConversationService {
     return db.insert('conversations', { visitor_id: visitorId, status: 'active', lead_score: 0 });
   }
 
+  async ensureConversationExists(id: string, visitorInfo?: any) {
+    // Attempt to insert the conversation. If it exists, do nothing (onConflict: 'id').
+    const payload: any = { id, status: 'active' };
+    if (visitorInfo) {
+      payload.visitor_name = visitorInfo.name;
+      payload.visitor_email = visitorInfo.email;
+    }
+    
+    try {
+      await db.insert('conversations', payload);
+    } catch (err: any) {
+      // If it's a unique constraint violation (code 23505), it already exists, which is fine.
+      if (err.code !== '23505') {
+        throw err;
+      }
+    }
+  }
+
   async saveMessage(conversationId: string, role: string, content: string, citations?: any) {
-    return db.insert('messages', { conversation_id: conversationId, role, content, citations });
+    // Notice: To use upsert via the 'db' stub we would need to add an upsert method,
+    // but we can just use supabase client directly if we export it, or handle it in RAGXService.
+    const { supabase } = require('@/lib/db/supabase');
+    return supabase.from('messages').insert({ conversation_id: conversationId, role, content, citations });
   }
 }
 

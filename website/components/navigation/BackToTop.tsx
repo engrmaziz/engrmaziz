@@ -27,7 +27,7 @@ export const BackToTop = React.forwardRef<HTMLButtonElement, BackToTopProps>(
             whileTap={{ scale: 0.9 }}
             onClick={scrollToTop}
             className={cn(
-              "fixed bottom-6 left-6 z-40 w-12 h-12 rounded-full bg-elevated border border-border-default shadow-lg flex items-center justify-center text-secondary hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+              "fixed bottom-[168px] right-6 z-40 w-12 h-12 rounded-full bg-elevated border border-border-default shadow-lg flex items-center justify-center text-secondary hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
               className
             )}
             aria-label="Back to top"

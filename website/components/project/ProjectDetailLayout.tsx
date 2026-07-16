@@ -13,6 +13,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { MarkdownComponents } from "@/components/markdown/MarkdownComponents";
 import { DiagramPlaceholder } from "./DiagramPlaceholder";
 import { RelatedContent } from "./RelatedContent";
 import type { ProjectData } from "@/lib/projects";
@@ -272,7 +273,7 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
                   {/* Section Content or Placeholder */}
                   {hasContent ? (
                     <div className="markdown-body">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
                         {content}
                       </ReactMarkdown>
                     </div>

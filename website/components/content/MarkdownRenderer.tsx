@@ -1,5 +1,8 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { MarkdownComponents } from "@/components/markdown/MarkdownComponents";
 
 export interface MarkdownRendererProps {
   content: string;
@@ -21,7 +24,10 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
         "prose-blockquote:border-l-accent prose-blockquote:bg-accent/5 prose-blockquote:px-4 prose-blockquote:py-1 prose-blockquote:text-secondary prose-blockquote:not-italic",
         className
       )}
-      dangerouslySetInnerHTML={{ __html: content }} // In a real app, use something like next-mdx-remote or react-markdown
-    />
+    >
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
+        {content}
+      </ReactMarkdown>
+    </div>
   );
 }

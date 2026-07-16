@@ -23,6 +23,7 @@ export const BlogCard = React.forwardRef<HTMLDivElement, BlogCardProps>(
     
     // Format date beautifully
     const formattedDate = new Date(date).toLocaleDateString('en-US', {
+      timeZone: 'UTC',
       month: 'short',
       day: 'numeric',
       year: 'numeric'

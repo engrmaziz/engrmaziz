@@ -8,6 +8,9 @@ import { Footer } from "@/components/navigation/Footer";
 import { ScrollProgress } from "@/components/navigation/ScrollProgress";
 import { generatePersonSchema, generateWebSiteSchema, siteMetadata } from "@/lib/seo";
 import { RAGXIndicator } from "@/components/rag/RAGXIndicator";
+import dynamic from 'next/dynamic';
+
+const RAGXChatAssistant = dynamic(() => import('@/components/rag/RAGXChatAssistant').then(mod => mod.RAGXChatAssistant));
 
 const inter = Inter({
   subsets: ["latin"],
@@ -106,13 +109,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebSiteSchema()) }}
         />
       </head>
-      <body className="font-sans min-h-screen selection:bg-accent/20 selection:text-accent">
+      <body className="font-sans min-h-screen">
         <ThemeProvider>
           <ScrollProgress />
           <AppShell navbar={<Navbar />} footer={<Footer />}>
             {children}
           </AppShell>
           <RAGXIndicator />
+          <RAGXChatAssistant />
         </ThemeProvider>
       </body>
     </html>

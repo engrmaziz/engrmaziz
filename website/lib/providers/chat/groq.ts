@@ -1,6 +1,6 @@
 import { ChatProvider, ChatRequest, ChatResponse, ChatMessage } from '../types';
 import { ProviderExecutionError, ProviderConfigurationError } from '../errors';
-import { systemConfig } from '../../system';
+import { systemConfig } from '../../system/config';
 
 export class GroqChatProvider implements ChatProvider {
   readonly name = 'GroqChatProvider';

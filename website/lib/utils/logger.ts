@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-function-type */
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 
 export enum LogLevel {
   INFO = 'INFO',

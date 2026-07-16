@@ -1,13 +1,13 @@
 {
-  "timestamp": "2026-07-15T08:08:32.799Z",
-  "gitCommit": "1f5dbf00203e1f78a987788de3a71af20f95e1e9",
+  "timestamp": "2026-07-15T08:09:14.170Z",
+  "gitCommit": "4490c218345dcedda94a7ab1ef61ee87db04c46d",
   "suiteId": "regression_suite_v1",
   "statistics": {
     "totalTests": 14,
     "passed": 14,
     "failed": 0,
     "successRate": 1,
-    "averageLatency": 4992.571428571428,
+    "averageLatency": 4854.571428571428,
     "averageRetrievalCount": 0,
     "averageLlmCalls": 0,
     "toolInvocationCount": 0,
@@ -18,7 +18,7 @@
       "id": "agent_runtime_failure_recovery",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 2327,
+      "durationMs": 1204,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -29,7 +29,7 @@
       "id": "agent_runtime_max_tool_limit",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 1529,
+      "durationMs": 1097,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -40,7 +40,7 @@
       "id": "agent_runtime_multiple_tool",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 2003,
+      "durationMs": 2068,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -51,7 +51,7 @@
       "id": "agent_runtime_no_tool",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 1714,
+      "durationMs": 1418,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -62,7 +62,7 @@
       "id": "agent_runtime_single_tool",
       "category": "Agent Runtime",
       "status": "PASS",
-      "durationMs": 2059,
+      "durationMs": 1123,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -73,7 +73,7 @@
       "id": "memory_multi_turn_followup",
       "category": "Memory",
       "status": "PASS",
-      "durationMs": 1403,
+      "durationMs": 1382,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -84,7 +84,7 @@
       "id": "memory_summary_recall",
       "category": "Memory",
       "status": "PASS",
-      "durationMs": 1272,
+      "durationMs": 1004,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -95,7 +95,7 @@
       "id": "retrieval_dense_retrieval",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 19632,
+      "durationMs": 20311,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -106,7 +106,7 @@
       "id": "retrieval_hybrid_retrieval",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 9971,
+      "durationMs": 9752,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -117,7 +117,7 @@
       "id": "retrieval_known_document",
       "category": "Retrieval",
       "status": "PASS",
-      "durationMs": 23245,
+      "durationMs": 22738,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -128,7 +128,7 @@
       "id": "tool_calling_echotool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 997,
+      "durationMs": 1289,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -139,7 +139,7 @@
       "id": "tool_calling_healthtool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 1224,
+      "durationMs": 1305,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -150,7 +150,7 @@
       "id": "tool_calling_timetool",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 1508,
+      "durationMs": 2088,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,
@@ -161,7 +161,7 @@
       "id": "tool_calling_tool_failure",
       "category": "Tool Calling",
       "status": "PASS",
-      "durationMs": 1012,
+      "durationMs": 1185,
       "metrics": {
         "retrievalCount": 0,
         "llmCalls": 0,

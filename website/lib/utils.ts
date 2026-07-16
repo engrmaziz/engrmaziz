@@ -26,6 +26,7 @@ export function slugify(str: string): string {
  */
 export function formatDate(date: string | Date, options?: Intl.DateTimeFormatOptions): string {
   const defaultOptions: Intl.DateTimeFormatOptions = {
+    timeZone: "UTC",
     year: "numeric",
     month: "long",
     day: "numeric",

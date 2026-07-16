@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { checkHealth } from '@/lib/system';
+import { checkHealth } from '@/lib/system/health';
 
 export async function GET() {
   const health = checkHealth();

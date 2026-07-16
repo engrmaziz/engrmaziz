@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Database, Cpu, Layers, RefreshCw, AlertCircle, X, ShieldCheck } from 'lucide-react';
+import { Activity, Database, Cpu, Layers, RefreshCw, AlertCircle, X, ShieldCheck, BrainCircuit } from 'lucide-react';
 
 interface RAGStatus {
   status: 'ONLINE' | 'OFFLINE';
@@ -57,17 +57,18 @@ export function RAGXIndicator() {
   const isOnline = status?.status === 'ONLINE';
 
   return (
-    <div className="fixed bottom-6 left-6 z-[9999] font-sans">
+    <div className="fixed bottom-[104px] right-6 z-50 font-sans">
       {/* Floating Indicator Trigger Button */}
       <button
         onClick={() => {
           setIsOpen(!isOpen);
           if (!isOpen) fetchStatus();
         }}
-        className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-elevated border border-default text-primary hover:border-accent hover:text-accent shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
-        aria-label="Toggle RAGX status indicator panel"
+        title="AI Knowledge Engine"
+        className="w-12 h-12 rounded-full flex items-center justify-center bg-elevated border border-border-default text-primary hover:border-accent hover:text-accent shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base relative"
+        aria-label="AI Knowledge Engine"
       >
-        <span className="relative flex h-2.5 w-2.5">
+        <span className="absolute top-0 right-0 flex h-2.5 w-2.5 -mt-0.5 -mr-0.5">
           {isOnline && (
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
           )}
@@ -77,7 +78,7 @@ export function RAGXIndicator() {
             }`}
           ></span>
         </span>
-        <span className="text-xs font-semibold tracking-wider font-mono">RAGX</span>
+        <BrainCircuit className="w-5 h-5" />
       </button>
 
       {/* Expandable Status Overlay Card */}
@@ -94,14 +95,14 @@ export function RAGXIndicator() {
             />
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="absolute bottom-14 left-0 w-80 p-5 rounded-2xl bg-elevated border border-default shadow-2xl z-[10000] text-primary overflow-hidden"
+              className="absolute bottom-16 right-0 w-[calc(100vw-3rem)] sm:w-80 max-h-[calc(100vh-268px)] flex flex-col rounded-2xl bg-elevated border border-default shadow-2xl z-50 text-primary overflow-hidden"
             >
               {/* Header Title Bar */}
-              <div className="flex items-center justify-between pb-3 border-b border-default mb-4">
+              <div className="flex items-center justify-between p-5 pb-3 border-b border-default shrink-0 bg-elevated z-10">
                 <div className="flex items-center gap-2">
                   <Activity className="h-4 w-4 text-accent" />
                   <span className="text-sm font-semibold tracking-wide">Knowledge Base Engine</span>
@@ -116,7 +117,7 @@ export function RAGXIndicator() {
               </div>
 
               {/* Engine Metrics Rows */}
-              <div className="space-y-3.5 text-xs font-mono">
+              <div className="flex-1 overflow-y-auto p-5 pt-4 space-y-3.5 text-xs font-mono">
                 {/* Connection Health Status */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-secondary">
@@ -228,25 +229,25 @@ export function RAGXIndicator() {
                 </div>
               </div>
 
-              {/* Action Buttons Footer */}
-              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-default">
-                <button
-                  onClick={fetchStatus}
-                  disabled={loading}
-                  className="flex-1 py-1.5 rounded-lg border border-default text-xs font-semibold hover:border-accent hover:text-accent disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
-                  Refresh Check
-                </button>
-              </div>
-
-              {/* Error Callout */}
-              {error && (
-                <div className="mt-3 p-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg flex items-start gap-1.5 text-[10px] leading-relaxed">
-                  <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                  <span>Connection refused. Verify PostgreSQL pooler access and local environment values.</span>
+              {/* Action Buttons Footer & Error */}
+              <div className="p-5 pt-3 border-t border-default shrink-0 bg-elevated z-10 flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={fetchStatus}
+                    disabled={loading}
+                    className="flex-1 py-1.5 rounded-lg border border-default text-xs font-semibold hover:border-accent hover:text-accent disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
+                    Refresh Check
+                  </button>
                 </div>
-              )}
+                {error && (
+                  <div className="p-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg flex items-start gap-1.5 text-[10px] leading-relaxed">
+                    <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                    <span>Connection refused. Verify PostgreSQL pooler access and local environment values.</span>
+                  </div>
+                )}
+              </div>
             </motion.div>
           </>
         )}

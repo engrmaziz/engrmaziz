@@ -8,6 +8,15 @@ import { envServer } from '@/lib/config/env.server';
 // This is the admin/service_role client, meaning it bypasses RLS.
 // It should ONLY be used in server environments (API routes, Server Components, Server Actions)
 
+// Mock WebSocket for Node.js 20 without native WebSocket
+class MockWebSocket {
+  constructor() {}
+  send() {}
+  close() {}
+  addEventListener() {}
+  removeEventListener() {}
+}
+
 export const supabase = createClient(
   envClient.NEXT_PUBLIC_SUPABASE_URL,
   envServer.SUPABASE_SERVICE_ROLE_KEY,
@@ -15,6 +24,9 @@ export const supabase = createClient(
     auth: {
       persistSession: false,
       autoRefreshToken: false,
+    },
+    realtime: {
+      transport: typeof WebSocket !== 'undefined' ? WebSocket : MockWebSocket as any
     }
   }
 );

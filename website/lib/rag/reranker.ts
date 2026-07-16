@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { telemetryLogger } from '../telemetry';
 import { providerFactory } from '../providers';
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 
 export interface RerankResult {
   index: number;

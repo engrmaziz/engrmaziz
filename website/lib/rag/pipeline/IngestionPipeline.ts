@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-function-type */
-import { embeddings } from '@/lib/rag/embeddings';
 import { db } from '@/lib/db/supabase';
 import { semanticChunker } from './SemanticChunker';
 import { logger } from '@/lib/utils/logger';
@@ -42,8 +41,9 @@ export class IngestionPipeline {
 
       // 5. Embedding Generation & Vector Storage (Batched)
       let processedChunks = 0;
+      const { ragEmbedder } = await import('@/lib/rag/embedder');
       for (const chunk of chunks) {
-        const vector = await embeddings.generateEmbedding(chunk.text);
+        const vector = await ragEmbedder.embed(chunk.text);
         
         const chunkRecord = await db.insert('document_chunks', {
           parent_document: docRecord.id,

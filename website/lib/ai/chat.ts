@@ -3,7 +3,14 @@ import { providerFactory } from '../providers';
 import { AIChatMessage, AIChatResponse } from './provider';
 
 class AIChatService {
-  private client = providerFactory.getChatProvider();
+  private _client: any = null;
+
+  private get client() {
+    if (!this._client) {
+      this._client = providerFactory.getChatProvider();
+    }
+    return this._client;
+  }
 
   async chatSimple(prompt: string, context?: Record<string, unknown>): Promise<any> {
     return this.client.generate({ prompt, context });

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSystemVersion } from '@/lib/system';
+import { getSystemVersion } from '@/lib/system/version';
 
 export async function GET() {
   const version = getSystemVersion();

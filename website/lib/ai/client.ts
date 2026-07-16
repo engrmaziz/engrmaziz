@@ -2,7 +2,7 @@
 import { AIProvider, AIChatMessage, AIChatResponse } from './provider';
 import { CONFIG } from '@/lib/config/constants';
 import { logger } from '@/lib/utils/logger';
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 
 // Default mock/stub provider for sandbox/test environments
 export class DefaultAIProvider implements AIProvider {

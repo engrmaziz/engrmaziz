@@ -5,7 +5,7 @@ import { ragReranker } from './reranker';
 import { telemetryLogger } from '../telemetry';
 import { ragContextBuilder } from './context-builder';
 import { providerFactory } from '../providers';
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 
 export interface RetrievedChunk {
   chunkId: string;
@@ -67,7 +67,8 @@ export class RAGRetriever {
     query: string,
     limit: number = 5,
     threshold: number = 0.3,
-    filters: Record<string, any> = {}
+    filters: Record<string, any> = {},
+    queryVector?: number[]
   ): Promise<{ contextText: string; chunks: RetrievedChunk[]; citations: any[], cragEval: string }> {
     try {
       const normalizedQuery = this.normalizeQuery(query);
@@ -78,27 +79,38 @@ export class RAGRetriever {
 
       // --- 1. HyDE (Hypothetical Document Embeddings) ---
       let hypotheticalDocument = normalizedQuery;
+      let finalEmbedding = queryVector;
+
       try {
         const { providerFactory } = await import('@/lib/providers');
         const aiClient = providerFactory.getChatProvider();
         const hydePrompt = `You are a technical expert. Write a concise, factual excerpt (3-4 sentences) that directly answers the following query. Write it in the style of official technical documentation.\n\nQuery: ${normalizedQuery}`;
-        const hydeRes = await aiClient.generate({ prompt: hydePrompt });
+        
+        // Add a 1200ms timeout to HyDE to bound latency
+        const hydePromise = aiClient.generate({ prompt: hydePrompt });
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('HyDE timeout')), 1200));
+        
+        const hydeRes = await Promise.race([hydePromise, timeoutPromise]) as any;
+        
         if (hydeRes && hydeRes.content) {
           hypotheticalDocument = hydeRes.content.trim();
           telemetryLogger.log('RAG', `HyDE generated: "${hypotheticalDocument.substring(0, 50)}..."`);
+          finalEmbedding = await ragEmbedder.embed(hypotheticalDocument);
         }
       } catch (hydeErr) {
-        telemetryLogger.error('RAG', `HyDE generation failed, falling back to original query.`, hydeErr);
+        telemetryLogger.log('RAG', `HyDE bounded latency exceeded or failed, continuing with original query vector.`);
       }
 
-      // 2. Generate Query Vector Embedding using the Hypothetical Document (or fallback to query)
-      const queryEmbedding = await ragEmbedder.embed(hypotheticalDocument);
+      // If HyDE failed/timed out, and we weren't passed a queryVector, we must generate it.
+      if (!finalEmbedding) {
+        finalEmbedding = await ragEmbedder.embed(normalizedQuery);
+      }
 
       // 3. Deterministic Vector Retrieval Pipeline
       const { retrievalPipeline } = await import('../retrieval/pipeline');
       
       const retrievalResult = await retrievalPipeline.retrieve({
-        queryEmbedding,
+        queryEmbedding: finalEmbedding,
         limit: 50,
         threshold,
         filters,
@@ -107,7 +119,6 @@ export class RAGRetriever {
 
       telemetryLogger.log('RAG', `Deterministic retrieval candidate count: ${retrievalResult.statistics.candidateCount}`);
 
-      // Take the top 15 normalized candidates
       const top15Candidates = retrievalResult.candidates.slice(0, 15);
 
       if (top15Candidates.length === 0) {
@@ -117,7 +128,6 @@ export class RAGRetriever {
       // 4. Execute Reranker to filter down to the best candidates
       const rerankedResults = await ragReranker.rerank(normalizedQuery, top15Candidates, limit);
 
-      // 6. Map reranked indices to original database records
       const finalChunks = rerankedResults.map((r) => {
         const originalRecord = top15Candidates[r.index]!;
         return {
@@ -130,29 +140,29 @@ export class RAGRetriever {
         };
       });
 
-      // 7. Build optimized context block and extract citations using the Context Builder
       const { contextText, citations } = ragContextBuilder.buildContext(
         finalChunks as any,
         systemConfig.RAG_MAX_CONTEXT_TOKENS
       );
 
       // --- 8. CRAG (Corrective RAG) Context Evaluation ---
-      let cragEval = 'RELEVANT';
-      try {
-        const { providerFactory } = await import('@/lib/providers');
+      // The user approved moving this to a fire-and-forget background promise since it only logs telemetry
+      // and does not halt generation or influence retrieval.
+      const cragEval = 'RELEVANT';
+      import('@/lib/providers').then(({ providerFactory }) => {
         const aiClient = providerFactory.getChatProvider();
         const cragPrompt = `You are a grader evaluating the relevance of retrieved context to a user query. \n\nQuery: ${normalizedQuery}\n\nContext:\n${contextText}\n\nDoes the context contain sufficient relevant information to answer the query? Respond with exactly one word: "RELEVANT" or "IRRELEVANT".`;
-        const cragRes = await aiClient.generate({ prompt: cragPrompt });
-        const evalScore = cragRes?.content?.trim().toUpperCase();
-        if (evalScore && evalScore.includes('IRRELEVANT')) {
-          cragEval = 'IRRELEVANT';
-          telemetryLogger.log('RAG', `CRAG Evaluation marked context as IRRELEVANT.`);
-        } else {
-          telemetryLogger.log('RAG', `CRAG Evaluation marked context as RELEVANT.`);
-        }
-      } catch (cragErr) {
-        telemetryLogger.error('RAG', `CRAG evaluation failed, assuming RELEVANT.`, cragErr);
-      }
+        aiClient.generate({ prompt: cragPrompt })
+          .then(cragRes => {
+            const evalScore = cragRes?.content?.trim().toUpperCase();
+            if (evalScore && evalScore.includes('IRRELEVANT')) {
+              telemetryLogger.log('RAG', `CRAG Evaluation marked context as IRRELEVANT.`);
+            } else {
+              telemetryLogger.log('RAG', `CRAG Evaluation marked context as RELEVANT.`);
+            }
+          })
+          .catch(err => telemetryLogger.error('RAG', `CRAG async evaluation failed.`, err));
+      });
 
       return {
         contextText,

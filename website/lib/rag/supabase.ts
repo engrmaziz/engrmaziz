@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Pool } from 'pg';
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 
 const url = systemConfig.NEXT_PUBLIC_SUPABASE_URL || '';
 const projectRef = url.match(/https:\/\/([a-z0-9]+)\.supabase\.co/)?.[1] || 'mrtfycddgwpvezbaxbdl';

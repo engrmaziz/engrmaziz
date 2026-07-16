@@ -1,7 +1,7 @@
 import { ragDatabase, ChunkRecord, EmbeddingRecord } from '../rag/supabase';
 import { IndexedChunk } from '../indexing/types';
 import { StorageExecutionError } from './errors';
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 
 export class VectorRepository {
   /**

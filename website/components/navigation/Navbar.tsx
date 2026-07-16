@@ -55,7 +55,7 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-4 inset-x-4 md:inset-x-8 max-w-5xl mx-auto z-[9999] pointer-events-auto transition-all duration-300 rounded-full",
+        "fixed top-4 inset-x-4 md:inset-x-8 max-w-5xl mx-auto z-40 pointer-events-auto transition-all duration-300 rounded-full",
         isScrolled
           ? "bg-base/70 backdrop-blur-xl border border-border-default/50 shadow-sm py-2 px-6"
           : "bg-transparent py-4 px-6 border border-transparent"
@@ -184,7 +184,7 @@ export function Navbar() {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
-                <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="w-full mt-4 flex items-center justify-center gap-2 text-secondary hover:text-primary transition-colors py-2">
+                <Link href="https://github.com/engrmaziz" target="_blank" rel="noopener noreferrer" className="w-full mt-4 flex items-center justify-center gap-2 text-secondary hover:text-primary transition-colors py-2">
                   <Code2 className="w-5 h-5" />
                   <span className="font-medium">GitHub Profile</span>
                 </Link>

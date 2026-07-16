@@ -14,7 +14,7 @@ export const SystemConstants = {
   DEFAULT_FAST_MODEL: 'openai/gpt-oss-20b',
 
   // Providers
-  DEFAULT_CHAT_PROVIDER: 'default',
+  DEFAULT_CHAT_PROVIDER: 'groq',
   DEFAULT_EMBEDDING_PROVIDER: 'jina_embedding',
   DEFAULT_RERANKER_PROVIDER: 'jina_reranker'
 } as const;

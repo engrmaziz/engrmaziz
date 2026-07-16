@@ -21,6 +21,10 @@
     /* Liquid Accent Background (low opacity) */
     --liquid-accent-opacity: 0.15;
 
+    /* Selection Styles */
+    --color-selection-bg: rgba(193, 101, 47, 0.3); /* accent at 30% opacity */
+    --color-selection-text: #1A1A18; /* dark text for high contrast */
+
     /* Spacing & Layout */
     --nav-height: 4rem; /* 64px */
     --container-width-default: 1200px;
@@ -64,6 +68,10 @@
     /* Surfaces */
     --surface-glass-bg: rgba(28, 28, 22, 0.6);
     --surface-glass-border: rgba(255, 255, 255, 0.1);
+
+    /* Selection Styles */
+    --color-selection-bg: var(--color-accent-hover); /* Brighter accent */
+    --color-selection-text: #FFFFFF; /* white text */
   }
 
   * {
@@ -75,9 +83,18 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
+  /* Universal Selection Styles */
   ::selection {
-    background-color: var(--color-accent);
-    color: var(--color-bg-base);
+    background-color: var(--color-selection-bg) !important;
+    color: var(--color-selection-text) !important;
+    -webkit-text-fill-color: var(--color-selection-text) !important;
+    text-shadow: none !important;
+  }
+  ::-moz-selection {
+    background-color: var(--color-selection-bg) !important;
+    color: var(--color-selection-text) !important;
+    -webkit-text-fill-color: var(--color-selection-text) !important;
+    text-shadow: none !important;
   }
 
   /* Scrollbar */

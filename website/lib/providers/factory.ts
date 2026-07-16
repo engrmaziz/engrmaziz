@@ -1,7 +1,7 @@
 import { ChatProvider, EmbeddingProvider, RerankerProvider } from './types';
 import { providerRegistry } from './registry';
 import { ProviderConfigurationError } from './errors';
-import { systemConfig } from '../system';
+import { systemConfig } from '../system/config';
 
 // Removed automatic registration. Handled by system/startup.ts
 

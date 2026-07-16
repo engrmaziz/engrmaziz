@@ -17,13 +17,13 @@ graph TD
         ClientComponents --> FramerMotion[Framer Motion Animations]
     end
 
-    subgraph Backend Infrastructure
+    subgraph "Backend Infrastructure"
         ServerComponents -.-> SupabaseWrapper[Supabase Client]
         ServerComponents -.-> SanityWrapper[Sanity Client]
         ServerComponents -.-> ResendWrapper[Resend Client]
     end
 
-    subgraph AI Infrastructure
+    subgraph "AI Infrastructure"
         ServerComponents -.-> GroqWrapper[Groq / GPT-OSS Models]
         ServerComponents -.-> Pinecone[Vector DB]
     end

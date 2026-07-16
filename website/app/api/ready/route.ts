@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { checkReadiness } from '@/lib/system';
+import { checkReadiness } from '@/lib/system/readiness';
 
 export async function GET() {
   const readiness = checkReadiness();
