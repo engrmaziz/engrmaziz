@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     // Save to Database
     try {
       await db.insert('contacts', data);
-    } catch (dbError: any) {
+    } catch (dbError: unknown) {
       console.error('[Contact API] Failed to save to database:', dbError);
       // We continue even if DB fails, as email is the primary notification
     }
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     try {
       notificationResult = await emailService.sendContactNotification(data);
       console.log('[Contact API] Resend notification message ID:', notificationResult?.data?.id);
-    } catch (emailError: any) {
+    } catch (emailError: unknown) {
       console.error('[Contact API] Failed to send notification email:', emailError);
       // If notification fails, we MUST fail the request so the frontend shows an error
       return errorResponse(new Error('Failed to deliver message. Please try emailing io@maziz.me directly.'));
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     // Acknowledge Lead
     try {
       await emailService.sendLeadAcknowledgement(data.email, data.name);
-    } catch (ackError: any) {
+    } catch (ackError: unknown) {
       console.error('[Contact API] Failed to send acknowledgment email:', ackError);
       // We do not fail the request if just the auto-reply fails
     }

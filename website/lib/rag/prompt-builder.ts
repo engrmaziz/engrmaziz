@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { RAG_SYSTEM_PROMPT } from './prompts';
+import { getAllServices } from '../services';
 
 export class PromptBuilder {
   /**
@@ -19,10 +20,9 @@ export class PromptBuilder {
     // Inject Structured Service Index for broad queries to prevent chunk-dropping omission
     if (currentQuery.toLowerCase().includes('service') || currentQuery.toLowerCase().includes('offer')) {
       try {
-        const { getAllServices } = require('../services');
         const allServices = getAllServices();
         if (allServices && allServices.length > 0) {
-          const serviceList = allServices.map((s: any) => `- ${s.title}${s.description ? `: ${s.description}` : ''}`).join('\n');
+          const serviceList = allServices.map((s) => `- ${s.title}${s.description ? `: ${s.description}` : ''}`).join('\n');
           systemContent += `\n\n--- Complete Service Catalog (Use this to ensure you do not omit any services) ---\n${serviceList}`;
         }
       } catch (e) {
