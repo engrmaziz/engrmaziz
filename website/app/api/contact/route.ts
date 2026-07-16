@@ -17,7 +17,9 @@ export async function POST(req: NextRequest) {
 
     // Save to Database
     try {
+      console.log("Before save");
       await db.insert('contacts', data);
+      console.log("After save");
     } catch (dbError: unknown) {
       console.error('[Contact API] Failed to save to database:', dbError);
       // We continue even if DB fails, as email is the primary notification
@@ -26,7 +28,9 @@ export async function POST(req: NextRequest) {
     // Trigger Notification
     let notificationResult;
     try {
+      console.log("Before notification email");
       notificationResult = await emailService.sendContactNotification(data);
+      console.log("After notification email");
       console.log('[Contact API] Resend notification message ID:', notificationResult?.data?.id);
     } catch (emailError: unknown) {
       console.error('[Contact API] Failed to send notification email:', emailError);
@@ -36,7 +40,9 @@ export async function POST(req: NextRequest) {
     
     // Acknowledge Lead
     try {
+      console.log("Before acknowledgement email");
       await emailService.sendLeadAcknowledgement(data.email, data.name);
+      console.log("After acknowledgement email");
     } catch (ackError: unknown) {
       console.error('[Contact API] Failed to send acknowledgment email:', ackError);
       // We do not fail the request if just the auto-reply fails
