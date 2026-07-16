@@ -73,23 +73,23 @@ Modern Next.js applications require sophisticated rendering strategies to balanc
 
 ```mermaid
 graph TD
-    subgraph Browser / Client
+    subgraph "Browser / Client"
         User([User Requests URL])
         DOM[Browser DOM Rendering]
         Interactive[Hydrated Client Components]
     end
 
-    subgraph Vercel Edge Network
+    subgraph "Vercel Edge Network"
         CDN[Edge Cache / CDN]
         Middleware[Next.js Middleware: Auth/Routing]
     end
 
-    subgraph Next.js Node Server
+    subgraph "Next.js Node Server"
         RSC[React Server Components]
         Suspense[Streaming UI / Suspense]
     end
 
-    subgraph Backend / APIs
+    subgraph "Backend / APIs"
         API[External REST/GraphQL APIs]
         DB[(PostgreSQL)]
     end

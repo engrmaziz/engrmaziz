@@ -73,23 +73,23 @@ A robust automation system relies heavily on asynchronous event-driven architect
 
 ```mermaid
 graph TD
-    subgraph Trigger Sources
+    subgraph "Trigger Sources"
         CRM[Salesforce / HubSpot]
         Email[Exchange / Gmail Inbox]
         Form[Web Form Submission]
     end
 
-    subgraph API Gateway Layer
+    subgraph "API Gateway Layer"
         Webhook[FastAPI Webhook Receiver]
     end
 
-    subgraph Middleware & Processing
+    subgraph "Middleware & Processing"
         Queue[(Celery / RabbitMQ)]
         Worker[Python Automation Worker]
         LLM[LLM: Data Extraction]
     end
 
-    subgraph Destination Systems
+    subgraph "Destination Systems"
         ERP[SAP / NetSuite]
         Slack[Slack / Teams Notifications]
         DB[(Internal PostgreSQL)]

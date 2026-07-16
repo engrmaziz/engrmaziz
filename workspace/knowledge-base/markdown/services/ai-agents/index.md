@@ -95,22 +95,22 @@ An Enterprise Omnichannel Architecture requires strict separation of concerns, h
 
 ```mermaid
 graph TD
-    subgraph Channels (The Mouth/Ears)
+    subgraph "Channels (The Mouth/Ears)"
         Voice[Voice APIs: Vapi / Retell]
         Web[React / Next.js Chatbot]
         Social[Twilio: WhatsApp / SMS]
     end
 
-    subgraph API Gateway
+    subgraph "API Gateway"
         FastAPI[FastAPI WebSocket/REST Router]
     end
 
-    subgraph Memory & State
+    subgraph "Memory & State"
         Redis[(Redis: Active Session State)]
         Postgres[(PostgreSQL: Long-term Memory)]
     end
 
-    subgraph The Brain (LangGraph)
+    subgraph "The Brain (LangGraph)"
         Router[Intent Router]
         WorkerA[RAG Knowledge Agent]
         WorkerB[Tool Calling / API Agent]

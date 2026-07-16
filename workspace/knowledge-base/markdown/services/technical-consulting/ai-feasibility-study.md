@@ -73,25 +73,25 @@ Our feasibility studies remove emotion and rely entirely on data.
 
 ```mermaid
 graph TD
-    subgraph Phase 1: Data Audit
+    subgraph "Phase 1: Data Audit"
         Ingest[Data Extraction: APIs/DBs/PDFs]
         Analyze[Data Quality & Density Analysis]
         Identify[Identify PII & Compliance Risks]
     end
 
-    subgraph Phase 2: The Proof of Concept
+    subgraph "Phase 2: The Proof of Concept"
         Embed[Select Embedding Models]
         Chunk[Test Semantic Chunking Strategies]
         RAG[Build Rapid RAG / LangGraph PoC]
     end
 
-    subgraph Phase 3: Mathematical Evaluation
+    subgraph "Phase 3: Mathematical Evaluation"
         Adversarial[Generate 1,000 Test Queries]
         Score[Ragas: Grade Precision & Recall]
         Cost[Model API Token Costs @ Scale]
     end
 
-    subgraph Phase 4: The Verdict
+    subgraph "Phase 4: The Verdict"
         Report[Executive Feasibility Report]
         Roadmap[Production Engineering Roadmap]
     end

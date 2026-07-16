@@ -58,5 +58,42 @@ export const MarkdownComponents = {
   h3({ children, ...props }: any) {
     const id = String(children).toLowerCase().replace(/[^a-z0-9]+/g, '-');
     return <h3 id={id} className="scroll-mt-32 group relative" {...props}>{children}</h3>;
+  },
+  table({ children, ...props }: any) {
+    return (
+      <div className="w-full overflow-x-auto rounded-lg border border-border-default mb-4 shadow-sm bg-base">
+        <table className="w-full text-left text-sm" {...props}>
+          {children}
+        </table>
+      </div>
+    );
+  },
+  th({ children, ...props }: any) {
+    return (
+      <th className="px-4 py-3 bg-elevated border-b border-border-default font-semibold text-primary whitespace-nowrap" {...props}>
+        {children}
+      </th>
+    );
+  },
+  td({ children, ...props }: any) {
+    return (
+      <td className="px-4 py-3 border-b border-border-default text-secondary break-words" {...props}>
+        {children}
+      </td>
+    );
+  },
+  a({ children, href, ...props }: any) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline break-all" {...props}>
+        {children}
+      </a>
+    );
+  },
+  img({ src, alt, ...props }: any) {
+    return (
+      <div className="rounded-xl overflow-hidden border border-border-default my-4 bg-base">
+        <img src={src} alt={alt} className="max-w-full h-auto object-contain" loading="lazy" {...props} />
+      </div>
+    );
   }
 };

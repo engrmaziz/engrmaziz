@@ -105,7 +105,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-4 border-l border-border-default pl-4">
             <ThemeToggle />
-            <Link href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <Link href="https://github.com/engrmaziz" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <Button variant="ghost" size="icon" className="rounded-full text-secondary hover:text-primary">
                 <Code2 className="w-4 h-4" />
               </Button>

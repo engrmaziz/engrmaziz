@@ -127,17 +127,29 @@ export class RAGOrchestrator {
         ctx.executionContext.diagnostics.summaryUsed = !!ctx.memory.summary;
 
         if (ctx.memory.history.length > 0) {
-          const historyStr = ctx.memory.history
-            .map((h: any) => `${h.role === 'user' ? 'User' : 'Assistant'}: ${h.content}`)
-            .join('\n');
+          // Heuristic: Check if query is standalone or requires context resolution
+          const lowerQuery = queryText.toLowerCase().trim();
+          const needsRewrite = /^(what about|explain that|compare it|what did i|what was|tell me more|how does it|why|where|who is he|who is she|and|but)/i.test(lowerQuery);
           
-          const rewritePrompt = CONVERSATION_REWRITER_PROMPT
-            .replace('{history}', historyStr)
-            .replace('{query}', queryText);
-          
-          const rewriteRes = await aiClient.generate({ prompt: rewritePrompt });
-          if (rewriteRes && rewriteRes.content) {
-            ctx.request.optimizedQuery = rewriteRes.content.trim();
+          if (!needsRewrite) {
+            // Standalone query: bypass LLM rewrite to save ~2500ms
+            telemetryLogger.log('RAG', `Memory stage: Bypassing LLM rewrite for standalone query: "${queryText}"`);
+            ctx.request.optimizedQuery = queryText;
+          } else {
+            telemetryLogger.log('RAG', `Memory stage: Invoking LLM rewrite for query: "${queryText}"`);
+            const historyStr = ctx.memory.history
+              .map((h: any) => `${h.role === 'user' ? 'User' : 'Assistant'}: ${h.content}`)
+              .join('\n');
+            
+            const rewritePrompt = CONVERSATION_REWRITER_PROMPT
+              .replace('{history}', historyStr)
+              .replace('{query}', queryText);
+            
+            const rewriteRes = await aiClient.generate({ prompt: rewritePrompt });
+            if (rewriteRes && rewriteRes.content) {
+              ctx.request.optimizedQuery = rewriteRes.content.trim();
+              telemetryLogger.log('RAG', `Memory stage: Rewritten query: "${ctx.request.optimizedQuery}"`);
+            }
           }
         }
       }
@@ -200,6 +212,7 @@ export class RAGOrchestrator {
       ctx.retrieval.citations = retrievalResult.citations;
       
       ctx.executionContext.diagnostics.finalContextChunks = retrievalResult.chunks.length;
+      (ctx.executionContext.diagnostics as any).retrievalStageTimings = (retrievalResult as any).stageTimings;
       
       trace.endStage('Retrieval', true);
       telemetryLogger.log('PIPELINE', 'Retrieval stage completed', { requestId, durationMs: trace.exportTrace().stages['Retrieval'].durationMs });

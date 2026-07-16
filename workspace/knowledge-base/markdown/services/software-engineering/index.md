@@ -95,23 +95,23 @@ A resilient enterprise application requires caching at the edge, horizontal scal
 
 ```mermaid
 graph TD
-    subgraph Edge CDN & WAF
+    subgraph "Edge CDN & WAF"
         Cloudflare[Cloudflare Edge CDN]
         Vercel[Vercel Edge Network]
     end
 
-    subgraph Frontend Compute
+    subgraph "Frontend Compute"
         NextJS[Next.js React Server Components]
     end
 
-    subgraph Backend Microservices (AWS/GCP)
+    subgraph "Backend Microservices (AWS/GCP)"
         API[API Gateway / Load Balancer]
         Auth[Auth Service: OAuth/JWT]
         Core[Core Business Logic API]
         QueueWorker[Background Task Workers]
     end
 
-    subgraph Data Persistence
+    subgraph "Data Persistence"
         Redis[(Redis: Cache & Session)]
         Postgres[(PostgreSQL: Primary DB)]
         S3[(AWS S3: Asset Storage)]

@@ -73,26 +73,26 @@ A production-grade backend isolates public traffic from internal state and heavy
 
 ```mermaid
 graph TD
-    subgraph Public Internet
+    subgraph "Public Internet"
         Client[Mobile / Web Client]
     end
 
-    subgraph API Gateway Layer
+    subgraph "API Gateway Layer"
         Nginx[NGINX / API Gateway]
         RateLimit[Redis Rate Limiter]
     end
 
-    subgraph Compute Layer (Docker Containers)
+    subgraph "Compute Layer (Docker Containers)"
         API[FastAPI / Node.js Servers]
         Auth[Authentication Service]
     end
 
-    subgraph Asynchronous Workers
+    subgraph "Asynchronous Workers"
         Queue[(RabbitMQ / Redis)]
         Worker[Celery / BullMQ Workers]
     end
 
-    subgraph Persistence Layer
+    subgraph "Persistence Layer"
         PrimaryDB[(PostgreSQL Primary: Writes)]
         ReplicaDB[(PostgreSQL Replica: Reads)]
         Cache[(Redis Cache)]

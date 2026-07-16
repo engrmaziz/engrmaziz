@@ -29,9 +29,8 @@ interface RAGStatus {
   health: 'EXCELLENT' | 'CRITICAL';
 }
 
-const STORAGE_KEY = 'ragx_chat_state';
 const VISITOR_KEY = 'ragx_visitor_info';
-const CONVO_ID_KEY = 'ragx_convo_id';
+const HISTORY_KEY = 'ragx_history_v2';
 
 function generateUUID() {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -47,13 +46,19 @@ function TypewriterText({ text, onComplete }: { text: string; onComplete?: () =>
   const [displayedText, setDisplayedText] = useState('');
   
   useEffect(() => {
+    const safeText = text || '';
+    if (!safeText) {
+      if (onComplete) onComplete();
+      return;
+    }
+    
     let index = 0;
     const intervalId = setInterval(() => {
-      setDisplayedText(text.slice(0, index));
+      setDisplayedText(safeText.slice(0, index));
       index += 3;
-      if (index > text.length) {
+      if (index > safeText.length) {
         clearInterval(intervalId);
-        setDisplayedText(text);
+        setDisplayedText(safeText);
         if (onComplete) onComplete();
       }
     }, 15);
@@ -79,21 +84,19 @@ export function RAGXChatAssistant() {
   const [conversationId, setConversationId] = useState<string>('');
   const [visitorInfo, setVisitorInfo] = useState<VisitorInfo | null>(null);
   const [engineStatus, setEngineStatus] = useState<RAGStatus | null>(null);
+  
+  const [showHistory, setShowHistory] = useState(false);
+  const [history, setHistory] = useState<any[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    const storedMessages = localStorage.getItem(STORAGE_KEY);
     const storedVisitor = localStorage.getItem(VISITOR_KEY);
-    const storedConvoId = localStorage.getItem(CONVO_ID_KEY);
+    const storedHistory = localStorage.getItem(HISTORY_KEY);
 
-    if (storedConvoId) {
-      setConversationId(storedConvoId);
-    } else {
-      const newId = generateUUID();
-      setConversationId(newId);
-      localStorage.setItem(CONVO_ID_KEY, newId);
+    if (!conversationId) {
+      setConversationId(generateUUID());
     }
 
     if (storedVisitor) {
@@ -104,11 +107,9 @@ export function RAGXChatAssistant() {
       } catch (e) {}
     }
 
-    if (storedMessages) {
+    if (storedHistory) {
       try {
-        const parsed = JSON.parse(storedMessages);
-        const cleaned = parsed.map((m: Message) => ({ ...m, isStreaming: false }));
-        setMessages(cleaned);
+        setHistory(JSON.parse(storedHistory));
       } catch (e) {}
     }
 
@@ -120,9 +121,29 @@ export function RAGXChatAssistant() {
 
   useEffect(() => {
     if (messages.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      setHistory(prev => {
+        const existingIdx = prev.findIndex(h => h.id === conversationId);
+        const title = messages.find(m => m.role === 'user')?.content.slice(0, 30) || 'New Chat';
+        
+        const newEntry = {
+          id: conversationId,
+          title,
+          updatedAt: new Date().toISOString(),
+          messages: messages.map(m => ({ ...m, isStreaming: false })) // don't persist streaming state
+        };
+        
+        let newHistory;
+        if (existingIdx >= 0) {
+          newHistory = [...prev];
+          newHistory[existingIdx] = { ...prev[existingIdx], ...newEntry };
+        } else {
+          newHistory = [newEntry, ...prev];
+        }
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(newHistory));
+        return newHistory;
+      });
     }
-  }, [messages]);
+  }, [messages, conversationId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -168,7 +189,6 @@ export function RAGXChatAssistant() {
         timestamp: new Date().toISOString()
       };
       setMessages([welcomeMsg]);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([welcomeMsg]));
     }
   };
 
@@ -204,7 +224,10 @@ export function RAGXChatAssistant() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to communicate with RAG engine.');
+        const errorMsg = data.error 
+          ? (typeof data.error === 'string' ? data.error : (data.error.message || JSON.stringify(data.error))) 
+          : 'Failed to communicate with RAG engine.';
+        throw new Error(errorMsg);
       }
 
       setMessages(prev => [...prev, {
@@ -250,18 +273,18 @@ export function RAGXChatAssistant() {
   };
 
   const clearConversation = () => {
-    const newId = generateUUID();
-    setConversationId(newId);
-    localStorage.setItem(CONVO_ID_KEY, newId);
-    
-    const welcomeMsg: Message = {
-      id: generateUUID(),
-      role: 'assistant',
-      content: `Hello 👋\n\nI'm the RAGX Knowledge Assistant. Conversation cleared. How can I help you?`,
-      timestamp: new Date().toISOString()
-    };
-    setMessages([welcomeMsg]);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([welcomeMsg]));
+    setConversationId(generateUUID());
+    setMessages([]);
+    setShowHistory(false);
+  };
+  
+  const loadHistoryChat = (convoId: string) => {
+    const chat = history.find(h => h.id === convoId);
+    if (chat) {
+      setConversationId(convoId);
+      setMessages(chat.messages);
+      setShowHistory(false);
+    }
   };
 
   const formatTime = (isoString: string) => {
@@ -311,7 +334,6 @@ export function RAGXChatAssistant() {
               className="relative z-[100] flex flex-col bg-elevated/95 backdrop-blur-xl border border-border-default shadow-2xl overflow-hidden pointer-events-auto
                         h-[100dvh] w-full rounded-none sm:h-[700px] sm:w-[440px] sm:max-h-[calc(100vh-80px)] sm:rounded-2xl"
             >
-              {/* Header */}
               <div className="flex items-center justify-between p-4 border-b border-border-default bg-base shrink-0">
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
@@ -324,10 +346,18 @@ export function RAGXChatAssistant() {
                 </div>
                 <div className="flex items-center gap-1 shrink-0 ml-2">
                   <button 
+                    onClick={() => setShowHistory(!showHistory)}
+                    className={`p-2 rounded-full transition-colors ${showHistory ? 'text-accent bg-accent/10' : 'text-secondary hover:text-accent hover:bg-accent/10'}`}
+                    aria-label="History"
+                    title="History"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                  </button>
+                  <button 
                     onClick={clearConversation}
                     className="p-2 text-secondary hover:text-accent hover:bg-accent/10 rounded-full transition-colors"
-                    aria-label="Clear conversation"
-                    title="Clear conversation"
+                    aria-label="New chat"
+                    title="New chat"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -379,6 +409,32 @@ export function RAGXChatAssistant() {
                       Start Conversation
                     </button>
                   </form>
+                </div>
+              ) : showHistory ? (
+                /* History View */
+                <div className="flex-1 overflow-y-auto p-4 bg-base flex flex-col space-y-2">
+                  <h3 className="text-sm font-semibold text-primary mb-2 px-2">Chat History</h3>
+                  {history.length === 0 ? (
+                    <p className="text-sm text-secondary px-2">No previous conversations found.</p>
+                  ) : (
+                    history.map(h => (
+                      <button
+                        key={h.id}
+                        onClick={() => loadHistoryChat(h.id)}
+                        className={`text-left p-3 rounded-xl transition-colors ${h.id === conversationId ? 'bg-accent/10 border border-accent/20' : 'bg-elevated border border-border-default hover:bg-accent/5'}`}
+                      >
+                        <p className="text-sm font-medium text-primary line-clamp-1">{h.title || 'Conversation'}</p>
+                        <p className="text-[11px] text-secondary mt-1">{formatTime(h.updatedAt)}</p>
+                      </button>
+                    ))
+                  )}
+                  <button
+                    onClick={clearConversation}
+                    className="mt-4 py-2 flex items-center justify-center gap-2 bg-accent/10 text-accent rounded-xl text-sm font-medium hover:bg-accent hover:text-white transition-all"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    Start New Chat
+                  </button>
                 </div>
               ) : (
                 /* Chat Interface */

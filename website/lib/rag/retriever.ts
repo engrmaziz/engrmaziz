@@ -71,42 +71,58 @@ export class RAGRetriever {
     queryVector?: number[]
   ): Promise<{ contextText: string; chunks: RetrievedChunk[]; citations: any[], cragEval: string }> {
     try {
+      const stageTimings: Record<string, number> = {};
+      let start = performance.now();
+      
       const normalizedQuery = this.normalizeQuery(query);
       const expandedQuery = this.expandQuery(query);
+      stageTimings['Normalization'] = performance.now() - start;
       
       telemetryLogger.log('RAG', `Normalized Query: "${normalizedQuery}"`);
       telemetryLogger.log('RAG', `Expanded Query: "${expandedQuery}"`);
 
       // --- 1. HyDE (Hypothetical Document Embeddings) ---
+      start = performance.now();
       let hypotheticalDocument = normalizedQuery;
       let finalEmbedding = queryVector;
 
-      try {
-        const { providerFactory } = await import('@/lib/providers');
-        const aiClient = providerFactory.getChatProvider();
-        const hydePrompt = `You are a technical expert. Write a concise, factual excerpt (3-4 sentences) that directly answers the following query. Write it in the style of official technical documentation.\n\nQuery: ${normalizedQuery}`;
-        
-        // Add a 350ms timeout to HyDE to bound latency strictly
-        const hydePromise = aiClient.generate({ prompt: hydePrompt });
-        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('HyDE timeout')), 350));
-        
-        const hydeRes = await Promise.race([hydePromise, timeoutPromise]) as any;
-        
-        if (hydeRes && hydeRes.content) {
-          hypotheticalDocument = hydeRes.content.trim();
-          telemetryLogger.log('RAG', `HyDE generated: "${hypotheticalDocument.substring(0, 50)}..."`);
-          finalEmbedding = await ragEmbedder.embed(hypotheticalDocument);
-        }
-      } catch (hydeErr) {
-        telemetryLogger.log('RAG', `HyDE bounded latency exceeded or failed, continuing with original query vector.`);
-      }
+      // Skip HyDE if the query is sufficiently descriptive (e.g. > 40 chars)
+      const shouldRunHyde = normalizedQuery.length <= 40;
 
-      // If HyDE failed/timed out, and we weren't passed a queryVector, we must generate it.
+      if (shouldRunHyde) {
+        try {
+          const { providerFactory } = await import('@/lib/providers');
+          const aiClient = providerFactory.getChatProvider();
+          const hydePrompt = `You are a technical expert. Write a concise, factual excerpt (3-4 sentences) that directly answers the following query. Write it in the style of official technical documentation.\n\nQuery: ${normalizedQuery}`;
+          
+          // Add a 350ms timeout to HyDE to bound latency strictly
+          const hydePromise = aiClient.generate({ prompt: hydePrompt });
+          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('HyDE timeout')), 350));
+          
+          const hydeRes = await Promise.race([hydePromise, timeoutPromise]) as any;
+          
+          if (hydeRes && hydeRes.content) {
+            hypotheticalDocument = hydeRes.content.trim();
+            telemetryLogger.log('RAG', `HyDE generated: "${hypotheticalDocument.substring(0, 50)}..."`);
+            finalEmbedding = await ragEmbedder.embed(hypotheticalDocument);
+          }
+        } catch (hydeErr) {
+          telemetryLogger.log('RAG', `HyDE bounded latency exceeded or failed, continuing with original query vector.`);
+        }
+      } else {
+        telemetryLogger.log('RAG', `HyDE skipped: query sufficiently descriptive.`);
+      }
+      stageTimings['HyDE'] = performance.now() - start;
+
+      start = performance.now();
+      // If HyDE failed/timed out/skipped, and we weren't passed a queryVector, we must generate it.
       if (!finalEmbedding) {
         finalEmbedding = await ragEmbedder.embed(normalizedQuery);
       }
+      stageTimings['Embedding'] = performance.now() - start;
 
       // 3. Deterministic Vector Retrieval Pipeline
+      start = performance.now();
       const { retrievalPipeline } = await import('../retrieval/pipeline');
       
       const retrievalResult = await retrievalPipeline.retrieve({
@@ -116,6 +132,7 @@ export class RAGRetriever {
         filters,
         strategy: 'vector_only'
       });
+      stageTimings['VectorSearch'] = performance.now() - start;
 
       telemetryLogger.log('RAG', `Deterministic retrieval candidate count: ${retrievalResult.statistics.candidateCount}`);
 
@@ -126,8 +143,11 @@ export class RAGRetriever {
       }
 
       // 4. Execute Reranker to filter down to the best candidates
+      start = performance.now();
       const rerankedResults = await ragReranker.rerank(normalizedQuery, top8Candidates, limit);
+      stageTimings['Reranker'] = performance.now() - start;
 
+      start = performance.now();
       const finalChunks = rerankedResults.map((r) => {
         const originalRecord = top8Candidates[r.index]!;
         return {
@@ -144,6 +164,15 @@ export class RAGRetriever {
         finalChunks as any,
         systemConfig.RAG_MAX_CONTEXT_TOKENS
       );
+      stageTimings['ContextAssembly'] = performance.now() - start;
+      
+      if (process.env.ENABLE_PERFORMANCE_PROFILING === 'true') {
+        console.log('\n[RETRIEVAL SUB-STAGE PROFILE]');
+        Object.entries(stageTimings).forEach(([stage, ms]) => {
+          console.log(`${stage.padEnd(20)}: ${ms.toFixed(2)} ms`);
+        });
+        console.log('-----------------------------');
+      }
 
       // --- 8. CRAG (Corrective RAG) Context Evaluation ---
       // The user approved moving this to a fire-and-forget background promise since it only logs telemetry
@@ -168,7 +197,8 @@ export class RAGRetriever {
         contextText,
         chunks: finalChunks,
         citations,
-        cragEval
+        cragEval,
+        stageTimings
       };
 
     } catch (err: any) {

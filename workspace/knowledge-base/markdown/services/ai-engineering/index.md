@@ -111,27 +111,27 @@ Our standard Enterprise RAG architecture decouples retrieval, generation, and va
 
 ```mermaid
 graph TD
-    subgraph Client Layer
+    subgraph "Client Layer"
         A[Next.js Frontend / API Gateway]
     end
 
-    subgraph Security Layer
+    subgraph "Security Layer"
         B[Authentication / JWT]
         C[PII Redaction Gateway]
     end
 
-    subgraph Routing & State
+    subgraph "Routing & State"
         D[LangGraph Supervisor]
     end
 
-    subgraph Retrieval Pipeline
+    subgraph "Retrieval Pipeline"
         E[Query Transformer]
         F[Hybrid Search Router]
         G[(Vector DB - pgvector)]
         H[(Graph DB - Neo4j)]
     end
 
-    subgraph Generation & Validation
+    subgraph "Generation & Validation"
         I[LLM Inference]
         J[Fact Checker / Hallucination Grader]
     end

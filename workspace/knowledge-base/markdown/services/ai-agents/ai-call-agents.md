@@ -73,17 +73,17 @@ Deploying Call Agents requires strict decoupling of the scheduling engine, the t
 
 ```mermaid
 graph TD
-    subgraph Campaign Management
+    subgraph "Campaign Management"
         CRM[Salesforce / HubSpot] --> API[FastAPI Dispatcher]
         API --> Queue[(RabbitMQ / Celery Queue)]
     end
 
-    subgraph Telephony & Audio
+    subgraph "Telephony & Audio"
         Twilio[Twilio SIP Trunking]
         Vapi[Vapi / Retell Voice Gateway]
     end
 
-    subgraph LLM & Logic
+    subgraph "LLM & Logic"
         LLM[GPT-4o / Groq Llama 3]
         DB[(PostgreSQL: Call Logs)]
     end

@@ -73,25 +73,25 @@ Our audit covers the complete request lifecycle.
 
 ```mermaid
 graph TD
-    subgraph 1. Discovery Phase
+    subgraph "1. Discovery Phase"
         Interviews[Engineering Team Interviews]
         Access[Secure Read-Only Repo/AWS Access]
     end
 
-    subgraph 2. Diagnostic Phase
+    subgraph "2. Diagnostic Phase"
         Static[Static Code Analysis: Snyk / Sonar]
         Manual[Manual Architecture Review]
         DB[Database Profiling: Slow Query Logs]
         Infra[Cloud Infra Review: AWS/GCP]
     end
 
-    subgraph 3. Synthesis Phase
+    subgraph "3. Synthesis Phase"
         Map[Current State Architecture Map]
         Target[Target State Architecture Map]
         Gaps[Gap & Risk Analysis]
     end
 
-    subgraph 4. The Deliverable
+    subgraph "4. The Deliverable"
         Report[Executive Summary: ROI & Costs]
         Roadmap[Engineering Blueprint: JIRA Epics]
     end

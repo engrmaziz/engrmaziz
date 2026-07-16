@@ -73,22 +73,22 @@ A robust SaaS architecture separates the Control Plane (user management/billing)
 
 ```mermaid
 graph TD
-    subgraph Client
+    subgraph "Client"
         Browser[Next.js Client]
     end
 
-    subgraph Authentication & Gateway
+    subgraph "Authentication & Gateway"
         WAF[Cloudflare WAF]
         Edge[Next.js Middleware: JWT Verification]
     end
 
-    subgraph Control Plane (Account / Billing)
+    subgraph "Control Plane (Account / Billing)"
         Auth[Clerk / Auth0 / NextAuth]
         Billing[Stripe API]
         Webhook[Stripe Webhook Receiver]
     end
 
-    subgraph Data Plane (Core Application)
+    subgraph "Data Plane (Core Application)"
         API[FastAPI / Node.js Server]
         RLS[PostgreSQL Row-Level Security]
     end
