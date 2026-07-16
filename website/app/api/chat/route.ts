@@ -13,6 +13,7 @@ const chatRequestSchema = z.object({
     name: z.string().min(2),
     email: z.string().email(),
   }).optional(),
+  flags: z.record(z.any()).optional(),
 });
 
 export const runtime = 'nodejs';
@@ -61,7 +62,8 @@ export async function POST(req: NextRequest) {
     const response = await ragOrchestrator.execute({
       query: data.message,
       sessionId: data.conversationId,
-      filters: {} // No active filters sent from UI yet
+      filters: {}, // No active filters sent from UI yet
+      flags: (data as any).flags
     });
 
     return successResponse({

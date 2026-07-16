@@ -127,7 +127,7 @@ export class RAGRetriever {
       
       const retrievalResult = await retrievalPipeline.retrieve({
         queryEmbedding: finalEmbedding,
-        limit: 50,
+        limit: 200, // Fetch up to 200 chunks to ensure document diversity is possible before pruning
         threshold,
         filters,
         strategy: 'vector_only'
@@ -136,20 +136,51 @@ export class RAGRetriever {
 
       telemetryLogger.log('RAG', `Deterministic retrieval candidate count: ${retrievalResult.statistics.candidateCount}`);
 
-      const top8Candidates = retrievalResult.candidates.slice(0, 8);
+      // 4. Document Diversity Selection
+      // Group by documentId and pull highest scored chunk from each document first,
+      // then fill remaining slots to ensure broad queries cover many distinct documents.
+      const DIVERSITY_POOL_SIZE = 30; // Feed up to 30 diverse chunks to the reranker
+      
+      const docGroups = new Map<string, any[]>();
+      retrievalResult.candidates.forEach(candidate => {
+        const docId = candidate.document_id;
+        if (!docGroups.has(docId)) docGroups.set(docId, []);
+        docGroups.get(docId)!.push(candidate);
+      });
 
-      if (top8Candidates.length === 0) {
-        return { contextText: '', chunks: [], citations: [], cragEval: 'IRRELEVANT' };
+      const diverseCandidates: any[] = [];
+      let round = 0;
+      
+      while (diverseCandidates.length < Math.min(DIVERSITY_POOL_SIZE, retrievalResult.candidates.length)) {
+        let addedInRound = false;
+        for (const [docId, chunks] of docGroups.entries()) {
+          if (diverseCandidates.length >= DIVERSITY_POOL_SIZE) break;
+          
+          // STRICT DIVERSITY: Maximum 2 chunks per document in the candidate pool
+          // to prevent any single document from starving others
+          if (round >= 2) continue;
+          
+          if (chunks.length > round) {
+            diverseCandidates.push(chunks[round]);
+            addedInRound = true;
+          }
+        }
+        if (!addedInRound) break; // Exhausted all chunks
+        round++;
       }
 
-      // 4. Execute Reranker to filter down to the best candidates
+      if (diverseCandidates.length === 0) {
+        return { contextText: '', chunks: [], citations: [], cragEval: 'IRRELEVANT', stageTimings };
+      }
+
+      // 5. Execute Reranker to filter down to the best diverse candidates
       start = performance.now();
-      const rerankedResults = await ragReranker.rerank(normalizedQuery, top8Candidates, limit);
+      const rerankedResults = await ragReranker.rerank(normalizedQuery, diverseCandidates, limit);
       stageTimings['Reranker'] = performance.now() - start;
 
       start = performance.now();
       const finalChunks = rerankedResults.map((r) => {
-        const originalRecord = top8Candidates[r.index]!;
+        const originalRecord = diverseCandidates[r.index]!;
         return {
           chunkId: originalRecord.chunk_id,
           documentId: originalRecord.document_id,

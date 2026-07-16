@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, User, Mail, Trash2, Bot, AlertCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -87,11 +88,13 @@ export function RAGXChatAssistant() {
   
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
+    setMounted(true);
     const storedVisitor = localStorage.getItem(VISITOR_KEY);
     const storedHistory = localStorage.getItem(HISTORY_KEY);
 
@@ -99,10 +102,11 @@ export function RAGXChatAssistant() {
       setConversationId(generateUUID());
     }
 
+    let loadedVisitor = null;
     if (storedVisitor) {
       try {
-        const parsed = JSON.parse(storedVisitor);
-        setVisitorInfo(parsed);
+        loadedVisitor = JSON.parse(storedVisitor);
+        setVisitorInfo(loadedVisitor);
         setIsIdentified(true);
       } catch (e) {}
     }
@@ -111,6 +115,18 @@ export function RAGXChatAssistant() {
       try {
         setHistory(JSON.parse(storedHistory));
       } catch (e) {}
+    }
+    
+    // Explicitly add welcome message on fresh mount if visitor is identified
+    // but the current session is brand new
+    if (loadedVisitor && messages.length === 0) {
+      const welcomeMsg: Message = {
+        id: generateUUID(),
+        role: 'assistant',
+        content: `Hello ${loadedVisitor.name} 👋\n\nI'm the RAGX Knowledge Assistant.\n\nAsk me anything about our company, services, projects, or expertise.\n\nExample prompts:\n- *"How does your RAG pipeline work?"*\n- *"What AI services do you offer?"*`,
+        timestamp: new Date().toISOString()
+      };
+      setMessages([welcomeMsg]);
     }
 
     fetch('/api/rag/status')
@@ -274,7 +290,13 @@ export function RAGXChatAssistant() {
 
   const clearConversation = () => {
     setConversationId(generateUUID());
-    setMessages([]);
+    const welcomeMsg: Message = {
+      id: generateUUID(),
+      role: 'assistant',
+      content: `Hello ${visitorInfo?.name || ''} 👋\n\nI'm the RAGX Knowledge Assistant. New chat started. How can I help you?`,
+      timestamp: new Date().toISOString()
+    };
+    setMessages([welcomeMsg]);
     setShowHistory(false);
   };
   
@@ -314,17 +336,18 @@ export function RAGXChatAssistant() {
         <Bot className="w-6 h-6" />
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <div className="fixed inset-0 z-[100] pointer-events-none font-sans flex items-end sm:items-end justify-end sm:p-6 pb-0 pr-0">
-            {/* Mobile Backdrop Overlay */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[95] sm:hidden pointer-events-auto"
-            />
+      {mounted && createPortal(
+        <AnimatePresence>
+          {isOpen && (
+            <div className="fixed inset-0 z-[9999] pointer-events-none font-sans flex items-end sm:items-end justify-end sm:p-6 pb-0 pr-0">
+              {/* Mobile Backdrop Overlay */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsOpen(false)}
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9995] sm:hidden pointer-events-auto"
+              />
             
             <motion.div
               initial={{ opacity: 0, y: "100%", scale: 0.95 }}
@@ -545,8 +568,10 @@ export function RAGXChatAssistant() {
               )}
             </motion.div>
           </div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 }

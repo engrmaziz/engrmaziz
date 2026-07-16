@@ -207,13 +207,42 @@ export class RAGOrchestrator {
     // ==========================================
     trace.startStage('Retrieval');
     try {
-      const retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 5, 0.3, filters, queryVector);
+      // Reduced threshold from 0.0 to -1.0 to allow broad queries to capture all available services
+      const retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 20, -1.0, filters, queryVector);
       ctx.retrieval.retrievedContext = retrievalResult.contextText;
       ctx.retrieval.citations = retrievalResult.citations;
       
       ctx.executionContext.diagnostics.finalContextChunks = retrievalResult.chunks.length;
       (ctx.executionContext.diagnostics as any).retrievalStageTimings = (retrievalResult as any).stageTimings;
       
+      if (process.env.ENABLE_PERFORMANCE_PROFILING === 'true') {
+        console.log('\n========================================');
+        console.log('DOCUMENT RETRIEVAL & PRUNING AUDIT');
+        console.log('========================================');
+        
+        console.log('\n[RETRIEVED DOCUMENTS (Top 30 Candidates to Reranker)]');
+        // We can access original diverseCandidates from logs inside retriever if needed, 
+        // but let's print the chunks that made it past reranker into Prompt Assembly first.
+        retrievalResult.chunks.forEach((chunk: any) => {
+          console.log(`- [${chunk.documentId}] ${chunk.metadata.title} (${chunk.metadata.url}) | Score: ${chunk.score?.toFixed(3)}`);
+        });
+
+        console.log('\n[PROMPT DOCUMENTS (Actually included in Context)]');
+        ctx.retrieval.citations.forEach((cit: any) => {
+          console.log(`- [ID: ${cit.id}] ${cit.title} (${cit.url})`);
+        });
+
+        console.log('\n[DROPPED DOCUMENTS (Due to Context Budget / Reranking)]');
+        // Any chunk that is in retrievalResult.chunks but NOT in ctx.retrieval.citations
+        const promptUrls = new Set(ctx.retrieval.citations.map((c: any) => c.url));
+        retrievalResult.chunks.forEach((chunk: any) => {
+          if (!promptUrls.has(chunk.metadata.url)) {
+            console.log(`- [${chunk.documentId}] ${chunk.metadata.title} | Reason: Dropped during token budget construction`);
+          }
+        });
+        console.log('========================================\n');
+      }
+
       trace.endStage('Retrieval', true);
       telemetryLogger.log('PIPELINE', 'Retrieval stage completed', { requestId, durationMs: trace.exportTrace().stages['Retrieval'].durationMs });
     } catch (err: any) {
