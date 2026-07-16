@@ -11,7 +11,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Storage configured incorrectly.' }, { status: 500 });
     }
 
-    const signRes = await fetch(`${supabaseUrl}/storage/v1/object/sign/resume/latest.pdf`, {
+    const signRes = await fetch(`${supabaseUrl}/storage/v1/object/sign/resumes/latest.pdf`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${serviceRoleKey}`,
@@ -28,7 +28,7 @@ export async function GET() {
 
     const { signedURL } = await signRes.json();
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       url: `${supabaseUrl}/storage/v1${signedURL}`,
       size: "2.4 MB",
       updatedAt: new Date().toISOString().split('T')[0]
