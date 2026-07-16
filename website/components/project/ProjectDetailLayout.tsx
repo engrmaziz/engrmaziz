@@ -14,7 +14,6 @@ import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { MarkdownComponents } from "@/components/markdown/MarkdownComponents";
-import { DiagramPlaceholder } from "./DiagramPlaceholder";
 import { RelatedContent } from "./RelatedContent";
 import type { ProjectData } from "@/lib/projects";
 
@@ -153,7 +152,7 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
           <div className="flex flex-wrap items-center gap-4">
             {project.sourceCode && (
               <a href={project.sourceCode} target="_blank" rel="noopener noreferrer" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm">
-                <Button variant="outline" className="gap-2">
+                <Button variant="primary" className="gap-2">
                   <GitBranch className="w-4 h-4" /> View Repository
                 </Button>
               </a>
@@ -199,8 +198,13 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
               
               // Handle special programmatic sections
               if (sec.type === "diagram") {
+                const content = mappedContent[sec.id];
+                const hasContent = !!content && content.trim().length > 0;
+                
+                if (!hasContent) return null;
+
                 return (
-                  <section key={sec.id} id={sec.id} className="mb-16 scroll-mt-32 group">
+                  <section key={sec.id} id={sec.id} className="mb-16 scroll-mt-32 group relative">
                     <div className="flex items-center justify-between mb-6 border-b border-border-default pb-2">
                       <h2 className="text-2xl md:text-3xl font-bold text-primary m-0 flex items-center gap-3">
                         <a href={`#${sec.id}`} className="hover:text-accent transition-colors cursor-pointer">
@@ -211,7 +215,11 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
                         {copiedLink === sec.id ? <Check className="w-4 h-4 text-green-500" /> : <Hash className="w-4 h-4" />}
                       </button>
                     </div>
-                    <DiagramPlaceholder type={sec.diagType as "mermaid" | "c4" | "sequence" | "infrastructure" | "database" | "api"} title={sec.title} />
+                    <div className="markdown-body">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
+                        {content}
+                      </ReactMarkdown>
+                    </div>
                   </section>
                 );
               }
@@ -251,6 +259,8 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
               const content = mappedContent[sec.id];
               const hasContent = !!content && content.trim().length > 0;
 
+              if (!hasContent) return null;
+
               return (
                 <section key={sec.id} id={sec.id} className="mb-16 scroll-mt-32 group relative">
                   
@@ -270,20 +280,12 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
                     </button>
                   </div>
 
-                  {/* Section Content or Placeholder */}
-                  {hasContent ? (
-                    <div className="markdown-body">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
-                        {content}
-                      </ReactMarkdown>
-                    </div>
-                  ) : (
-                    <div className="bg-elevated/50 border border-border-default border-dashed rounded-lg p-6 my-6 text-center text-secondary">
-                      <p className="font-mono text-sm">
-                        [ Information Required: <span className="font-bold">{sec.title}</span> specifications are pending documentation sync. ]
-                      </p>
-                    </div>
-                  )}
+                  {/* Section Content */}
+                  <div className="markdown-body">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>
+                      {content}
+                    </ReactMarkdown>
+                  </div>
                 </section>
               );
             })}

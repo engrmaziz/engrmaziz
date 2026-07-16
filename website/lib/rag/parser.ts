@@ -128,11 +128,13 @@ export class RAGParser {
   private deriveUrl(category: string, slug: string, filename: string): string {
     // Map categories to frontend routes
     const cleanSlug = slug.toLowerCase();
-    if (category === 'blog') return `/blog/${cleanSlug}`;
-    if (category === 'projects') return `/projects/${cleanSlug}`;
-    if (category === 'services') {
+    const cleanFilename = filename.toLowerCase().replace(/\\/g, '/');
+    
+    if (category === 'blog' || cleanFilename.includes('/blog/')) return `/blog/${cleanSlug}`;
+    if (category === 'projects' || cleanFilename.includes('/projects/')) return `/projects/${cleanSlug}`;
+    if (category === 'services' || cleanFilename.includes('/services/')) {
       // Find sub-path structure inside services folder
-      const serviceParts = filename.toLowerCase().replace(/\\/g, '/').split('/services/');
+      const serviceParts = cleanFilename.split('/services/');
       if (serviceParts.length > 1) {
         const subPath = serviceParts[1]!.replace(/\.[^/.]+$/, "");
         return `/services/${subPath.replace(/\/index$/, '')}`;

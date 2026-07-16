@@ -44,7 +44,7 @@ export function generateWebSiteSchema() {
       "name": siteMetadata.author,
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteMetadata.siteUrl}/favicon.ico`
+        "url": `${siteMetadata.siteUrl}/images/maklight.webp`
       }
     },
     "potentialAction": {

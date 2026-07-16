@@ -2,6 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { BackToTop } from "@/components/navigation/BackToTop";
+import { BrandLogo } from "@/components/common/BrandLogo";
 
 const FOOTER_LINKS = {
   Navigation: [
@@ -45,12 +46,7 @@ export function Footer() {
               href="/" 
               className="group flex items-center gap-2 w-fit focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
             >
-              <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                <span className="text-base font-bold text-base-inverted font-mono">AE</span>
-              </div>
-              <span className="text-lg font-bold tracking-tight text-primary transition-colors group-hover:text-accent">
-                Architect
-              </span>
+              <BrandLogo size="lg" className="transition-transform duration-300 group-hover:scale-[1.02]" />
             </Link>
             
             <p className="text-secondary leading-relaxed max-w-sm">
@@ -109,7 +105,7 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-border-default gap-4">
           <p className="text-secondary text-sm">
-            © {currentYear} AI Architect. All rights reserved.
+            © {currentYear} Musharraf Aziz. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="text-secondary hover:text-primary transition-colors text-sm">Privacy Policy</Link>

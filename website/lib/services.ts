@@ -108,7 +108,7 @@ function parseMarkdownFile(filePath: string): BaseContent {
     slugArray,
     title: data.title || slug.replace(/-/g, ' '),
     category: data.category || 'Service',
-    description: data.description || 'Information Required',
+    description: data.description || '',
     aliases: data.aliases || undefined,
     tags: data.tags || undefined,
     keywords: data.keywords || undefined,

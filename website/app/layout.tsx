@@ -44,6 +44,7 @@ export const metadata: Metadata = {
     "Voice AI", "Go", "Python", "System Architecture"
   ],
   authors: [{ name: siteMetadata.author, url: siteMetadata.siteUrl }],
+  applicationName: siteMetadata.author,
   creator: siteMetadata.author,
   publisher: siteMetadata.author,
   formatDetection: {
@@ -55,13 +56,13 @@ export const metadata: Metadata = {
     title: siteMetadata.title,
     description: siteMetadata.description,
     url: siteMetadata.siteUrl,
-    siteName: siteMetadata.title,
+    siteName: siteMetadata.author,
     images: [
       {
-        url: "/og-image.png",
+        url: "/images/maklight.webp",
         width: 1200,
         height: 630,
-        alt: siteMetadata.title,
+        alt: "Musharraf Aziz — AI Engineer, Full-Stack Developer & Enterprise AI Solutions",
       },
     ],
     locale: "en_US",

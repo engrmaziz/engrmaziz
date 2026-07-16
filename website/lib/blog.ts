@@ -80,7 +80,7 @@ export function getAllPosts(): BlogData[] {
     return {
       slug,
       title: data.title || slug.replace(/-/g, ' '),
-      description: data.description || 'Information Required',
+      description: data.description || '',
       category: data.category || 'Engineering',
       date: data.date || new Date().toISOString().split('T')[0],
       author: data.author || 'Senior Software Architect',

@@ -90,7 +90,20 @@ export class RAGReranker {
       const denseScore = res.similarity || res.semantic_score || 0.0;
       
       // Merge dense vector scores and sparse keyword matching (60% dense / 40% lexical weight)
-      const mergedScore = denseScore * 0.6 + lexicalScore * 0.4;
+      let mergedScore = denseScore * 0.6 + lexicalScore * 0.4;
+      
+      // HEURISTIC: Broad/Taxonomy Boost
+      // If the query asks broadly for "services" or "offerings", boost root category pages
+      // so they don't get outranked by verbose pages like FAQ or Knowledge Base.
+      const url = res.metadata?.url || res.url || res.source || '';
+      const category = res.metadata?.category || '';
+      
+      if (query.toLowerCase().includes('service')) {
+        // Boost root service pages (e.g. /services/ai-agents/index.md or /services/ai-agents)
+        if (url.includes('services/') || category.toLowerCase() === 'service') {
+          mergedScore += 0.2; // Significant boost to force them into Top 5
+        }
+      }
       
       return {
         index,
