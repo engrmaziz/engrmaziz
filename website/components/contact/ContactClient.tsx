@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Mail, MapPin, Clock, Code, Briefcase, FileText, CalendarCheck, ShieldCheck } from "lucide-react";
+import { envClient } from "@/lib/config/env.client";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
@@ -131,7 +132,7 @@ export function ContactClient() {
               </p>
             </div>
             <a
-              href={process.env.NEXT_PUBLIC_BOOKING_URL}
+              href={envClient.NEXT_PUBLIC_BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-accent text-[color:var(--color-bg-base)] font-bold rounded-lg hover:bg-accent/90 transition-colors shrink-0 cursor-pointer relative z-50 inline-flex items-center justify-center text-center"

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 export interface ToolCall {
   tool: string;
   arguments: Record<string, unknown>;

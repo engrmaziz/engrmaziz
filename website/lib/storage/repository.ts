@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { ragDatabase, ChunkRecord, EmbeddingRecord } from '../rag/supabase';
 import { IndexedChunk } from '../indexing/types';
 import { StorageExecutionError } from './errors';
@@ -17,6 +18,7 @@ export class VectorRepository {
 
       for (let i = 0; i < indexedChunks.length; i++) {
         const chunk = indexedChunks[i];
+        if (!chunk) continue;
         
         chunkRecords.push({
           parent_document: documentId,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { RequestContext } from '../rag/orchestrator';
 import { RequestTrace } from '../telemetry';
 

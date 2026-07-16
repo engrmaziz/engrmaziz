@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { ChatProvider, EmbeddingProvider, RerankerProvider } from './types';
 import { providerRegistry } from './registry';
 import { ProviderConfigurationError } from './errors';

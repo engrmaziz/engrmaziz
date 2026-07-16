@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 const SENSITIVE_KEYS = new Set([
   'authorization',
   'api_key',

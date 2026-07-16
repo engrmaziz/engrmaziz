@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 export class CitationFormatter {
   static format(rawContent: string, retrievedCitations: any[]): string {
     if (!rawContent) return rawContent;

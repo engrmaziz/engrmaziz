@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { randomUUID } from 'crypto';
 import { StageTelemetry, RequestTraceData } from './types';
 

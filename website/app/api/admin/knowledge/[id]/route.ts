@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { NextResponse } from 'next/server';
 import { adminKnowledgeService } from '../../../../../lib/knowledge/admin-service';
 import { authorizationService, PERMISSIONS } from '../../../../../lib/security';

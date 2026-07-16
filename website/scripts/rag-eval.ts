@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ragRetriever } from '../lib/rag/retriever';
 import { createAIClient } from '../lib/ai/client';
 

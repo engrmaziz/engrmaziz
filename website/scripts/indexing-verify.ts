@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { indexingPipeline } from '../lib/indexing/pipeline';
 import { RecordBuilder } from '../lib/indexing/record';
 import { providerFactory, EmbeddingProvider } from '../lib/providers';

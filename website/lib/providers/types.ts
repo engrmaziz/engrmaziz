@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 // Matches existing internal abstractions
 export interface ChatRequest {
   messages?: any[];

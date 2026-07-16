@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { Agent, AgentResponse } from './types';
 import { AgentContext } from './context';
 import { telemetryLogger } from '../telemetry';

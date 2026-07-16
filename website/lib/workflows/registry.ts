@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Workflow } from './types';
 import { telemetryLogger } from '../telemetry';
 

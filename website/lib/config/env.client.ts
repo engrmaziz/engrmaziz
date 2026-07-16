@@ -17,6 +17,7 @@ const clientSchema = z.object({
   NEXT_PUBLIC_SITE_DOMAIN: z.string().default('localhost'),
   NEXT_PUBLIC_CANONICAL_URL: z.string().url().default('http://localhost:3000'),
   NEXT_PUBLIC_DEFAULT_LOCALE: z.string().default('en-US'),
+  NEXT_PUBLIC_BOOKING_URL: z.string().url().default('https://cal.com/musharrafaziz/enterprise-discovery-call'),
 });
 
 const _clientEnv = clientSchema.safeParse({
@@ -36,6 +37,7 @@ const _clientEnv = clientSchema.safeParse({
   NEXT_PUBLIC_SITE_DOMAIN: process.env.NEXT_PUBLIC_SITE_DOMAIN,
   NEXT_PUBLIC_CANONICAL_URL: process.env.NEXT_PUBLIC_CANONICAL_URL,
   NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
+  NEXT_PUBLIC_BOOKING_URL: process.env.NEXT_PUBLIC_BOOKING_URL,
 });
 
 if (!_clientEnv.success) {

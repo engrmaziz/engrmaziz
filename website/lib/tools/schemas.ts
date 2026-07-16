@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 export function validateSchema(args: Record<string, unknown>, schema: Record<string, any>): string[] {
   const errors: string[] = [];
   const required = schema.required || [];

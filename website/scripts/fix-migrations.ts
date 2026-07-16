@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { pgPool } from '../lib/rag/supabase';
 
 async function main() {

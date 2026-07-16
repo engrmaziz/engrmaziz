@@ -1,12 +1,13 @@
 /* eslint-disable */
 import { NextResponse } from 'next/server';
 import { ragIndexer } from '@/lib/rag/indexer';
+import { telemetryLogger } from '@/lib/telemetry';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
-    console.log('[RAG Index API] Ingestion crawl request triggered.');
+    telemetryLogger.log('RAG', 'Ingestion crawl request triggered.');
     const result = await ragIndexer.indexAll();
     
     return NextResponse.json({

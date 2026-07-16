@@ -30,17 +30,27 @@ Hospitals (like AIHK) want to use advanced LLMs to summarize patient histories, 
 - Detect and block prompt injection attacks.
 - Ensure all LLM outputs conform to a strict, safe JSON schema before returning to the client application.
 
+## Key Features
+- **Inbound Sanitization**: Applies Regex-based PII masking and heuristic jailbreak blocking.
+- **Upstream Governance**: Injects dynamic system prompts and forces provider-native JSON response modes.
+- **Outbound Validation**: Enforces output against JSON schemas with lightweight auto-repair capabilities.
+- **Compliance Telemetry**: Writes asynchronous `.jsonl` audit trails capturing request latency and security outcomes.
+
 ## Solution Architecture
-Built as a highly concurrent FastAPI microservice. Incoming requests are processed through a pipeline:
-1. **Input Validation:** Blocks malicious payloads.
-2. **Redaction Engine:** Uses Microsoft Presidio (backed by spaCy NLP models) to identify entities (Names, SSNs, Medical IDs, Locations). It replaces them with placeholders (e.g., `<PERSON_1>`).
-3. **LLM Invocation:** Sends the clean prompt to the LLM.
-4. **Re-identification (Optional):** Maps the placeholders back to the original entities on the secure internal network before returning the response to the doctor.
+### System Flow
+1. **Inbound Sanitization:** Prompts are validated against `config.yaml` guardrails to strip PII and block instruction-override phrases.
+2. **Upstream Governance:** The proxy connects asynchronously via `httpx.AsyncClient` to the LLM (e.g., Groq API), injecting a strict JSON-mode system prompt.
+3. **Outbound Validation:** The raw string output is parsed, validated against required schema keys (e.g., `status`, `message`, `data`), and auto-repaired if necessary.
+4. **Audit Logging:** Every lifecycle event is recorded in an append-only `audit_trail.jsonl`.
 
 ## Technology Stack
-- **Framework:** FastAPI, Python.
-- **NLP/Security:** Microsoft Presidio, spaCy, Guardrails AI.
-- **Infrastructure:** Dockerized, deployed behind an Nginx reverse proxy on local hardware.
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | FastAPI (Python) |
+| **HTTP Client** | HTTPX (Async) |
+| **NLP/Security** | Regex Heuristics, MS Presidio, spaCy |
+| **LLM Provider** | Groq API |
+| **Testing** | Custom ASCII Security Dashboard via `test_gateway.py` |
 
 ## Challenges & Lessons Learned
 - **Challenge:** NLP models (like spaCy) can add 300-500ms of latency to every request.
@@ -56,7 +66,4 @@ Demonstrates a deep understanding of enterprise constraints. While many develope
 - "Explain the process of Re-identification. How do you return a coherent summary to the user if the names were stripped before sending to the LLM?"
 
 
-## Telemetry & Media Status
-> [!NOTE]
-> **Screenshots/Diagrams:** [Missing Source Information] - Visual assets have not been provided in the current repository.
-> **Deployment Metrics:** Standard CI/CD deployment utilized. Explicit latency/throughput KPIs are documented only where explicitly provided in the core analysis.
+

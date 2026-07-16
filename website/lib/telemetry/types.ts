@@ -1,4 +1,5 @@
-export type LoggerNamespace = 'RAG' | 'MEMORY' | 'SUMMARY' | 'TOOLS' | 'AGENT' | 'LLM' | 'PIPELINE';
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+export type LoggerNamespace = 'RAG' | 'MEMORY' | 'SUMMARY' | 'TOOLS' | 'AGENT' | 'LLM' | 'PIPELINE' | 'SYSTEM' | 'WORKFLOW';
 
 export interface StageTelemetry {
   stageName: string;

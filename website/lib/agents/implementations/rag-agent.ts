@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { BaseAgent } from '../base-agent';
 import { AgentContext } from '../context';
 import { AgentResponse } from '../types';

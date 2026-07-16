@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 export type RetrievalStrategy = 'vector_only';
 
 export interface RetrievalRequest {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { toolRegistry } from '../registry';
 import { HealthTool } from './health';
 import { TimeTool } from './time';

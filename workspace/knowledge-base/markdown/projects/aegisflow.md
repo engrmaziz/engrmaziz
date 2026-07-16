@@ -31,16 +31,35 @@ Financial institutions require real-time processing of massive datasets with zer
 - Integrate real-time ML inference for fraud detection.
 - Maintain strict PCI-DSS compliance and data security.
 
+## Key Features
+- **Predictive Liquidity Forecasting**: Utilizes LSTM Neural Networks to project 30, 60, and 90-day cash flow.
+- **Automated Client Risk Clustering**: Assigns dynamic risk tiers using K-Means clustering on historical payment delays.
+- **Economic Stress-Testing**: Leverages Generative Adversarial Networks (GANs) to simulate market constrictions and hyper-inflation.
+- **Dynamic Time-Sync Engine**: Actively recalibrates average payment delay metrics based on live calendar delta ($t$) before routing to AI models.
+
 ## Solution Architecture
 
 ### High-Level Architecture
 A decoupled microservices architecture. The Next.js frontend communicates via REST to the FastAPI backend. Background ML tasks (PyTorch) are handled via asynchronous task queues (Celery/Redis) to prevent blocking the main API threads.
 
 ### System Components
-- **Frontend:** Next.js (App Router), React, Tailwind CSS.
+- **Frontend:** Next.js (App Router), React, Tailwind CSS, Recharts for predictive trajectories.
 - **Backend:** FastAPI (Python 3.10+).
 - **ML Engine:** PyTorch models served via dedicated inference endpoints.
 - **Database:** PostgreSQL (Primary), Redis (Caching & Task Queues).
+
+## Database Design
+AegisFlow relies on a strict relational architecture hosted on Supabase (PostgreSQL).
+- `clients`: Houses client demographics, risk tiers, and dynamically computed risk profiles.
+- `invoices`: Tracks individual transaction states, due dates, and settlement velocity.
+- `feedback`: Production telemetry loop allowing beta testers to communicate directly with the database.
+
+## AI Pipeline
+The AI intelligence layer is decoupled into a dedicated Python microservice to prevent blocking the Next.js frontend:
+1. **Embedding/Preprocessing**: Live frontend data payload is validated via Pydantic and normalized before model ingestion.
+2. **K-Means Clustering (`scikit-learn`)**: Analyzes historical payment delays and invoice volumes to assign mathematical Risk Tiers (High, Medium, Low) to clients.
+3. **LSTM Neural Networks (`PyTorch`)**: Projects 30, 60, and 90-day cash flow liquidity based on historical settlement velocity.
+4. **Generative Adversarial Networks (GANs)**: Simulates worst-case economic scenarios to stress-test financial survivability.
 
 ## Technology Stack
 - **Programming Languages:** TypeScript, Python, SQL.
@@ -62,7 +81,13 @@ A decoupled microservices architecture. The Next.js frontend communicates via RE
 ## Challenges & Lessons Learned
 - **Challenge:** PyTorch inference was blocking the FastAPI event loop under heavy load.
 - **Solution:** Offloaded ML inference to a dedicated Celery worker pool, maintaining sub-100ms API response times.
-- **Future Improvements:** Transitioning from REST to gRPC for internal microservice communication to further reduce latency.
+- **The 422 Schema Sync Bug:** Next.js payloads were failing validation on the Python backend. Resolved by rigorously typing Next.js JSON payloads against strict Pydantic models.
+- **Recharts Render Crash:** Resolved negative dimension rendering issues by injecting explicit `minWidth={1}` DOM boundaries to prevent React race conditions.
+
+## Future Improvements
+- Migration of the production Vercel build to a dedicated `.tech` domain namespace.
+- Expand GAN stress-testing parameters to include granular industry-specific regional shocks.
+- Automate K-Means client clustering natively inside the database via Supabase Edge Functions (CRON jobs).
 
 ## Recruiter Summary
 AegisFlow demonstrates the ability to architect and deploy complex, high-throughput FinTech applications using modern, decoupled stacks (Next.js + FastAPI), while successfully integrating heavy machine learning workloads (PyTorch) into production environments without compromising latency.
@@ -72,7 +97,4 @@ AegisFlow demonstrates the ability to architect and deploy complex, high-through
 - "What security measures did you implement in AegisFlow to ensure financial data remained secure?"
 
 
-## Telemetry & Media Status
-> [!NOTE]
-> **Screenshots/Diagrams:** [Missing Source Information] - Visual assets have not been provided in the current repository.
-> **Deployment Metrics:** Standard CI/CD deployment utilized. Explicit latency/throughput KPIs are documented only where explicitly provided in the core analysis.
+

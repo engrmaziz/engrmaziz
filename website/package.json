@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
     "rag:index": "npx tsx scripts/rag-index.ts",
     "rag:status": "npx tsx scripts/rag-status.ts",
     "rag:search": "npx tsx scripts/rag-search.ts",
@@ -35,6 +36,7 @@
     "remark-gfm": "^4.0.1",
     "resend": "^6.17.2",
     "server-only": "^0.0.1",
+    "sharp": "^0.35.3",
     "tailwind-merge": "^3.6.0",
     "zod": "^3.25.76"
   },

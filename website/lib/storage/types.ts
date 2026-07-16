@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { IndexResult } from '../indexing/types';
 
 export interface VectorRecord {

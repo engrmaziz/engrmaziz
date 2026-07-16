@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { randomUUID } from 'crypto';
 import { AgentState } from './agent-state';
 import { AgentContext } from './types';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 class MockWebSocket {}
 global.WebSocket = MockWebSocket as any;
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @next/next/no-img-element */
 import React from "react";
 import { Copy } from "lucide-react";
 import { Mermaid } from "@/components/ui/Mermaid";

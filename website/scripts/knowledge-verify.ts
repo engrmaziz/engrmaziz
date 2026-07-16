@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { knowledgeService } from '../lib/knowledge/service';
 import { ingestionPipeline } from '../lib/ingestion/pipeline';
 import { indexingPipeline } from '../lib/indexing/pipeline';

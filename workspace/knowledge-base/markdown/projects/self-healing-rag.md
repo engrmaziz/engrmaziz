@@ -30,20 +30,50 @@ Standard RAG systems are brittle. If the vector search returns irrelevant docume
 - Fallback to web search or alternative data sources if local retrieval fails.
 - Maintain fast generation times (using Groq LPUs) despite multiple LLM evaluation hops.
 
+## Key Features
+- **Confidence Firewall**: Pre-inference mathematical gate ensuring average semantic similarity meets strict thresholds.
+- **Self-Healing Loop**: Autonomous rewrite + re-retrieval passes triggered upon low-confidence retrieval.
+- **Deterministic Refusal**: Hard constraint to return explicit `status: failed` when context remains insufficient, prioritizing refusal over hallucinated generation.
+- **Local Embedded Generation**: Semantic text embedding runs on local CPU isolated from external APIs.
+
 ## Solution Architecture
 
 ### High-Level Architecture
-1. **Query Routing:** Classifies the user query intent.
-2. **Retrieval:** Fetches top-k documents from Qdrant.
-3. **Grading (The "Healing" phase):** A lightweight LLM evaluates if the documents actually answer the query. 
-4. **Correction:** If rejected, the system rewrites the query and searches external APIs (Tavily/SerpAPI).
-5. **Generation:** The final context is passed to the generation LLM.
+A serverless asynchronous FastAPI orchestration backend, integrated with local CPU embedding generation (`all-MiniLM-L6-v2`) and Qdrant Cloud. Groq's API is utilized for low-latency generation.
 
-### System Components
-- **Framework:** LangChain (Custom DAG implementation).
-- **LLMs:** Groq (Llama 3) for ultra-fast intermediate grading; OpenAI (GPT-4o) for complex final generation.
-- **Vector Database:** Qdrant (chosen for its advanced filtering and speed).
-- **Backend:** FastAPI wrapper to expose the pipeline as a REST service.
+```mermaid
+flowchart TD
+    Edge[Edge Trigger / Webhook] --> |POST /api/v1/upload| API
+    API[FastAPI Gateway] --> Embed[Local CPU Embedding]
+    Embed --> |Upsert| Qdrant[Qdrant Cloud]
+    
+    Query[POST /api/v1/ask] --> R[Retrieve Top-K]
+    R --> Eval{Confidence >= Threshold?}
+    Eval --> |Yes| Gen[Groq Llama 3.1 Inference]
+    Eval --> |No| Rewrite[Self-healing Rewrite]
+    Rewrite --> R
+    
+    Rewrite -.-> |Max retries reached| Refuse[Deterministic Fault Frame]
+```
+
+### System Flow
+1. **Ingestion**: Documents are pulled via Make.com webhooks and uploaded to `/api/v1/upload`.
+2. **Vectorization**: PDF extraction, semantic chunking, and embedding occur via `sentence-transformers`.
+3. **Retrieval & Guardrails**: Queries are fetched from Qdrant and passed through a mathematical confidence firewall.
+4. **Healing**: Low confidence triggers autonomous rewriting and re-retrieval loops.
+5. **Generation**: Groq-hosted Llama 3.1 performs strictly grounded generation based on the final verified context.
+
+## Technology Stack
+| Layer | Technology |
+|-------|-----------|
+| **API Gateway** | FastAPI (Python 3.11+) |
+| **Embedding Engine** | SentenceTransformers (`all-MiniLM-L6-v2`) |
+| **Vector DB** | Qdrant Cloud Cluster |
+| **Inference Layer** | Groq API (Llama 3.1) |
+| **Event Orchestration** | Make.com |
+
+## Deployment
+Packaged as a Docker container and deployed serverlessly to **Hugging Face Spaces**. Environment keys (`GROQ_API_KEY`, `QDRANT_API_KEY`, etc.) are securely injected at runtime.
 
 ## Data Processing & Embeddings
 - **Chunking:** Semantic chunking with 512 token limits and 50 token overlap.
@@ -63,7 +93,4 @@ Demonstrates advanced knowledge of AI architectures beyond simple API wrappers. 
 - "Why did you choose Qdrant over Pinecone or ChromaDB for this specific project?"
 
 
-## Telemetry & Media Status
-> [!NOTE]
-> **Screenshots/Diagrams:** [Missing Source Information] - Visual assets have not been provided in the current repository.
-> **Deployment Metrics:** Standard CI/CD deployment utilized. Explicit latency/throughput KPIs are documented only where explicitly provided in the core analysis.
+

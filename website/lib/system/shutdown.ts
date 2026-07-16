@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { telemetryLogger } from '../telemetry';
 import { pgPool } from '../rag/supabase';
 

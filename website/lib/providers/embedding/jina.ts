@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { EmbeddingProvider } from '../types';
 import { ProviderExecutionError, ProviderConfigurationError } from '../errors';
 import { systemConfig } from '../../system/config';

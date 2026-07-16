@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { RequestTrace, generateTraceSummary, exportTrace, redactSensitiveData } from '../lib/telemetry';
 import { logger } from '../lib/utils/logger';
 

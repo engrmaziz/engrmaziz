@@ -32,6 +32,10 @@ export const systemConfigSchema = z.object({
     (val) => (val === 'true' || val === true ? true : false),
     z.boolean().default(SystemConstants.DEFAULT_RERANKING_ENABLED)
   ),
+  ENABLE_PERFORMANCE_PROFILING: z.preprocess(
+    (val) => (val === 'true' || val === true ? true : false),
+    z.boolean().default(false)
+  ),
 
   // Models
   JINA_EMBEDDING_MODEL: z.string().default(SystemConstants.DEFAULT_JINA_EMBEDDING_MODEL),

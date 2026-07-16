@@ -35,11 +35,25 @@ AI assistants are highly capable at coding, but they lack context about the *his
 ## Solution Architecture
 The server is built in TypeScript and runs as an independent Node.js process. It communicates with the host AI client (e.g., Claude Desktop) via JSON-RPC over standard input/output (stdio). It executes local `git` commands safely and returns structured JSON context to the model.
 
+## System Flow
+1. **Tool Invocation**: The AI agent requests an analysis of a specific code block.
+2. **Git Parsing**: The MCP server locally executes `git blame` to identify commits responsible for the code lines.
+3. **API Resolution**: Each commit hash is dynamically resolved to its originating GitHub Pull Request via the GitHub API.
+4. **Issue Extraction**: Pull Request descriptions are parsed for linked issue identifiers (e.g., `fixes #123`).
+5. **Context Return**: The aggregated history, PR intent, and associated issues are formatted as JSON and returned directly to the AI's context window.
+
+## Database Design
+To respect GitHub API rate limits and optimize latency, the MCP server utilizes a local **SQLite** cache to permanently store resolved commit-to-PR and PR-to-Issue mappings.
+
 ## Technology Stack
-- **Languages:** TypeScript, Node.js.
-- **Protocols:** Model Context Protocol (MCP), JSON-RPC.
-- **Tools:** Git CLI.
-- **Distribution:** NPM Registry.
+
+| Layer | Technology |
+|-------|-----------|
+| **Language** | TypeScript, Node.js |
+| **Protocol** | Model Context Protocol (MCP), JSON-RPC |
+| **Cache DB** | SQLite |
+| **Integrations** | Git CLI, GitHub API |
+| **Distribution** | NPM Registry |
 
 ## Challenges & Lessons Learned
 - **Challenge:** Implementing secure, read-only access to prevent the AI from executing arbitrary bash commands via the MCP server.
@@ -53,7 +67,4 @@ Demonstrates a proactive, forward-looking engineering mindset. By building and p
 - "What security precautions did you take when allowing an AI model to execute local git commands on a user's machine?"
 
 
-## Telemetry & Media Status
-> [!NOTE]
-> **Screenshots/Diagrams:** [Missing Source Information] - Visual assets have not been provided in the current repository.
-> **Deployment Metrics:** Standard CI/CD deployment utilized. Explicit latency/throughput KPIs are documented only where explicitly provided in the core analysis.
+

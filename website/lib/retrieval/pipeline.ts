@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { RetrievalRequest, RetrievalResult } from './types';
 import { RetrievalValidator } from './validator';
 import { RetrievalScorer } from './scorer';

@@ -1,3 +1,4 @@
+export type { AgentContext } from './context';
 import { AgentContext } from './context';
 
 export interface AgentResponse {

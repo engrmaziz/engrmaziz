@@ -32,6 +32,12 @@ Traditional e-commerce platforms (like Shopify or WooCommerce) often suffer from
 - Implement strict data security using Row-Level Security (RLS).
 - Create a real-time admin dashboard for inventory management.
 
+## Key Features
+- **AI Smart-Bundling**: Increases average order value with mathematically discounted, real-time cart upsell recommendations.
+- **Ghost Revenue Retriever**: Automatically recovers lost revenue from abandoned carts by issuing unique promo codes.
+- **Post-Purchase Drip Campaigns**: Retains customers via timed review requests and returning-customer discounts.
+- **Cryptographic Coupon Engine**: Prevents margin abuse with a mathematically secure, single-use promo code architecture.
+
 ## Solution Architecture
 
 ### High-Level Architecture
@@ -43,8 +49,38 @@ A fully serverless architecture. The Next.js frontend is deployed on Vercel, uti
 - **Backend/DB:** Supabase (PostgreSQL, Auth, Storage).
 - **Email/Comms:** Resend API.
 
-## Security & Database
+## Technology Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js (App Router), React, Tailwind CSS |
+| **Backend & DB** | Supabase (PostgreSQL) |
+| **State Management** | Zustand |
+| **Hosting & Cron** | Vercel |
+| **Transactional Email** | Resend |
+
+## AI Components
+AuraNode implements four core serverless engines:
+1. **AI Smart-Bundling**: Cross-references real-time cart state against the catalog to curate a 1-click bundle with a precise 15% discount.
+2. **Ghost Revenue Retriever**: Vercel Cron jobs poll Supabase for `status = 'draft'` orders older than 24 hours, generate single-use cryptographic coupons, and dispatch recovery emails via Resend.
+3. **Automated Drip Campaigns**: Employs an `email_queue` table to schedule and dispatch review requests (+7 days) and loyalty discounts (+14 days).
+4. **Cryptographic Coupons**: Derives promo codes using `crypto.randomUUID()` + HMAC-SHA256, storing them with a strict `max_uses` constraint to prevent brute-forcing.
+
+## Database Design
 - **Row-Level Security (RLS):** Implemented strict RLS policies in Supabase ensuring users can only read/write their own cart and order data, while admins have elevated privileges.
+- **`promo_codes`**: Tracks generated coupons with hashed values, `max_uses`, `use_count`, and `expires_at` TTL parameters.
+- **`email_queue`**: Decoupled asynchronous job table for processing scheduled drip campaigns.
+
+## Project Structure
+- `app/(store)/`: Public storefront routes.
+- `app/(dashboard)/`: Protected admin inventory and coupon management.
+- `app/api/cron/`: Secure serverless cron handlers for cart recovery and drip campaigns.
+- `lib/coupons.ts`: Core cryptographic generation logic.
+
+## Deployment
+Fully serverless architecture deployed to **Vercel**. Backend PostgreSQL database managed via **Supabase**. Cron jobs strictly authenticated via header-injected `CRON_SECRET` tokens.
+
+## Security & Database
 - **Authentication:** Supabase Auth with magic links and OAuth providers.
 
 ## Challenges & Lessons Learned
@@ -59,7 +95,4 @@ A prime example of modern Full-Stack SaaS development. Demonstrates mastery over
 - "Why did you choose Zustand over Redux or React Context for this project?"
 
 
-## Telemetry & Media Status
-> [!NOTE]
-> **Screenshots/Diagrams:** [Missing Source Information] - Visual assets have not been provided in the current repository.
-> **Deployment Metrics:** Standard CI/CD deployment utilized. Explicit latency/throughput KPIs are documented only where explicitly provided in the core analysis.
+

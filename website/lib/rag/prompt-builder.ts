@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { RAG_SYSTEM_PROMPT } from './prompts';
 
 export class PromptBuilder {

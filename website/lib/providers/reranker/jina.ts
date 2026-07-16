@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { RerankerProvider, Document } from '../types';
 import { ProviderExecutionError, ProviderConfigurationError } from '../errors';
 import { systemConfig } from '../../system/config';

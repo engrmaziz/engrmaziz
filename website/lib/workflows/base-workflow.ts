@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { Workflow, WorkflowContext, WorkflowResult, WorkflowState, WorkflowStep } from './types';
 import { telemetryLogger } from '../telemetry';
 

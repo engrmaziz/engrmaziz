@@ -30,21 +30,58 @@ Standard text-based LLM APIs are too slow for voice interactions. When users spe
 - Support real-time barge-in (interruption handling).
 - Orchestrate complex logic (e.g., booking an appointment) during a live call.
 
+## Key Features
+- **Voice First**: Real-time speech interface utilizing Whisper transcription over WebSockets.
+- **Stateful AI Orchestration**: Employs LangGraph for complex workflows, branching, grading nodes, and iterative refinement.
+- **Hybrid Retrieval**: Combines Pinecone semantic dense search with BM25 sparse lexical search for high recall.
+- **Cross-Encoder Reranking**: Filters noisy chunks and improves context precision before LLM generation.
+- **Corrective RAG (CRAG)**: Includes query rewriting, document relevance grading, retry cycles, and hallucination checks.
+
 ## Solution Architecture
 
 ### High-Level Architecture
-The system uses a WebSocket-first architecture. Audio streams directly from the frontend (or telephony provider like Twilio/Vapi) to the Django backend. The backend manages the LangGraph state, executing tools, and streams the LLM text output instantly to a TTS engine (like Deepgram/ElevenLabs), which streams audio back to the user.
+The system uses an asynchronous WebSocket-first architecture powered by Django ASGI and Daphne. Audio streams directly from the frontend to the Django backend. The backend manages the LangGraph state, coordinates hybrid retrieval, executes tools, and streams the LLM text output instantly to a TTS engine, which streams audio back to the user.
+
+```mermaid
+graph TD
+    A[Voice Input] --> B[Whisper Large V3]
+    B --> C[History Aware Query Rewrite]
+    C --> D[Hybrid Retrieval]
+    D --> E[Pinecone Dense Search]
+    D --> F[BM25 Sparse Search]
+    E --> G[Merge Results]
+    F --> G
+    G --> H[Cross Encoder Reranking]
+    H --> I[Document Relevance Grading]
+    I -->|Pass| J[LLM Generation]
+    I -->|Retry| C
+    J --> K[Hallucination Detection]
+    K -->|Grounded| L[Final Answer]
+    K -->|Retry| J
+```
 
 ### System Components
 - **Telephony/Voice Gateway:** Vapi.ai / Retell AI.
-- **Backend Orchestrator:** Django (Python) using Django Channels for ASGI WebSocket support.
-- **Agent Logic:** LangGraph (Stateful multi-actor graph).
-- **LLM:** Groq (LPU) for inference speed.
+- **Backend Orchestrator:** Django 6 (Python 3.12) using Django Channels for ASGI WebSocket support.
+- **Agent Logic:** LangGraph (Stateful multi-actor graph) and LangChain.
+- **LLM:** Groq (Llama-3-70b-versatile) for inference speed.
+- **Vector DB & Search:** Pinecone, BM25, and SentenceTransformers (`all-MiniLM-L6-v2`).
 
 ## Technology Stack
-- **Frameworks:** Django, Django Channels, LangGraph.
-- **Protocols:** WebSockets (WSS), WebRTC.
-- **AI Models:** Groq Llama-3-70b-versatile, Deepgram (Nova-2 for STT).
+
+| Layer | Technology |
+|-------|-----------|
+| **Backend & Async** | Django 6, Daphne, Django Channels |
+| **Protocol** | WebSockets (WSS), WebRTC, ASGI |
+| **AI Orchestration** | LangGraph, LangChain, LangSmith |
+| **Retrieval** | Pinecone, BM25, Cross-Encoder Reranker |
+| **Models** | Groq (Llama 3), Whisper Large V3, all-MiniLM-L6-v2 |
+
+## Project Structure
+- `chat/`: WebSocket consumers, conversation persistence, and UI templates.
+- `graph/`: LangGraph orchestration engine (nodes, routing logic, state management).
+- `knowledge/`: Document loading, chunking, local embedding generation, and Pinecone/BM25 indexing.
+- `core/`: Django ASGI/WSGI configuration and routing.
 
 ## Challenges & Lessons Learned
 - **Challenge:** LLM generation time was pushing latency above 1.5 seconds.
@@ -60,7 +97,4 @@ Highlights extreme optimization skills. Building voice AI requires a deep unders
 - "Explain how you handled 'barge-in' (interruptions) using LangGraph and WebSockets."
 
 
-## Telemetry & Media Status
-> [!NOTE]
-> **Screenshots/Diagrams:** [Missing Source Information] - Visual assets have not been provided in the current repository.
-> **Deployment Metrics:** Standard CI/CD deployment utilized. Explicit latency/throughput KPIs are documented only where explicitly provided in the core analysis.
+

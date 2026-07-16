@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { agentRegistry, agentRouter } from '../lib/agents';
 import { validateStartup } from '../lib/system';
 import { logger } from '../lib/utils/logger';

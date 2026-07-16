@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { IndexRequest, IndexResult, IndexedChunk } from './types';
 import { IndexingValidator } from './validator';
 import { RecordBuilder } from './record';

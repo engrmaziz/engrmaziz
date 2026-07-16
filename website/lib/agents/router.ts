@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { Agent } from './types';
 import { agentRegistry } from './registry';
 import { RequestContext } from '../rag/orchestrator';

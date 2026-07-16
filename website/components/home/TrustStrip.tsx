@@ -38,7 +38,7 @@ export function TrustStrip() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-border-default">
           <div className="flex flex-col items-center justify-center text-center px-4">
             <span className="text-4xl font-bold text-primary font-mono mb-2">
-              <Counter from={0} to={8} suffix="+" />
+              <Counter from={0} to={6} suffix="+" />
             </span>
             <span className="text-sm font-medium text-secondary tracking-wide uppercase">Years Experience</span>
           </div>

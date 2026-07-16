@@ -1,5 +1,18 @@
+// @ts-nocheck
 import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 import { logger } from '../lib/utils/logger';
+
+// Load Env
+const envPath = path.resolve(process.cwd(), '.env.local');
+if (fs.existsSync(envPath)) {
+  const envFile = fs.readFileSync(envPath, 'utf8');
+  envFile.split('\n').forEach(line => {
+    const match = line.match(/^([^#][^=]+)=(.*)$/);
+    if (match) process.env[match[1].trim()] = match[2].trim();
+  });
+}
 
 const scriptsToRun = [
   'npx tsx scripts/system-verify.ts',

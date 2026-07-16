@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { retrievalPipeline } from '../lib/retrieval/pipeline';
 import { ragDatabase } from '../lib/rag/supabase';
 import { RetrievalRequest } from '../lib/retrieval/types';

@@ -5,9 +5,9 @@ import { successResponse, errorResponse } from '@/lib/utils/response';
 import { validateRequest } from '@/lib/security/validation';
 import { searchSchema } from '@/lib/validation/schemas';
 import { checkRateLimit, getClientIp } from '@/lib/security/rate-limit';
-import { embeddings } from '@/lib/rag/embeddings';
+import { ragEmbedder } from '@/lib/rag/embedder';
 
-export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     const data = await validateRequest(searchSchema, req);
 
     // Hybrid search stub
-    const vector = await embeddings.generateEmbedding(data.query);
+    const vector = await ragEmbedder.embed(data.query);
     
     // Hit vector DB...
     const results: any[] = [];

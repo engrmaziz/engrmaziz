@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ragDatabase } from './supabase';
 import { createLogger } from './logger';

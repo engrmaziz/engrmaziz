@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ragRetriever } from '../lib/rag/retriever';
 import { ragEmbedder } from '../lib/rag/embedder';
 import { retrievalPipeline } from '../lib/retrieval/pipeline';

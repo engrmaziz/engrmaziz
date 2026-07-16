@@ -25,21 +25,21 @@ export class RAGLogger {
 
   debug(message: string, context?: LogContext) {
     if (systemConfig.NODE_ENV !== 'production') {
-      console.debug(this.formatMessage('debug', message, context));
+      console.debug(this.formatMessage('DEBUG', message, context));
     }
   }
 
   info(message: string, context?: LogContext) {
-    console.info(this.formatMessage('info', message, context));
+    console.info(this.formatMessage('INFO', message, context));
   }
 
   warn(message: string, context?: LogContext) {
-    console.warn(this.formatMessage('warn', message, context));
+    console.warn(this.formatMessage('WARN', message, context));
   }
 
   error(message: string, error?: any, context?: LogContext) {
     const errCtx = error ? { ...context, error: error.message || error } : context;
-    console.error(this.formatMessage('error', message, errCtx));
+    console.error(this.formatMessage('ERROR', message, errCtx));
   }
 }
 

@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 "use client";
 
 import React, { useEffect, useRef, useState, useId } from 'react';
 import { useTheme } from 'next-themes';
+import { envClient } from '@/lib/config/env.client';
 
 interface MermaidProps {
   chart: string;
@@ -40,7 +42,7 @@ export function Mermaid({ chart }: MermaidProps) {
           setSvgCode(svg);
         }
       } catch (error: any) {
-        if (process.env.NODE_ENV !== 'production') {
+        if (envClient.NEXT_PUBLIC_APP_ENV !== 'production') {
           console.error('Mermaid rendering failed', error);
           console.error('Failed chart:', chart);
         }

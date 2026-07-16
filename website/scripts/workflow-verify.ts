@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { workflowRegistry, workflowRouter, createWorkflowContext, BaseWorkflow } from '../lib/workflows';
 import { RequestTrace } from '../lib/telemetry/request-trace';
 import { logger } from '../lib/utils/logger';

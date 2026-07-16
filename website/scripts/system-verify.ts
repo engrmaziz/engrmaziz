@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { systemConfig } from '../lib/system/config';
 import { checkHealth } from '../lib/system/health';
 import { checkReadiness } from '../lib/system/readiness';

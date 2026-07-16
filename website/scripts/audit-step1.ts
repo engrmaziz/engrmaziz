@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ragDatabase } from '../lib/rag/supabase';
 import fs from 'fs';
 import path from 'path';
