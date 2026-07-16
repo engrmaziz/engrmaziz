@@ -146,7 +146,7 @@ export class RAGRetriever {
       // Deep queries (long, specific) need more depth (fewer documents, multiple consecutive chunks).
       const isBroadQuery = normalizedQuery.length <= 40;
       const DIVERSITY_POOL_SIZE = isBroadQuery ? 40 : 30; // Feed more diverse chunks to the reranker for broad queries
-      const MAX_CHUNKS_PER_DOC = isBroadQuery ? 1 : 2;    // Enforce strict 1-chunk limit per doc to maximize breadth
+      const MAX_CHUNKS_PER_DOC = isBroadQuery ? 1 : 5;    // Enforce 1-chunk limit per doc for broad queries to maximize breadth
       
       const docGroups = new Map<string, any[]>();
       retrievalResult.candidates.forEach(candidate => {
@@ -163,8 +163,6 @@ export class RAGRetriever {
         for (const [docId, chunks] of docGroups.entries()) {
           if (diverseCandidates.length >= DIVERSITY_POOL_SIZE) break;
           
-          // STRICT DIVERSITY: Limit chunks per document based on query breadth
-          // to prevent any single document from starving others
           if (round >= MAX_CHUNKS_PER_DOC) continue;
           
           if (chunks.length > round) {

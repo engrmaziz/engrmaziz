@@ -66,11 +66,24 @@ export function HomeHero() {
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex items-center gap-4 mt-6 pt-6 border-t border-border-default">
-            <Link href="/resume.pdf" target="_blank">
-              <Button variant="ghost" size="sm" className="gap-2 text-secondary hover:text-primary">
-                <FileText className="w-4 h-4" /> Résumé
-              </Button>
-            </Link>
+            <button 
+              onClick={async () => {
+                try {
+                  const res = await fetch('/api/resume');
+                  if (!res.ok) throw new Error();
+                  const data = await res.json();
+                  const url = data?.url || data?.data?.url;
+                  if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                  else throw new Error();
+                } catch {
+                  window.open('/resume.pdf', '_blank', 'noopener,noreferrer');
+                }
+              }}
+              className="flex items-center justify-center gap-2 px-8 py-4 bg-elevated/80 backdrop-blur-sm border border-border-default hover:border-accent/40 rounded-xl font-bold text-primary hover:text-accent transition-all hover:-translate-y-1 group"
+            >
+              <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              Download Resume
+            </button>
             <Link href="https://github.com" target="_blank">
               <Button variant="ghost" size="sm" className="gap-2 text-secondary hover:text-primary">
                 <Code2 className="w-4 h-4" /> GitHub

@@ -4,21 +4,58 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { Send, Loader2, CheckCircle } from "lucide-react";
+import { Send, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API integration
-    setTimeout(() => {
+    setError(null);
+    
+    try {
+      const formData = new FormData(e.currentTarget);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        company: formData.get('company') || undefined,
+        role: formData.get('role') || undefined,
+        projectType: formData.get('type') || undefined,
+        timeline: formData.get('timeline') || undefined,
+        message: formData.get('message'),
+        consent: formData.get('consent') === 'on',
+      };
+
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        let errorMsg = result.error?.message || result.error || 'Failed to submit inquiry.';
+        if (result.error?.details?.fieldErrors) {
+          const fields = Object.entries(result.error.details.fieldErrors)
+            .map(([field, errs]: any) => `${field}: ${errs.join(', ')}`)
+            .join(' | ');
+          errorMsg += ` (${fields})`;
+        }
+        throw new Error(errorMsg);
+      }
+
       setIsSubmitting(false);
       setIsSuccess(true);
-    }, 1500);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setError(err.message || 'An unexpected error occurred. Please email io@maziz.me directly.');
+    }
   };
 
   if (isSuccess) {
@@ -43,32 +80,38 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-sm px-4 py-3 rounded-lg flex items-start gap-2">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <p>{error}</p>
+        </div>
+      )}
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-primary">Full Name <span className="text-red-500">*</span></label>
-          <input required disabled={isSubmitting} type="text" id="name" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" placeholder="Jane Doe" />
+          <input required disabled={isSubmitting} type="text" id="name" name="name" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" placeholder="Jane Doe" />
         </div>
         <div className="space-y-2">
           <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-primary">Work Email <span className="text-red-500">*</span></label>
-          <input required disabled={isSubmitting} type="email" id="email" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" placeholder="jane@company.com" />
+          <input required disabled={isSubmitting} type="email" id="email" name="email" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" placeholder="jane@company.com" />
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label htmlFor="company" className="text-xs font-bold uppercase tracking-wider text-primary">Company</label>
-          <input disabled={isSubmitting} type="text" id="company" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" placeholder="Acme Corp" />
+          <input disabled={isSubmitting} type="text" id="company" name="company" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" placeholder="Acme Corp" />
         </div>
         <div className="space-y-2">
           <label htmlFor="role" className="text-xs font-bold uppercase tracking-wider text-primary">Role</label>
-          <input disabled={isSubmitting} type="text" id="role" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" placeholder="VP of Engineering" />
+          <input disabled={isSubmitting} type="text" id="role" name="role" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" placeholder="VP of Engineering" />
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label htmlFor="type" className="text-xs font-bold uppercase tracking-wider text-primary">Project Type</label>
-          <select disabled={isSubmitting} id="type" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all appearance-none disabled:opacity-50">
+          <select disabled={isSubmitting} id="type" name="type" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all appearance-none disabled:opacity-50">
             <option value="">Select an option</option>
             <option value="ai">AI / RAG Architecture</option>
             <option value="backend">Backend Systems Scaling</option>
@@ -82,18 +125,18 @@ export function ContactForm() {
             Preferred Meeting Time
             <span className="text-[10px] text-secondary font-medium tracking-normal bg-elevated border border-border-default px-1.5 py-0.5 rounded ml-auto">US EST (Washington)</span>
           </label>
-          <input disabled={isSubmitting} type="datetime-local" id="timeline" className="w-full bg-base border border-border-default rounded-lg px-4 py-[11px] text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" />
+          <input disabled={isSubmitting} type="datetime-local" id="timeline" name="timeline" className="w-full bg-base border border-border-default rounded-lg px-4 py-[11px] text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all disabled:opacity-50" />
         </div>
       </div>
 
       <div className="space-y-2">
         <label htmlFor="message" className="text-xs font-bold uppercase tracking-wider text-primary">Message <span className="text-red-500">*</span></label>
-        <textarea required disabled={isSubmitting} id="message" rows={5} className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all resize-y disabled:opacity-50" placeholder="Describe your architecture challenges, goals, and technical requirements..." />
+        <textarea required disabled={isSubmitting} id="message" name="message" rows={5} className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all resize-y disabled:opacity-50" placeholder="Describe your architecture challenges, goals, and technical requirements..." />
       </div>
 
       <div className="flex items-start gap-3 pt-2">
         <div className="flex items-center h-5">
-          <input disabled={isSubmitting} id="consent" type="checkbox" required className="w-4 h-4 border-border-default rounded bg-base text-accent focus:ring-accent disabled:opacity-50" />
+          <input disabled={isSubmitting} id="consent" name="consent" type="checkbox" required className="w-4 h-4 border-border-default rounded bg-base text-accent focus:ring-accent disabled:opacity-50" />
         </div>
         <label htmlFor="consent" className="text-xs text-secondary leading-relaxed">
           I consent to having this website store my submitted information so they can respond to my inquiry. I understand this data will not be shared with third parties.

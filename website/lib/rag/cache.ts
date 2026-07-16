@@ -19,13 +19,21 @@ export class RAGSemanticCache {
   private defaultTTLMs = 24 * 60 * 60 * 1000; // 24 hours
 
   private getHash(text: string): string {
-    return crypto.createHash('sha256').update(text.toLowerCase().trim()).digest('hex');
+    const KNOWLEDGE_VERSION = 'v1.1.0';
+    const PROMPT_VERSION = 'v1.0.0';
+    const cacheKey = `${text.toLowerCase().trim()}|${KNOWLEDGE_VERSION}|${PROMPT_VERSION}`;
+    return crypto.createHash('sha256').update(cacheKey).digest('hex');
   }
 
   /**
    * Search for a cached response using both exact lexical hash and semantic vector matching.
    */
   async get(queryText: string, queryEmbedding: number[], similarityThreshold: number = 0.98): Promise<CacheEntry | null> {
+    if (process.env.NODE_ENV === "development") {
+      log.info('Development mode detected. Bypassing semantic cache read.');
+      return null;
+    }
+
     const hash = this.getHash(queryText);
     
     // 1. Check Local Memory (Fastest, exact match)

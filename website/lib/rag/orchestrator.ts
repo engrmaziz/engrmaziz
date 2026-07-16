@@ -18,6 +18,7 @@ export interface RequestContext {
     optimizedQuery: string;
     sessionId?: string;
     conversationId?: string;
+    visitorInfo?: any;
   };
   memory: {
     history: any[];
@@ -63,6 +64,7 @@ export class RAGOrchestrator {
     const queryText = requestBody.query || '';
     const sessionId = requestBody.sessionId || '';
     const filters = requestBody.filters || {};
+    const visitorInfo = requestBody.visitorInfo;
 
     if (!queryText.trim()) {
       throw new Error('Query text cannot be empty.');
@@ -76,7 +78,8 @@ export class RAGOrchestrator {
         query: queryText,
         optimizedQuery: queryText,
         sessionId,
-        conversationId: sessionId || undefined
+        conversationId: sessionId || undefined,
+        visitorInfo
       },
       memory: { history: [] },
       retrieval: { citations: [] },
@@ -210,7 +213,7 @@ export class RAGOrchestrator {
     trace.startStage('Retrieval');
     try {
       // Reduced threshold from 0.0 to -1.0 to allow broad queries to capture all available services
-      const retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 20, -1.0, filters, queryVector);
+      const retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 40, -1.0, filters, queryVector);
       ctx.retrieval.retrievedContext = retrievalResult.contextText;
       ctx.retrieval.citations = retrievalResult.citations;
       
@@ -263,7 +266,9 @@ export class RAGOrchestrator {
         ctx.memory.summary || null,
         ctx.memory.history,
         ctx.retrieval.retrievedContext || '',
-        queryText
+        queryText,
+        ctx.response.toolOutputs,
+        ctx.request.visitorInfo
       );
       trace.endStage('PromptAssembly', true);
       telemetryLogger.log('PIPELINE', 'PromptAssembly stage completed', { requestId, durationMs: trace.exportTrace().stages['PromptAssembly'].durationMs });

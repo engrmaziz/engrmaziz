@@ -14,6 +14,22 @@ import { Container } from "@/components/ui/Container";
 import { useScroll } from "@/hooks/useScroll";
 import { BrandLogo } from "@/components/common/BrandLogo";
 
+async function openResume() {
+  try {
+    const res = await fetch('/api/resume');
+    if (!res.ok) throw new Error('Failed to fetch resume URL');
+    const data = await res.json();
+    const url = data?.url || data?.data?.url;
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      throw new Error('No URL returned');
+    }
+  } catch {
+    window.open('/resume.pdf', '_blank', 'noopener,noreferrer');
+  }
+}
+
 const NAV_LINKS = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
@@ -106,12 +122,16 @@ export function Navbar() {
                 <Code2 className="w-4 h-4" />
               </Button>
             </Link>
-            <Link href="/resume.pdf" target="_blank" aria-label="Resume">
-              <Button variant="outline" size="sm" className="hidden lg:flex gap-2 font-mono text-xs">
-                <FileText className="w-3.5 h-3.5" />
-                RESUME
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              className="hidden lg:flex gap-2 font-mono text-xs"
+              onClick={openResume}
+              aria-label="Resume"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              RESUME
+            </Button>
             <Link href="/contact" aria-label="Contact">
               <Button size="sm" className="gap-2 group">
                 Contact
@@ -168,12 +188,15 @@ export function Navbar() {
               </nav>
 
               <div className="flex flex-col gap-4 mt-8">
-                <Link href="/resume.pdf" target="_blank" className="w-full">
-                  <Button variant="outline" className="w-full justify-between font-mono text-sm">
-                    VIEW RESUME
-                    <FileText className="w-4 h-4" />
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  className="w-full justify-between font-mono text-sm"
+                  onClick={openResume}
+                  aria-label="View Resume"
+                >
+                  VIEW RESUME
+                  <FileText className="w-4 h-4" />
+                </Button>
                 <Link href="/contact" className="w-full">
                   <Button className="w-full justify-between">
                     GET IN TOUCH

@@ -22,7 +22,7 @@ export const AppShell = React.forwardRef<HTMLDivElement, AppShellProps>(
           Skip to main content
         </a>
         
-        {navbar && <header className="sticky top-0 z-[9999] w-full pointer-events-none">{navbar}</header>}
+        {navbar && <header className="sticky top-0 z-50 w-full pointer-events-none">{navbar}</header>}
         
         <div className="flex flex-1 w-full">
           {sidebar && (

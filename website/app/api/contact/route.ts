@@ -16,16 +16,35 @@ export async function POST(req: NextRequest) {
     const data = await validateRequest(contactSchema, req);
 
     // Save to Database
-    await db.insert('contacts', data);
+    try {
+      await db.insert('contacts', data);
+    } catch (dbError: any) {
+      console.error('[Contact API] Failed to save to database:', dbError);
+      // We continue even if DB fails, as email is the primary notification
+    }
 
     // Trigger Notification
-    await emailService.sendContactNotification(data);
+    let notificationResult;
+    try {
+      notificationResult = await emailService.sendContactNotification(data);
+      console.log('[Contact API] Resend notification message ID:', notificationResult?.data?.id);
+    } catch (emailError: any) {
+      console.error('[Contact API] Failed to send notification email:', emailError);
+      // If notification fails, we MUST fail the request so the frontend shows an error
+      return errorResponse(new Error('Failed to deliver message. Please try emailing io@maziz.me directly.'));
+    }
     
     // Acknowledge Lead
-    await emailService.sendLeadAcknowledgement(data.email, data.name);
+    try {
+      await emailService.sendLeadAcknowledgement(data.email, data.name);
+    } catch (ackError: any) {
+      console.error('[Contact API] Failed to send acknowledgment email:', ackError);
+      // We do not fail the request if just the auto-reply fails
+    }
 
-    return successResponse({ received: true }, { message: 'Inquiry submitted successfully.' });
+    return successResponse({ received: true, id: notificationResult?.data?.id }, { message: 'Inquiry submitted successfully.' });
   } catch (error) {
+    console.error('[Contact API] Unhandled exception:', error);
     return errorResponse(error);
   }
 }

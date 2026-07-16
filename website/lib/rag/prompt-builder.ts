@@ -11,10 +11,29 @@ export class PromptBuilder {
     recentMessages: { role: string; content: string }[],
     ragContext: string,
     currentQuery: string,
-    toolOutputs: any[] = []
+    toolOutputs: any[] = [],
+    visitorInfo?: { name: string; email: string }
   ): { role: 'system' | 'user' | 'assistant'; content: string }[] {
     let systemContent = RAG_SYSTEM_PROMPT.replace('{context}', 'See context below.');
     
+    // Inject Structured Service Index for broad queries to prevent chunk-dropping omission
+    if (currentQuery.toLowerCase().includes('service') || currentQuery.toLowerCase().includes('offer')) {
+      try {
+        const { getAllServices } = require('../services');
+        const allServices = getAllServices();
+        if (allServices && allServices.length > 0) {
+          const serviceList = allServices.map((s: any) => `- ${s.title}${s.description ? `: ${s.description}` : ''}`).join('\n');
+          systemContent += `\n\n--- Complete Service Catalog (Use this to ensure you do not omit any services) ---\n${serviceList}`;
+        }
+      } catch (e) {
+        console.warn('Failed to load service index for prompt builder', e);
+      }
+    }
+
+    if (visitorInfo) {
+      systemContent += `\n\n--- Visitor Session Info ---\nName: ${visitorInfo.name}\nEmail: ${visitorInfo.email}\nNote: The user has already provided their name and email. Do NOT ask for them again.`;
+    }
+
     if (summary) {
       systemContent += `\n\n--- Conversation Summary ---\n${summary}`;
     }

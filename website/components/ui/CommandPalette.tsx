@@ -77,10 +77,21 @@ export function CommandPalette() {
     setSelectedIndex(0);
   }, [query]);
 
-  const handleSelect = (item: typeof ITEMS[0]) => {
+  const handleSelect = async (item: typeof ITEMS[0]) => {
     setIsOpen(false);
     if (item.action.startsWith("theme-")) {
       setTheme(item.action.replace("theme-", ""));
+    } else if (item.action === "/resume.pdf") {
+      try {
+        const res = await fetch('/api/resume');
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const url = data?.url || data?.data?.url;
+        if (url) window.open(url, '_blank', 'noopener,noreferrer');
+        else throw new Error();
+      } catch {
+        window.open('/resume.pdf', '_blank', 'noopener,noreferrer');
+      }
     } else if (item.action.startsWith("http") || item.action.startsWith("mailto:")) {
       window.open(item.action, "_blank");
     } else {

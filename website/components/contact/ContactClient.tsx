@@ -7,7 +7,6 @@ import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import { ContactForm } from "@/components/contact/ContactForm";
-import { AIAssistant } from "@/components/assistant/AIAssistant";
 import { SplitLayout } from "@/components/layout/SplitLayout";
 
 export function ContactClient() {
@@ -95,10 +94,21 @@ export function ContactClient() {
                       <Briefcase className="w-5 h-5 text-secondary group-hover:text-accent" />
                       <span className="text-sm font-bold text-primary group-hover:text-accent">LinkedIn Network</span>
                     </a>
-                    <a href="/resume.pdf" target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 rounded-lg border border-border-default bg-elevated hover:border-accent/40 hover:bg-accent/5 transition-all group">
+                    <button onClick={async () => {
+                      try {
+                        const res = await fetch('/api/resume');
+                        if (!res.ok) throw new Error();
+                        const data = await res.json();
+                        const url = data?.url || data?.data?.url;
+                        if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                        else throw new Error();
+                      } catch {
+                        window.open('/resume.pdf', '_blank', 'noopener,noreferrer');
+                      }
+                    }} className="flex items-center gap-3 p-3 rounded-lg border border-border-default bg-elevated hover:border-accent/40 hover:bg-accent/5 transition-all group w-full text-left">
                       <FileText className="w-5 h-5 text-secondary group-hover:text-accent" />
                       <span className="text-sm font-bold text-primary group-hover:text-accent">Download Resume</span>
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -143,8 +153,6 @@ export function ContactClient() {
         </Container>
       </Section>
 
-      {/* Inject the global AI Assistant launcher on this page */}
-      <AIAssistant />
     </>
   );
 }

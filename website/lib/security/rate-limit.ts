@@ -14,6 +14,11 @@ interface RateLimitTracker {
 const store = new Map<string, RateLimitTracker>();
 
 export async function checkRateLimit(ip: string, endpoint: string, limit: number, windowMs: number) {
+  // Bypass or dramatically increase rate limits during local development
+  if (process.env.NODE_ENV === "development") {
+    limit = 1000;
+  }
+
   const key = `${ip}:${endpoint}`;
   const now = Date.now();
   
@@ -26,7 +31,7 @@ export async function checkRateLimit(ip: string, endpoint: string, limit: number
   }
 
   if (record.count >= limit) {
-    logger.warn('Rate limit exceeded', { ip, endpoint });
+    logger.warn('Rate limit exceeded', { ip, endpoint, env: process.env.NODE_ENV });
     throw new RateLimitError(`Too many requests to ${endpoint}. Please try again later.`);
   }
 
@@ -34,14 +39,21 @@ export async function checkRateLimit(ip: string, endpoint: string, limit: number
   store.set(key, record);
 }
 
-export function getClientIp(request: Request): string {
-  // Try Cloudflare connecting IP header first
+export function getClientIp(request: Request | any): string {
+  // 1. Try Vercel specific Real IP
+  const realIp = request.headers.get('x-real-ip');
+  if (realIp) return realIp;
+
+  // 2. Try Vercel / Standard Forwarded For
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  if (forwardedFor) return forwardedFor.split(',')[0]?.trim() || '127.0.0.1';
+
+  // 3. Try Cloudflare connecting IP header
   const cfIp = request.headers.get('cf-connecting-ip');
   if (cfIp) return cfIp;
   
-  // Fallback to forwarded for
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  if (forwardedFor) return forwardedFor.split(',')[0]?.trim() || '127.0.0.1';
+  // 4. Try Next.js native `ip` property on NextRequest
+  if (request.ip) return request.ip;
   
   return '127.0.0.1'; // Default fallback
 }

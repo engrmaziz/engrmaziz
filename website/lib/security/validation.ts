@@ -3,21 +3,21 @@ import { z } from 'zod';
 import { ValidationError } from '@/lib/utils/errors';
 
 export async function validateRequest<T>(schema: z.ZodType<T>, req: Request): Promise<T> {
+  let body;
   try {
-    const body = await req.json();
-    const result = schema.safeParse(body);
-    
-    if (!result.success) {
-      throw new ValidationError('Invalid request payload', result.error.flatten());
-    }
-    
-    return result.data;
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      throw error;
-    }
-    throw new ValidationError('Malformed JSON payload');
+    body = await req.json();
+  } catch (e: any) {
+    throw new ValidationError(`Failed to parse JSON body: ${e.message}`);
   }
+
+  const result = schema.safeParse(body);
+  if (!result.success) {
+    console.error('[Validation] Schema parsing failed:', JSON.stringify(result.error.flatten(), null, 2));
+    console.error('[Validation] Received body:', JSON.stringify(body, null, 2));
+    throw new ValidationError('Invalid request payload', result.error.flatten());
+  }
+  
+  return result.data;
 }
 
 export function validateParams<T>(schema: z.ZodType<T>, params: unknown): T {

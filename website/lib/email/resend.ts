@@ -15,12 +15,17 @@ export class EmailService {
   async sendContactNotification(data: any) {
     logger.info('Sending contact notification email', { data });
     try {
-      const { data: result, error } = await this.resend.emails.send({
+      const payload = {
         from: envServer.RESEND_FROM_EMAIL || CONFIG.email.identity,
-        to: [envServer.ADMIN_EMAIL || CONFIG.email.support],
+        to: (envServer.ADMIN_EMAIL || CONFIG.email.support).split(',').map((e: string) => e.trim()),
+        reply_to: data.email,
         subject: `New Inquiry: ${data.projectType || 'General'}`,
         html: `<p>New contact from ${data.name} (${data.email})</p><p>${data.message}</p>`
-      });
+      };
+      
+      console.log('[Resend Payload]:', JSON.stringify(payload, null, 2));
+
+      const { data: result, error } = await this.resend.emails.send(payload);
 
       if (error) {
         logger.error('Failed to send contact notification', { error });

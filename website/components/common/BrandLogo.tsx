@@ -12,9 +12,9 @@ export interface BrandLogoProps {
 export function BrandLogo({ size = "md", priority = false, className }: BrandLogoProps) {
   // Height mapping based on official branding requirements
   const sizeClasses = {
-    sm: "h-6 md:h-8",
-    md: "h-[34px] md:h-[40px]",
-    lg: "h-10 md:h-[48px]",
+    sm: "h-10 md:h-12",
+    md: "h-[52px] md:h-[65px]",
+    lg: "h-[60px] md:h-[80px]",
   };
 
   const altText = "Musharraf Aziz — AI Engineer, Full-Stack Developer & Enterprise AI Solutions";
