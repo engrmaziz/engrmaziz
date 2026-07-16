@@ -86,9 +86,9 @@ export class RAGRetriever {
         const aiClient = providerFactory.getChatProvider();
         const hydePrompt = `You are a technical expert. Write a concise, factual excerpt (3-4 sentences) that directly answers the following query. Write it in the style of official technical documentation.\n\nQuery: ${normalizedQuery}`;
         
-        // Add a 1200ms timeout to HyDE to bound latency
+        // Add a 350ms timeout to HyDE to bound latency strictly
         const hydePromise = aiClient.generate({ prompt: hydePrompt });
-        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('HyDE timeout')), 1200));
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('HyDE timeout')), 350));
         
         const hydeRes = await Promise.race([hydePromise, timeoutPromise]) as any;
         
@@ -119,17 +119,17 @@ export class RAGRetriever {
 
       telemetryLogger.log('RAG', `Deterministic retrieval candidate count: ${retrievalResult.statistics.candidateCount}`);
 
-      const top15Candidates = retrievalResult.candidates.slice(0, 15);
+      const top8Candidates = retrievalResult.candidates.slice(0, 8);
 
-      if (top15Candidates.length === 0) {
+      if (top8Candidates.length === 0) {
         return { contextText: '', chunks: [], citations: [], cragEval: 'IRRELEVANT' };
       }
 
       // 4. Execute Reranker to filter down to the best candidates
-      const rerankedResults = await ragReranker.rerank(normalizedQuery, top15Candidates, limit);
+      const rerankedResults = await ragReranker.rerank(normalizedQuery, top8Candidates, limit);
 
       const finalChunks = rerankedResults.map((r) => {
-        const originalRecord = top15Candidates[r.index]!;
+        const originalRecord = top8Candidates[r.index]!;
         return {
           chunkId: originalRecord.chunk_id,
           documentId: originalRecord.document_id,

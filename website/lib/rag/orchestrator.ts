@@ -113,14 +113,15 @@ export class RAGOrchestrator {
     trace.startStage('Memory');
     try {
       if (sessionId) {
-        let conv = await ragMemory.loadConversation(sessionId);
+        const { conversation, messages } = await ragMemory.loadConversationAndUnsummarized(sessionId);
+        let conv = conversation;
+        
         if (!conv) {
           conv = await ragMemory.createConversation(sessionId);
         }
         
         ctx.memory.summary = conv?.summary || undefined;
-        const summarizedCount = conv?.summary_message_count || 0;
-        ctx.memory.history = await ragMemory.loadUnsummarizedMessages(sessionId, summarizedCount);
+        ctx.memory.history = messages || [];
         
         ctx.executionContext.diagnostics.memoryMessagesLoaded = ctx.memory.history.length;
         ctx.executionContext.diagnostics.summaryUsed = !!ctx.memory.summary;
@@ -232,6 +233,7 @@ export class RAGOrchestrator {
     // ==========================================
     // STAGE 4: WORKFLOW ORCHESTRATION & AGENT EXECUTION
     // ==========================================
+    trace.startStage('Generation');
     try {
       const { workflowRouter, createWorkflowContext } = await import('../workflows');
       
@@ -262,7 +264,9 @@ export class RAGOrchestrator {
          agentId: 'workflow-managed',
          lastLlmModel: response.model || 'unknown'
       };
+      trace.endStage('Generation', true);
     } catch (agentErr: any) {
+      trace.endStage('Generation', false, agentErr.message);
       ctx.executionContext.errors.push(`Agent Fatal Error: ${agentErr.message}`);
       telemetryLogger.error('AGENT', 'Fatal execution error', agentErr, { requestId });
     }
@@ -334,6 +338,20 @@ export class RAGOrchestrator {
     }
 
     telemetryLogger.log('PIPELINE', 'Total request completed', { requestId, durationMs: trace.exportTrace().stages['Total'].durationMs });
+
+    if (process.env.ENABLE_PERFORMANCE_PROFILING === 'true') {
+      const t = trace.exportTrace().stages;
+      console.log('\n========================================');
+      console.log('PERFORMANCE PROFILE');
+      console.log('========================================');
+      console.log(`Memory ............ ${t['Memory']?.durationMs || 0} ms`);
+      console.log(`Retrieval ......... ${t['Retrieval']?.durationMs || 0} ms`);
+      console.log(`Prompt Assembly ... ${t['PromptAssembly']?.durationMs || 0} ms`);
+      console.log(`Generation ........ ${t['Generation']?.durationMs || 0} ms`);
+      console.log(`Persistence ....... ${t['Persistence']?.durationMs || 0} ms`);
+      console.log(`TOTAL ............. ${t['Total']?.durationMs || 0} ms`);
+      console.log('========================================\n');
+    }
 
     return {
       answer: ctx.response.assistantResponse,

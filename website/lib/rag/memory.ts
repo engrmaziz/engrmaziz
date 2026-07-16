@@ -18,6 +18,10 @@ export class ConversationMemoryService {
     return await ragDatabase.getUnsummarizedMessages(conversationId, offset);
   }
 
+  async loadConversationAndUnsummarized(conversationId: string) {
+    return await ragDatabase.getConversationWithUnsummarized(conversationId);
+  }
+
   async saveUserMessage(conversationId: string, content: string) {
     return await ragDatabase.insertMessage(conversationId, 'user', content);
   }

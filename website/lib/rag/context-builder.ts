@@ -36,7 +36,8 @@ export class RAGContextBuilder {
 
     // 1. Group chunks by document to preserve structural proximity
     const docGroups: Record<string, ContextChunk[]> = {};
-    const uniqueCitations: Record<string, { title: string; url: string; category: string; pillar?: string }> = {};
+    const uniqueCitations: Record<string, { id: number; title: string; url: string; category: string; pillar?: string }> = {};
+    let citationCounter = 1;
 
     for (const chunk of chunks) {
       const docId = chunk.documentId;
@@ -50,6 +51,7 @@ export class RAGContextBuilder {
       const citationKey = meta.url || meta.title;
       if (citationKey && !uniqueCitations[citationKey]) {
         uniqueCitations[citationKey] = {
+          id: citationCounter++,
           title: meta.title,
           url: meta.url || '#',
           category: meta.category || 'general',
@@ -92,7 +94,9 @@ export class RAGContextBuilder {
 
       // Format document blocks with clear metadata headers for the LLM
       const sampleMeta = docChunks[0]!.metadata;
-      const docHeader = `[DOCUMENT: ${sampleMeta.title} | URL: ${sampleMeta.url || ''} | Category: ${sampleMeta.category || 'General'}]\n---`;
+      const citationKey = sampleMeta.url || sampleMeta.title;
+      const sourceId = uniqueCitations[citationKey]?.id || '?';
+      const docHeader = `[SOURCE ID: ${sourceId} | Title: ${sampleMeta.title}]\n---`;
       
       const docContent = mergedDocChunks.join('\n\n---\n\n');
       const docBlock = `${docHeader}\n${docContent}`;

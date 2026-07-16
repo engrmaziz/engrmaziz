@@ -410,6 +410,26 @@ export class RAGDatabase {
     return rows;
   }
 
+  async getConversationWithUnsummarized(conversationId: string) {
+    const convQuery = 'SELECT * FROM public.conversations WHERE id = $1 LIMIT 1';
+    const msgQuery = `
+      SELECT * FROM public.messages 
+      WHERE conversation_id = $1 
+      ORDER BY created_at ASC 
+      OFFSET COALESCE((SELECT summary_message_count FROM public.conversations WHERE id = $1 LIMIT 1), 0)
+    `;
+    
+    const [convRes, msgRes] = await Promise.all([
+      pgPool.query(convQuery, [conversationId]),
+      pgPool.query(msgQuery, [conversationId])
+    ]);
+    
+    return {
+      conversation: convRes.rows[0] || null,
+      messages: msgRes.rows || []
+    };
+  }
+
   async insertMessage(conversationId: string, role: string, content: string, citations: any = null, model: string | null = null, latency: number | null = null) {
     const query = `
       INSERT INTO public.messages (conversation_id, role, content, citations, model, latency)
