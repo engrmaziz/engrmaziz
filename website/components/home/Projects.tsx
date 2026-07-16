@@ -67,7 +67,7 @@ export function Projects() {
                 </div>
                 <div className="flex items-center gap-4 mt-auto">
                   <Button>View Case Study</Button>
-                  <Button variant="outline" className="gap-2"><Code2 className="w-4 h-4" /> Source</Button>
+                  <Button variant="secondary" className="gap-2"><Code2 className="w-4 h-4" /> Source</Button>
                 </div>
               </div>
             }
@@ -109,7 +109,7 @@ export function Projects() {
                 </div>
                 <div className="flex items-center gap-4 mt-auto">
                   <Button>View Case Study</Button>
-                  <Button variant="outline" className="gap-2"><Code2 className="w-4 h-4" /> Source</Button>
+                  <Button variant="secondary" className="gap-2"><Code2 className="w-4 h-4" /> Source</Button>
                 </div>
               </div>
             }
