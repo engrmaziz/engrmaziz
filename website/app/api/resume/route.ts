@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { envServer } from '@/lib/config/env.server';
 import { env } from '@/lib/config/env';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -13,6 +15,7 @@ export async function GET() {
 
     const signRes = await fetch(`${supabaseUrl}/storage/v1/object/sign/resumes/latest.pdf`, {
       method: 'POST',
+      cache: 'no-store',
       headers: {
         'Authorization': `Bearer ${serviceRoleKey}`,
         'apikey': serviceRoleKey,
