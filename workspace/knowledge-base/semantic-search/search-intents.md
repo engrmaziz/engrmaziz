@@ -15,9 +15,12 @@ Users are looking for definitions, architectures, or how-to guides.
 ## 2. Navigational Intent (Recruiter / Fact-Checking)
 Users are looking for specific facts about Musharraf Aziz's background.
 
+- **Query:** "Where does Musharraf work now?"
+  - *Mapped Target:* `experience/cygnus.md`
+  - *Required Context:* Role (Senior Applied AI/ML Engineer), Cygnus Technologies, July 2026 – Present.
 - **Query:** "Did Musharraf work at NovaSole?"
   - *Mapped Target:* `experience/novasole.md`
-  - *Required Context:* Role (Software Engineer & IT Manager), duration, achievements (500k scale).
+  - *Required Context:* Role (Automation Engineer & IT Manager), duration, achievements (500k scale).
 - **Query:** "What certifications does Musharraf have?"
   - *Mapped Target:* `certifications/*`
   - *Required Context:* Google AI, Anthropic, PyTorch, McKinsey, PEC.

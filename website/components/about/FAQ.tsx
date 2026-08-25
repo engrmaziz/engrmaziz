@@ -36,7 +36,7 @@ const faqItems = [
     title: "What industries have you worked in?",
     content: (
       <p>
-        Healthcare (Allama Iqbal Hospital — Clinical AI, HIPAA principles), E-Commerce (NovaSole — 500k+ visitors), Renewable Energy (Ihsan Solar — NOC architecture), Telecommunications (Transworld Home — 50,000+ ISP connections), FinTech (AegisFlow — fraud detection), and Enterprise SaaS. I am comfortable in regulated, high-stakes environments.
+        Applied AI (Cygnus Technologies — ETL, RAG, MLOps), Healthcare (Allama Iqbal Hospital — Clinical AI, 1,000+ daily interactions), E-Commerce (NovaSole — 500k+ visitors), Renewable Energy (Ihsan Solar — NOC architecture), Telecommunications (Transworld Home — 50,000+ ISP connections), FinTech (AegisFlow — fraud detection), and Enterprise SaaS. I am comfortable in regulated, high-stakes environments.
       </p>
     ),
   },
@@ -45,7 +45,7 @@ const faqItems = [
     title: "Can you build production-grade AI systems?",
     content: (
       <p>
-        Yes — production in the strictest sense. At Allama Iqbal Hospital, I maintain Clinical RAG systems processing 1,000+ queries daily with zero logged hallucinations over 12 months. This was achieved through Corrective RAG, CI/CD LLM evaluation (DeepEval golden datasets), and LLM Guardrail Gateways. I do not build AI demos; I architect deterministic, testable, auditable AI systems.
+        Yes — production in the strictest sense. At Allama Iqbal Hospital I designed and deployed an LLM-powered agent with a LangChain RAG pipeline on a multi-channel patient platform handling 1,000+ daily interactions, using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B. At Cygnus Technologies I now design end-to-end AI/ML systems covering ETL, RAG, and MLOps. I do not build AI demos; I ship systems that handle real usage.
       </p>
     ),
   },
@@ -81,7 +81,25 @@ const faqItems = [
     title: "What is your educational background?",
     content: (
       <p>
-        I hold a B.Sc. (Hons.) in Electrical Engineering from COMSATS University Islamabad (EQF Level 6, 2021) and am a Registered Professional Engineer with the Pakistan Engineering Council (PEC). My research on LoRaWAN Smart Agriculture was published in MDPI Sustainability (Impact Factor 3.125). This formal engineering foundation — systems thinking, hardware constraints, strict tolerances — directly shapes how I architect software.
+        I hold a B.S. (Hons.) in Electrical Engineering from COMSATS University Islamabad, Lahore Campus (Sep 2017 – Aug 2021) and am a Registered Electrical Engineer with the Pakistan Engineering Council (PEC, active since Sep 2021). My research on LoRaWAN Smart Agriculture was published in MDPI Sustainability (Impact Factor 3.125). This formal engineering foundation — systems thinking, hardware constraints, strict tolerances — directly shapes how I architect software.
+      </p>
+    ),
+  },
+  {
+    id: "faq-9",
+    title: "Can I hire you freelance and also consider you for a full-time role?",
+    content: (
+      <p>
+        Yes. Freelance is the default for scoped California and Florida builds (call agents, chatbots, RAG, automation). Full-time is open for senior applied-AI roles on US teams, remote-first. Use the Hire page and pick an intent so the first reply is not a guessing game.
+      </p>
+    ),
+  },
+  {
+    id: "faq-10",
+    title: "Do you serve California and Florida without a US office?",
+    content: (
+      <p>
+        Yes. I serve those states remotely. Schema and the location pages list California and Florida as area served and Lahore as home location. I will not invent a California or Florida street address to game Map Pack.
       </p>
     ),
   },

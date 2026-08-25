@@ -17,10 +17,10 @@ export function ContactClient() {
           <div className="max-w-4xl">
             <Badge variant="outline" className="mb-4">Engagement & Inquiry</Badge>
             <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight">
-              Let&apos;s architect <br /> something robust.
+              Hire me for a project — or a full-time seat.
             </h1>
             <p className="text-xl text-secondary leading-relaxed max-w-3xl">
-              Currently accepting inquiries for high-complexity AI integration, deterministic RAG architecture, and scalable backend engineering projects.
+              California and Florida companies: custom AI call agents, chatbots, RAG agents, and workflow automation. Freelance/contract builds and full-time remote roles. Pacific and Eastern overlap. No fake US storefront.
             </p>
           </div>
         </Container>
@@ -67,7 +67,7 @@ export function ContactClient() {
                       </div>
                       <div>
                         <div className="text-xs font-bold uppercase tracking-wider text-secondary mb-1">Location</div>
-                        <div className="text-sm font-medium text-primary">Global / Remote</div>
+                        <div className="text-sm font-medium text-primary">Remote · serving California & Florida</div>
                       </div>
                     </li>
                     <li className="flex items-start gap-4">
@@ -122,7 +122,9 @@ export function ContactClient() {
                 <p className="text-sm text-secondary mb-10 max-w-md">
                   Please provide context regarding your architectural challenges, stack constraints, and timeline goals.
                 </p>
-                <ContactForm />
+                <React.Suspense fallback={<p className="text-secondary text-sm">Loading form…</p>}>
+                  <ContactForm />
+                </React.Suspense>
               </div>
             }
           />

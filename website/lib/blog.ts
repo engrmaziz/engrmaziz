@@ -83,7 +83,7 @@ export function getAllPosts(): BlogData[] {
       description: data.description || '',
       category: data.category || 'Engineering',
       date: data.date || new Date().toISOString().split('T')[0],
-      author: data.author || 'Senior Software Architect',
+      author: data.author || 'Senior AI Engineer',
       readingTime: data.readingTime || '5 min read',
       difficulty: data.difficulty || undefined,
       tags: data.tags || [],

@@ -7,7 +7,7 @@ aliases: [Career Progression, Chronology, Professional History]
 tags: [timeline, career, history, projects, certifications]
 keywords: [Musharraf Aziz career, AI Engineer timeline, engineering progression]
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-25
 version: 1.0.0
 confidence: High
 source_documents: []
@@ -26,11 +26,11 @@ related_services: []
 - **2021:** Registered as a Professional Engineer (ENGR.) with the Pakistan Engineering Council (PEC).
 
 ## Career Timeline
-- **Nov 2021 – Jan 2022:** Began professional career at Sybrid. Achieved Top Performer of the Month (x3).
-- **Mar 2022 – Nov 2022:** Team Lead, Technical Assistance Center at Transworld Home (ISP). Managed 14 staff and 50,000+ connections in Lahore.
-- **Dec 2022 – Dec 2023:** Team Lead, Quality Assurance & NOC Development at Ihsan Solar Energy Pvt. Ltd. Led a 4-person team managing 400+ kW in Raiwind.
-- **Dec 2023 – Aug 2024:** Software Engineer & IT Manager at NovaSole Pakistan in Kasur. Scaled the e-commerce platform to 500,000+ monthly visitors.
-- **Aug 2024 – Present:** AI Engineer & Operations Manager at Allama Iqbal Hospital Kasur. Deployed clinical RAG systems with zero hallucinations.
+- **Mar 2022 – Nov 2022:** Team Lead, Technical Assistance Center at Transworld Home (ISP). Led a 14-person team achieving 98% issue resolution within SLA across 50,000+ connections in Lahore.
+- **Dec 2022 – Dec 2023:** Team Lead, Quality Assurance & NOC Development at Ihsan Solar Energy Pvt. Ltd. Led a 4-person team managing 400+ kW in Raiwind. Productivity Leader Award (Jul 2023).
+- **Dec 2023 – Aug 2024:** Automation Engineer & IT Manager at NovaSole Pakistan in Kasur. Built automation connecting a 500,000+ monthly visitor e-commerce platform across 3 sales channels.
+- **Aug 2024 – Jul 2026:** AI Engineer & Operations Manager at Allama Iqbal Hospital, Kasur. Deployed an LLM-powered agent handling 1,000+ daily interactions. High Performance Excellence Award (Jun 2025).
+- **Jul 2026 – Present:** Senior Applied AI/ML Engineer at Cygnus Technologies in Lahore. Designing end-to-end AI/ML solutions covering ETL, RAG, and MLOps.
 
 ## Certification Timeline
 - **Aug 2025:** Completed AI for Business Professionals (HP LIFE).

@@ -7,6 +7,7 @@ export const contactSchema = z.object({
   company: z.string().max(100).optional(),
   role: z.string().max(100).optional(),
   projectType: z.string().optional(),
+  engagement: z.string().optional(),
   timeline: z.string().optional(),
   message: z.string().min(10, "Message must be at least 10 characters").max(2000),
   consent: z.boolean().refine(val => val === true, "Consent is required"),

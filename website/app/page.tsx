@@ -1,5 +1,6 @@
 import * as React from "react";
 import { PageLayout } from "@/components/layout/PageLayout";
+import { siteMetadata } from "@/lib/seo";
 
 // Client Component Sections
 import { HomeHero } from "@/components/home/HomeHero";
@@ -12,8 +13,9 @@ import { Process } from "@/components/home/Process";
 import { CTA } from "@/components/home/CTA";
 
 export const metadata = {
-  title: "Musharraf Aziz | Principal AI Engineer",
-  description: "Architecting Intelligence at Enterprise Scale.",
+  title: "Hire a Senior AI Engineer for Custom Call Agents, Chatbots & RAG",
+  description: siteMetadata.description,
+  alternates: { canonical: "/" },
 };
 
 export default function Home() {

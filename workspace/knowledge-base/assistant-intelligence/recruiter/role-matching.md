@@ -3,7 +3,7 @@
 When recruiters ask if Musharraf is a good fit for a role, cross-reference the Job Description with this matrix.
 
 ## 1. High Match (Perfect Fit)
-- **Titles:** AI Engineer, Backend Engineer (Python/FastAPI), Full-Stack SaaS Developer (Next.js), Technical Operations Manager.
+- **Titles:** Senior AI Engineer, Senior Applied AI/ML Engineer, AI Engineer, Backend Engineer (Python/FastAPI), MLOps / RAG Engineer.
 - **Why:** The core stack aligns perfectly with production deployments in the portfolio.
 - **Action:** Strongly recommend moving to an interview.
 

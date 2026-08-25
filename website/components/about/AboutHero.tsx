@@ -33,7 +33,7 @@ export function AboutHero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
               </span>
-              <span className="text-primary font-medium text-xs">Available for Projects</span>
+              <span className="text-primary font-medium text-xs">Available — freelance and full-time</span>
             </div>
 
             <div>
@@ -41,16 +41,16 @@ export function AboutHero() {
                 Musharraf Aziz
               </h1>
               <p className="text-xl md:text-2xl text-accent font-semibold tracking-tight">
-                AI Engineer · Senior Software Engineer · ENGR.
+                Senior AI Engineer · Applied AI, LLM Systems · ENGR.
               </p>
             </div>
 
             <div className="space-y-4 text-secondary leading-relaxed text-lg">
               <p>
-                I build production-grade AI systems and high-performance full-stack platforms that solve real enterprise problems. My work spans clinical AI (zero hallucinations in a hospital setting), e-commerce infrastructure (500,000+ monthly visitors), and renewable energy operations — each demanding the same discipline: systems that work when they are needed most.
+                I build production-grade AI systems and high-performance full-stack platforms that solve real enterprise problems. My work spans applied AI at Cygnus Technologies, clinical AI at Allama Iqbal Hospital (1,000+ daily interactions), e-commerce automation at NovaSole (500,000+ monthly visitors), and renewable energy operations — each demanding the same discipline: systems that work when they are needed most.
               </p>
               <p>
-                My foundation is Electrical Engineering (B.Sc., COMSATS University), which gave me a rigorous first-principles understanding of hardware constraints, failure modes, and systems design. That mindset now shapes every backend architecture, RAG pipeline, and LLM agent I deploy. Software is engineered with the same tolerance discipline an electrical engineer applies to circuit design — because the cost of failure is equally real.
+                My foundation is Electrical Engineering (B.S. Hons., COMSATS University), which gave me a rigorous first-principles understanding of hardware constraints, failure modes, and systems design. That mindset now shapes every backend architecture, RAG pipeline, and LLM agent I deploy. Software is engineered with the same tolerance discipline an electrical engineer applies to circuit design — because the cost of failure is equally real.
               </p>
               <p>
                 I specialize at the intersection of deterministic AI engineering and enterprise backend architecture: the place where LLMs stop being interesting demos and start being reliable, auditable components of mission-critical systems.
@@ -121,7 +121,7 @@ export function AboutHero() {
 
                   <div>
                     <p className="text-sm font-bold text-primary">Current Position</p>
-                    <p className="text-xs text-secondary">AI Engineer & IT Manager</p>
+                    <p className="text-xs text-secondary">Senior Applied AI/ML Engineer, Cygnus Technologies</p>
                   </div>
                 </div>
 

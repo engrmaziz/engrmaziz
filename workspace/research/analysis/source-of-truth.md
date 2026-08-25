@@ -29,15 +29,15 @@
 
 ### Source of Truth: Composite from `Comprehensive_CV` + `AIDNA_Superbuilder`
 
-| Employer | Title (per most detailed CV) | Period | Location |
+| Employer | Title (per current CV) | Period | Location |
 |----------|------|--------|----------|
-| Sybrid | Top Performer (x3) | Nov 2021 – Jan 2022 | (not specified) |
 | Transworld Home (ISP) | Team Lead, Technical Assistance Center | Mar 2022 – Nov 2022 | Lahore |
 | Ihsan Solar Energy Pvt. Ltd. | Team Lead, QA & NOC Development | Dec 2022 – Dec 2023 | Raiwind |
-| NovaSole Pakistan | Software Engineer & IT Manager | Dec 2023 – Aug 2024 | Kasur |
-| Allama Iqbal Hospital Kasur | AI Engineer & Operations Manager | Aug 2024 – Present | Kasur |
+| NovaSole Pakistan | Automation Engineer & IT Manager | Dec 2023 – Aug 2024 | Kasur |
+| Allama Iqbal Hospital, Kasur | AI Engineer & Operations Manager | Aug 2024 – Jul 2026 | Kasur |
+| Cygnus Technologies | Senior Applied AI/ML Engineer | Jul 2026 – Present | Lahore |
 
-**Note:** Sybrid employment only mentioned in awards section of the Comprehensive CV and AIDNA CV; no detailed job description provided.
+**Canonical CV:** `cv.pdf` (August 2026). Headline: Senior AI Engineer │ Applied AI, LLM Systems. Sybrid is not listed on the current CV and should not appear on public experience pages.
 
 ---
 

@@ -7,7 +7,7 @@ aliases: [AIHK Role, Hospital AI Engineer]
 tags: [experience, healthcare, ai engineer, rag, llm]
 keywords: [Healthcare AI implementation, MS Presidio, zero hallucinations, clinical RAG]
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-25
 version: 1.0.0
 confidence: High
 source_documents: []
@@ -20,7 +20,7 @@ related_services: [Enterprise AI Solutions (LLMs, Agents, RAG)]
 # AI Engineer & Operations Manager
 
 ## Overview
-A dual-hat leadership and deep technical role focusing on the digital transformation of a major regional hospital. This role required bridging cutting-edge GenAI research with mission-critical healthcare operations where fault tolerance and data privacy are non-negotiable.
+A dual-hat leadership and deep technical role focusing on the digital transformation of a major regional hospital. This role required bridging cutting-edge GenAI research with mission-critical healthcare operations where fault tolerance and data privacy are non-negotiable. The engagement ended in July 2026 when Musharraf moved to Cygnus Technologies.
 
 ## Company
 **Allama Iqbal Hospital Kasur (AIHK)**
@@ -32,20 +32,22 @@ Healthcare / MedTech
 Full-Time
 
 ## Dates
-**August 2024 – Present**
+**August 2024 – July 2026**
 
 ## Location
 Kasur, Pakistan
 
 ## Responsibilities
-- Architect and maintain enterprise-grade AI systems, specifically Multi-Agent LLM Workflows and Clinical Retrieval-Augmented Generation (RAG) systems.
-- Design and enforce AI security protocols (Guardrail Gateways) to ensure compliance with medical data privacy standards (HIPAA principles).
-- Manage cross-departmental hospital operations (10+ departments) through digital workflow automation.
-- Monitor and evaluate LLM performance in production using rigorous CI/CD testing frameworks.
+- Designed and deployed an LLM-powered AI agent using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B, with a RAG pipeline built in LangChain, integrated into a multi-channel patient platform handling 1,000+ daily interactions.
+- Built agent workflows that integrate with APIs, internal databases, and messaging platforms, using a 16-node n8n automation system to connect the AI agent to real business systems.
+- Built and published a Model Context Protocol server, giving AI agents structured, tool-based access to external systems.
+- Monitored agent output and decision quality over time, reviewing real interactions to identify failure patterns and refining prompt design and retrieval logic to improve reliability.
+- Hardened the agent system against failures, including low-confidence or incorrect outputs, using fallback handling and data governance controls before any data reached the LLM.
+- Wrote Python for data processing, API integration, and structured output handling supporting the agent's decision-making pipeline.
 
 ## Technical Stack
 - **Languages:** Python, TypeScript
-- **AI/ML:** LangGraph, LangChain, Groq, Llama 3, OpenAI, DeepEval
+- **AI/ML:** LangChain, Groq, Llama 3.3 70B, OpenAI, Gemini
 - **Backend:** FastAPI, Node.js
 - **Databases:** PostgreSQL, ChromaDB (Vector)
 - **Security:** Microsoft Presidio (PII Redaction)
@@ -63,9 +65,7 @@ Kasur, Pakistan
   - **Solution:** Deployed highly parallelized n8n automation workflows to synchronize data between legacy systems.
 
 ## Achievements & KPIs
-- Achieved and maintained **zero AI hallucinations** across **1,000+ daily interactions** for over 12 months.
-- Reduced overall system downtime by **25%**.
-- Drove an **18% efficiency gain** in administrative workflows.
+- Achieved **1,000+ daily interactions** on a multi-channel patient platform in production.
 - Awarded the **High Performance Excellence Award** (June 2025).
 
 ## Business Impact
@@ -74,7 +74,7 @@ The systems deployed fundamentally modernized the hospital's operations, reducin
 ## Recruiter Highlights
 - Proven ability to deploy LLMs in highly regulated, high-risk environments (Healthcare).
 - Demonstrated mastery of advanced agentic architectures (LangGraph) rather than simple wrapper scripts.
-- Strong metric-driven impact (zero hallucinations, 25% downtime reduction).
+- Strong metric-driven impact (1,000+ daily production interactions, High Performance Excellence Award).
 
 ## Interview Questions
 - "How exactly did you achieve 'zero hallucinations' in a clinical setting? What was your evaluation framework?"
@@ -84,4 +84,4 @@ The systems deployed fundamentally modernized the hospital's operations, reducin
 - **Situation:** The hospital needed an AI query system for clinical protocols, but doctors were rightfully terrified of LLM hallucinations providing incorrect dosages or procedures.
 - **Task:** Build a RAG system that was statistically incapable of returning false medical information.
 - **Action:** I moved away from standard naive RAG. I implemented a Corrective RAG (CRAG) workflow using LangGraph, where a secondary evaluator LLM scores the retrieval documents for relevance *before* generation. I also built a CI/CD pipeline using DeepEval to run regression tests on 500+ golden medical queries on every git push.
-- **Result:** The system has processed over 1,000 queries daily for 12 months without a single logged hallucination, winning the High Performance Excellence Award and gaining full trust from the medical board.
+- **Result:** The system processed 1,000+ queries daily in production, winning the High Performance Excellence Award (June 2025) and gaining trust from the medical board. The role concluded in July 2026.

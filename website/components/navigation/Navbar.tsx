@@ -34,8 +34,8 @@ const NAV_LINKS = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Services", href: "/services" },
+  { name: "Hire", href: "/hire" },
   { name: "Projects", href: "/projects" },
-  { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -132,9 +132,9 @@ export function Navbar() {
               <FileText className="w-3.5 h-3.5" />
               RESUME
             </Button>
-            <Link href="/contact" aria-label="Contact">
+            <Link href="/hire" aria-label="Hire">
               <Button size="sm" className="gap-2 group">
-                Contact
+                Hire
                 <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -197,9 +197,9 @@ export function Navbar() {
                   VIEW RESUME
                   <FileText className="w-4 h-4" />
                 </Button>
-                <Link href="/contact" className="w-full">
+                <Link href="/hire" className="w-full">
                   <Button className="w-full justify-between">
-                    GET IN TOUCH
+                    HIRE ME
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>

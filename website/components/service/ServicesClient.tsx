@@ -48,11 +48,31 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
           <div className="max-w-4xl">
             <Badge variant="outline" className="mb-4">Services & Capabilities</Badge>
             <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight">
-              Engineering Expertise <br/> That Scales
+              Custom AI Call Agents, Chatbots, RAG Agents & Workflow Automation
             </h1>
             <p className="text-xl text-secondary leading-relaxed max-w-3xl">
-              I provide specialized technical services focused on production-grade software engineering. From highly concurrent backend systems to deterministically orchestrated AI agents, every solution is architected for absolute reliability.
+              Production systems for California and Florida operators: inbound/outbound AI call agents, custom AI chatbots, RAG agents, voice and WhatsApp agents, LLM orchestration, and the backends those agents run on. Remote delivery. No fake US storefront.
             </p>
+            <div className="flex flex-wrap gap-3 mt-8">
+              <Link href="/services/california" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-bold text-primary hover:border-accent/50">
+                California
+              </Link>
+              <Link href="/services/florida" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-bold text-primary hover:border-accent/50">
+                Florida
+              </Link>
+              <Link href="/services/ai-agents/ai-call-agents" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
+                Call agents
+              </Link>
+              <Link href="/services/ai-agents/chatbots" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
+                Chatbots
+              </Link>
+              <Link href="/services/ai-engineering/rag-development" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
+                RAG agents
+              </Link>
+              <Link href="/services/technical-consulting/workflow-automation" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
+                Workflow automation
+              </Link>
+            </div>
           </div>
         </Container>
       </Section>

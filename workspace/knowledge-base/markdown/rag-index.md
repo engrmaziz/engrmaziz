@@ -64,4 +64,4 @@ To resolve vocabulary mismatches between recruiters, clients, and developers, th
 
 1. **Hybrid Search Notes:** Relying purely on dense vector embeddings (e.g., OpenAI `text-embedding-3-large`) may fail on exact keyword searches (e.g., specific acronyms like "MCP" or "n8n"). Implement Hybrid Search (Dense + Sparse/BM25) with a weighting of 0.7 Dense / 0.3 Sparse.
 2. **Self-Contained Content:** Every Markdown file in this knowledge base is written to be strictly self-contained. Pronouns ("he", "it") are minimized, and full proper nouns ("Musharraf Aziz", "AegisFlow") are repeated explicitly in each major section to maximize embedding quality.
-3. **Avoid Ambiguity:** Do not use relative temporal terms like "currently" or "last year". Use explicit dates (e.g., "August 2024 to Present") to ensure temporal queries remain accurate indefinitely.
+3. **Avoid Ambiguity:** Do not use relative temporal terms like "currently" or "last year". Use explicit dates (e.g., "July 2026 to Present") to ensure temporal queries remain accurate indefinitely.

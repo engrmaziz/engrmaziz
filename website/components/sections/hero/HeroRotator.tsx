@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const titles = [
-  "AI Engineer",
-  "Backend Architect",
+  "Senior AI Engineer",
+  "Applied AI / LLM Systems",
   "RAG Systems Engineer",
   "AI Automation Engineer",
-  "Senior Software Engineer",
+  "Senior Applied AI/ML Engineer",
   "Registered Engineer (PEC)",
 ];
 

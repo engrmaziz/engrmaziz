@@ -1,12 +1,12 @@
 {
   "nodes": [
-    {"id": "n1", "label": "Musharraf Aziz", "type": "Person", "properties": {"title": "AI Engineer & Operations Manager"}},
+    {"id": "n1", "label": "Musharraf Aziz", "type": "Person", "properties": {"title": "Senior Applied AI/ML Engineer"}},
     {"id": "n2", "label": "Allama Iqbal Hospital", "type": "Company", "properties": {"industry": "Healthcare"}},
     {"id": "n3", "label": "NovaSole Pakistan", "type": "Company", "properties": {"industry": "E-Commerce"}},
     {"id": "n4", "label": "Ihsan Solar Energy", "type": "Company", "properties": {"industry": "Renewable Energy"}},
     {"id": "n5", "label": "Transworld Home", "type": "Company", "properties": {"industry": "Telecommunications"}},
-    {"id": "n6", "label": "Sybrid", "type": "Company", "properties": {"industry": "Customer Support"}},
-    {"id": "n7", "label": "COMSATS University Islamabad", "type": "University", "properties": {"degree": "B.Sc. Electrical Engineering"}},
+    {"id": "n6", "label": "Cygnus Technologies", "type": "Company", "properties": {"industry": "Applied AI"}},
+    {"id": "n7", "label": "COMSATS University Islamabad", "type": "University", "properties": {"degree": "B.S. Electrical Engineering"}},
     {"id": "n8", "label": "AegisFlow", "type": "Project", "properties": {"type": "FinTech SaaS"}},
     {"id": "n9", "label": "Self-Healing RAG (SHBRAG)", "type": "Project", "properties": {"type": "AI Architecture"}},
     {"id": "n10", "label": "VoiceRAG Core v1", "type": "Project", "properties": {"type": "Voice AI"}},
@@ -36,12 +36,12 @@
     {"id": "n34", "label": "Registered Electrical Engineer", "type": "Certification", "properties": {"issuer": "PEC"}}
   ],
   "edges": [
-    {"source": "n1", "target": "n2", "type": "WORKS_AT", "properties": {"role": "AI Engineer & Operations Manager"}},
-    {"source": "n1", "target": "n3", "type": "WORKED_AT", "properties": {"role": "Software Engineer & IT Manager"}},
+    {"source": "n1", "target": "n6", "type": "WORKS_AT", "properties": {"role": "Senior Applied AI/ML Engineer"}},
+    {"source": "n1", "target": "n2", "type": "WORKED_AT", "properties": {"role": "AI Engineer & Operations Manager"}},
+    {"source": "n1", "target": "n3", "type": "WORKED_AT", "properties": {"role": "Automation Engineer & IT Manager"}},
     {"source": "n1", "target": "n4", "type": "WORKED_AT", "properties": {"role": "Team Lead, QA & NOC"}},
     {"source": "n1", "target": "n5", "type": "WORKED_AT", "properties": {"role": "Team Lead, TAC"}},
-    {"source": "n1", "target": "n6", "type": "WORKED_AT", "properties": {"role": "Early Career"}},
-    {"source": "n1", "target": "n7", "type": "EDUCATED_AT", "properties": {"degree": "B.Sc. Hons"}},
+    {"source": "n1", "target": "n7", "type": "EDUCATED_AT", "properties": {"degree": "B.S. Hons"}},
     {"source": "n1", "target": "n8", "type": "CREATED", "properties": {}},
     {"source": "n1", "target": "n9", "type": "CREATED", "properties": {}},
     {"source": "n1", "target": "n10", "type": "CREATED", "properties": {}},

@@ -56,7 +56,7 @@ const industries = [
   {
     name: "Artificial Intelligence",
     icon: <Bot className="w-8 h-8" />,
-    detail: "Production LLM orchestration, agentic workflows, deterministic AI system design.",
+    detail: "Production LLM orchestration, RAG, ETL pipelines, MLOps, and agentic workflows.",
   },
 ];
 

@@ -75,6 +75,11 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 
+# Local SEO Skills AI install (cloned toolkit; not part of the portfolio)
+vendor/seo-skills-ai/
+.cursor/skills/
+.cursor/mcp.json
+
 # IDE/editor files
 .vscode/
 .idea/

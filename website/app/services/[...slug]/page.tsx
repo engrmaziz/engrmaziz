@@ -2,9 +2,13 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllServices, getServiceBySlugArray } from "@/lib/services";
 import { ServiceDetailLayout } from "@/components/service/ServiceDetailLayout";
+import { ServiceGeoLinks } from "@/components/geo/ServiceGeoLinks";
+import { siteMetadata } from "@/lib/seo";
 
 // Ensure this page is statically generated at build time
 // Forced rebuild after deleting hardcoded routes
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   const services = getAllServices();
   return services.map((service) => ({
@@ -22,14 +26,28 @@ export function generateMetadata({ params }: { params: { slug: string[] } }): Me
   }
 
   const cleanDescription = service.description || `Engineering service details for ${service.title}`;
+  const keywords = [
+    ...(service.keywords || []),
+    "California",
+    "Florida",
+    "custom AI call agents",
+    "custom AI chatbots",
+    "RAG agents",
+    "workflow automation",
+  ];
   
   return {
-    title: `${service.title} | Engineering Services`,
+    title: `${service.title} | ${siteMetadata.author}`,
     description: cleanDescription,
+    keywords,
+    alternates: {
+      canonical: `/services/${service.slug}`,
+    },
     openGraph: {
       title: service.title,
       description: cleanDescription,
       type: "article",
+      url: `${siteMetadata.siteUrl}/services/${service.slug}`,
       tags: service.tags || [],
     },
     twitter: {
@@ -55,9 +73,16 @@ export default function ServiceDetailPage({ params }: { params: { slug: string[]
     "description": service.description,
     "category": service.category,
     "provider": {
-      "@type": "Organization",
-      "name": "Senior Software Architect"
-    }
+      "@type": "Person",
+      "name": siteMetadata.author,
+      "jobTitle": siteMetadata.jobTitle,
+      "url": siteMetadata.siteUrl
+    },
+    "areaServed": [
+      { "@type": "State", "name": "California" },
+      { "@type": "State", "name": "Florida" },
+      { "@type": "Country", "name": "United States" }
+    ]
   };
 
   // Breadcrumb schema
@@ -69,19 +94,19 @@ export default function ServiceDetailPage({ params }: { params: { slug: string[]
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://maziz.me"
+        "item": siteMetadata.siteUrl
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Services",
-        "item": "https://maziz.me/services"
+        "item": `${siteMetadata.siteUrl}/services`
       }
     ]
   };
 
   // Dynamically append breadcrumbs based on nested depth
-  let currentPath = "https://maziz.me/services";
+  let currentPath = `${siteMetadata.siteUrl}/services`;
   service.slugArray.forEach((part, index) => {
     currentPath += `/${part}`;
     breadcrumbList.itemListElement.push({
@@ -99,6 +124,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string[]
         dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbList]) }}
       />
       <ServiceDetailLayout service={service} />
+      <ServiceGeoLinks canonicalPath={`/services/${service.slug}`} title={service.title} />
     </>
   );
 }

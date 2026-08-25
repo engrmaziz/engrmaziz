@@ -2,18 +2,23 @@ import { MetadataRoute } from 'next';
 import { getAllProjects } from '@/lib/projects';
 import { getAllServices } from '@/lib/services';
 import { getAllPosts } from '@/lib/blog';
+import { getAllGeoPaths } from '@/lib/geo';
+import { siteMetadata } from '@/lib/seo';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://musharrafaziz.com'; // Should ideally be ENV var
+  const baseUrl = siteMetadata.siteUrl;
 
   // Base routes
   const routes = [
     '',
     '/about',
+    '/hire',
+    '/entity',
     '/projects',
     '/services',
     '/blog',
     '/contact',
+    '/sitemap',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
@@ -45,5 +50,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...routes, ...projects, ...services, ...posts];
+  const geo = getAllGeoPaths().map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: 'weekly' as const,
+    priority: path.split('/').length === 3 ? 0.9 : 0.85,
+  }));
+
+  return [...routes, ...projects, ...services, ...geo, ...posts];
 }

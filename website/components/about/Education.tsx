@@ -47,7 +47,7 @@ export function Education() {
                       <GraduationCap className="w-6 h-6 text-accent" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-primary">B.Sc. (Hons.) Electrical Engineering</h3>
+                      <h3 className="text-xl font-bold text-primary">B.S. (Hons.) Electrical Engineering</h3>
                       <p className="text-accent font-medium">COMSATS University Islamabad, Lahore Campus</p>
                       <p className="text-secondary text-sm mt-1">September 2017 – August 2021 · EQF Level 6</p>
                     </div>

@@ -28,7 +28,7 @@ The knowledge base models the professional identity, engineering philosophy, and
 ## Professional Identity
 - **Entity Name:** Musharraf Aziz
 - **Designation:** ENGR. (Registered Engineer, PEC)
-- **Primary Roles:** AI Engineer, Senior Software Engineer (AI/ML), Full-Stack Developer
+- **Primary Roles:** Senior AI Engineer, Senior Applied AI/ML Engineer, AI Engineer
 - **Focus Areas:** Deterministic LLM Workflows, Multi-Agent Orchestration, High-Performance Next.js/FastAPI SaaS Platforms, Voice AI, Workflow Automation.
 - **Mission:** To architect, engineer, and deploy high-performance, deterministic AI systems and full-stack platforms that solve complex enterprise problems, eliminate inefficiencies, and drive measurable business value with zero compromise on quality or security.
 
@@ -53,10 +53,10 @@ The knowledge base follows a strict hierarchical and relational structure:
 ## Major Sections
 
 ### 1. Education
-Details foundational engineering training, including the B.Sc. in Electrical Engineering from COMSATS University and the award-winning LoRaWAN Smart Agriculture FYP.
+Details foundational engineering training, including the B.S. (Hons.) in Electrical Engineering from COMSATS University and the award-winning LoRaWAN Smart Agriculture FYP.
 
 ### 2. Experience
-Chronological enterprise roles spanning Healthcare AI (Allama Iqbal Hospital), E-Commerce (NovaSole), Solar Energy (Ihsan Solar), and Telecom (Transworld Home).
+Chronological enterprise roles spanning Applied AI (Cygnus Technologies), Healthcare AI (Allama Iqbal Hospital), E-Commerce (NovaSole), Solar Energy (Ihsan Solar), and Telecom (Transworld Home).
 
 ### 3. Projects
 Deep architectural dives into 37 flagship systems, including AegisFlow (FinTech), VoiceRAG (Voice AI), Self-Healing RAG Pipeline, and AuraNode (SaaS).

@@ -5,6 +5,7 @@ export interface ContactSubmission {
   company?: string;
   role?: string;
   projectType?: string;
+  engagement?: string;
   timeline?: string;
   message: string;
   consent: boolean;

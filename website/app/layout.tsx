@@ -6,7 +6,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Navbar } from "@/components/navigation/Navbar";
 import { Footer } from "@/components/navigation/Footer";
 import { ScrollProgress } from "@/components/navigation/ScrollProgress";
-import { generatePersonSchema, generateWebSiteSchema, siteMetadata } from "@/lib/seo";
+import { generateSiteGraph, siteMetadata } from "@/lib/seo";
 import { RAGXIndicator } from "@/components/rag/RAGXIndicator";
 import dynamic from 'next/dynamic';
 
@@ -33,15 +33,25 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://musharrafaziz.com"),
+  metadataBase: new URL(siteMetadata.siteUrl),
   title: {
     default: siteMetadata.title,
     template: `%s | ${siteMetadata.author}`,
   },
   description: siteMetadata.description,
   keywords: [
-    "AI Engineer", "Backend Engineer", "Software Architect", "RAG Pipelines", 
-    "Voice AI", "Go", "Python", "System Architecture"
+    "hire AI engineer",
+    "freelance AI engineer",
+    "remote senior AI engineer",
+    "custom AI call agents",
+    "custom AI chatbots",
+    "RAG agents",
+    "workflow automation",
+    "AI voice agents",
+    "AI Engineer California",
+    "AI Engineer Florida",
+    "RAG Pipelines",
+    "LLM Systems",
   ],
   authors: [{ name: siteMetadata.author, url: siteMetadata.siteUrl }],
   applicationName: siteMetadata.author,
@@ -86,9 +96,9 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "/",
     types: {
-      "application/rss+xml": "https://musharrafaziz.com/feed.xml",
+      "application/rss+xml": `${siteMetadata.siteUrl}/feed.xml`,
+      "text/plain": `${siteMetadata.siteUrl}/llms.txt`,
     },
   },
 };
@@ -103,11 +113,7 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(generatePersonSchema()) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebSiteSchema()) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(generateSiteGraph()) }}
         />
       </head>
       <body className="font-sans min-h-screen">

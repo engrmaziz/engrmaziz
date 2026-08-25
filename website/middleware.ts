@@ -24,7 +24,11 @@ export function middleware(req: NextRequest) {
   res.headers.set('X-Frame-Options', 'DENY');
   res.headers.set('X-Content-Type-Options', 'nosniff');
   res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.headers.append(
+    'Link',
+    `<${req.nextUrl.origin}/llms.txt>; rel="describedby"; type="text/plain"`
+  );
 
   // Protect /admin routes
   if (req.nextUrl.pathname.startsWith('/admin')) {

@@ -2,12 +2,12 @@
 id: exp_sybrid_001
 title: Early Career at Sybrid
 category: Experience
-description: Early career foundations in customer communication and operations at Sybrid.
+description: Early career role not listed on the current public CV (`cv.pdf`). Kept for historical completeness; do not present as a featured job on the website.
 aliases: [Sybrid Role]
-tags: [experience, customer support, operations]
+tags: [experience, customer support, operations, historical]
 keywords: [Sybrid, Top Performer]
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-25
 version: 1.0.0
 confidence: High
 source_documents: []

@@ -2,9 +2,9 @@
 
 # Engr. Musharraf Aziz
 
-**AI Engineer · Enterprise Backend Architect · Registered Engineer (PEC)**
+**Senior AI Engineer · Applied AI, LLM Systems · Registered Engineer (PEC)**
 
-Lahore / Kasur, Pakistan · Open to AI/ML Roles & Enterprise Consulting
+Lahore, Pakistan · Open to AI/ML Roles & Enterprise Consulting
 
 *I architect deterministic AI systems and high-throughput backend infrastructure.*
 *Zero hallucinations. Sub-second latency. Production-grade reliability.*
@@ -40,11 +40,11 @@ Lahore / Kasur, Pakistan · Open to AI/ML Roles & Enterprise Consulting
 
 ## About
 
-Registered Engineer (PEC) with a B.Sc. in Electrical Engineering from COMSATS University and a published research paper in MDPI Sustainability (IF 3.125). I transitioned from hardware systems engineering into AI and backend architecture, carrying with me the discipline of embedded constraints: strict tolerances, zero margin for failure, and deterministic outputs.
+Registered Engineer (PEC) with a B.S. (Hons.) in Electrical Engineering from COMSATS University and a published research paper in MDPI Sustainability (IF 3.125). I transitioned from hardware systems engineering into applied AI, carrying with me the discipline of embedded constraints: strict tolerances, zero margin for failure, and deterministic outputs.
 
-I do not build thin API wrappers over foundation models. I engineer multi-layered AI pipelines with built-in evaluation, automatic correction, and enforceable guardrails. My production systems have maintained zero hallucinations across 1,000+ daily clinical queries for over 12 consecutive months in a hospital environment, while my backend infrastructure has handled 500,000+ monthly visitors at 99.95% uptime.
+I do not build thin API wrappers over foundation models. I engineer end-to-end AI systems covering ETL, RAG, LLM applications, and MLOps. My production systems have handled 1,000+ daily clinical interactions at Allama Iqbal Hospital, while e-commerce automation at NovaSole supported 500,000+ monthly visitors.
 
-My work spans Healthcare AI, FinTech, E-Commerce, Telecommunications, and Renewable Energy. Each domain sharpened a different engineering muscle: healthcare demanded absolute correctness, fintech demanded extreme throughput, e-commerce demanded scale under pressure, telecom demanded operational resilience, and solar demanded hardware-software integration from first principles.
+My work spans Applied AI, Healthcare AI, FinTech, E-Commerce, Telecommunications, and Renewable Energy. Each domain sharpened a different engineering muscle: applied AI demanded production MLOps, healthcare demanded absolute correctness, fintech demanded extreme throughput, e-commerce demanded scale under pressure, telecom demanded operational resilience, and solar demanded hardware-software integration from first principles.
 
 ---
 
@@ -197,30 +197,46 @@ sequenceDiagram
 <summary><strong>Professional Experience</strong></summary>
 <br>
 
-### AI Engineer & Operations Manager
-**Allama Iqbal Hospital Kasur** · Aug 2024 – Present
+### Senior Applied AI/ML Engineer
+**Cygnus Technologies** · Jul 2026 – Present
 
-Architected and deployed clinical RAG systems and an LLM Guardrail Gateway for a major regional hospital. Engineered a Corrective RAG workflow using LangGraph with DeepEval CI/CD regression testing (Faithfulness scoring on 500+ golden queries per deployment). Integrated Microsoft Presidio for automated PHI/PII redaction. Managed digital operations across 10+ hospital departments using parallelized n8n automation workflows.
-
-**Key metrics:** Zero hallucinations across 1,000+ daily queries for 12+ months. 18% efficiency gain in administrative workflows. High Performance Excellence Award (Jun 2025).
+Designing and deploying end-to-end AI and machine learning solutions for large-scale data processing, analytics, and intelligent automation. Building scalable ETL pipelines, fine-tuning custom ML/LLM/RAG applications, and shipping AI-powered reporting, predictive analytics, and recommendation systems. Using LangChain, LlamaIndex, Hugging Face, OpenAI APIs, and vector databases, with MLOps coverage for versioning, monitoring, and reliable rollout.
 
 ---
 
-### Software Engineer & IT Manager
+### AI Engineer & Operations Manager
+**Allama Iqbal Hospital, Kasur** · Aug 2024 – Jul 2026
+
+Designed and deployed an LLM-powered AI agent using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B, with a LangChain RAG pipeline on a multi-channel patient platform handling 1,000+ daily interactions. Built agent workflows connected to APIs, internal databases, and messaging platforms via a 16-node n8n system. Published a Model Context Protocol server for structured tool-based access to external systems. Hardened the agent with fallback handling and data governance before any data reached the LLM.
+
+**Key metrics:** 1,000+ daily production interactions. High Performance Excellence Award (Jun 2025).
+
+---
+
+### Automation Engineer & IT Manager
 **NovaSole Pakistan** · Dec 2023 – Aug 2024
 
-Led full-stack engineering for a high-traffic e-commerce platform. Built a Next.js SSG storefront optimized for Core Web Vitals and a Node.js data synchronization pipeline maintaining real-time inventory consistency across three sales channels. Managed database indexing strategies to prevent locks during seasonal traffic spikes.
+Built automated workflows connecting an e-commerce platform serving 500,000+ monthly visitors with payment processors and inventory systems across three sales channels, using REST APIs and webhook-based triggers. Built data pipelines and automated synchronisation logic, eliminating a previously manual daily reconciliation process.
 
-**Key metrics:** 500,000+ monthly visitors. 98%+ data accuracy across channels. 10M+ PKR monthly revenue. Near-zero cart abandonment from logistics automation.
+**Key metrics:** 500,000+ monthly visitors. 98%+ data accuracy across channels.
+
+---
+
+### Team Lead, Quality Assurance & NOC Development
+**Ihsan Solar Energy Pvt. Ltd.** · Dec 2022 – Dec 2023
+
+Built monitoring and alerting logic for a Network Operations Center, using operational data to improve fault detection across 400+ kW installed capacity. Led a QA team of 4 and introduced structured testing and data-driven analysis practices.
+
+**Key metrics:** 25% reduction in operational faults. Productivity Leader Award (Jul 2023).
 
 ---
 
 ### Team Lead, Technical Assistance Center
 **Transworld Home (ISP)** · Mar 2022 – Nov 2022
 
-Managed a 14-person TAC team overseeing 50,000+ active ISP connections in Lahore. Restructured escalation workflows to slash fault resolution times. Enforced strict SLA monitoring and uptime protocols.
+Led a 14-person TAC team achieving 98% issue resolution within SLA across 50,000+ active connections, using performance data to identify recurring issues. Trained and mentored 10+ technical staff.
 
-**Key metrics:** 99.95% network uptime. 98% SLA resolution rate. 18% reduction in fault resolution time. Employee of the Month and Workplace Commitment Award.
+**Key metrics:** 98% SLA resolution. 18% reduction in fault resolution time.
 
 </details>
 

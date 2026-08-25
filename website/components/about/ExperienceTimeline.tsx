@@ -16,51 +16,69 @@ const fadeUp = {
 
 const experiences = [
   {
-    company: "Allama Iqbal Hospital Kasur",
+    company: "Cygnus Technologies",
+    role: "Senior Applied AI/ML Engineer",
+    period: "Jul 2026 – Present",
+    industry: "Applied AI / Enterprise Technology",
+    location: "Lahore, Pakistan",
+    summary:
+      "Designing and deploying end-to-end AI and machine learning solutions for large-scale data processing, analytics, and intelligent automation across business functions.",
+    responsibilities: [
+      "Build scalable ETL and data pipelines for high-volume ingestion, transformation, and storage supporting analytics and model training.",
+      "Develop and fine-tune custom ML, deep learning, and generative AI solutions, including LLMs and RAG applications.",
+      "Build AI-powered reporting dashboards, predictive analytics, and recommendation systems for data-driven decision making.",
+      "Deploy, monitor, and optimize production ML models following MLOps practices covering versioning, monitoring, and reliable rollout.",
+    ],
+    achievements: [
+      "Enterprise AI applications grounded in operational data using LangChain, LlamaIndex, Hugging Face, OpenAI APIs, and vector databases.",
+      "Cross-functional delivery of scalable, secure, high-performance AI solutions aligned with business objectives.",
+    ],
+    stack: ["Python", "LangChain", "LlamaIndex", "Hugging Face", "OpenAI", "Vector DBs", "MLOps", "ETL"],
+    impact:
+      "Shipping production AI systems that turn high-volume operational data into reliable analytics, automation, and model-driven decisions.",
+  },
+  {
+    company: "Allama Iqbal Hospital, Kasur",
     role: "AI Engineer & Operations Manager",
-    period: "Aug 2024 – Present",
+    period: "Aug 2024 – Jul 2026",
     industry: "Healthcare / MedTech",
     location: "Kasur, Pakistan",
     summary:
-      "A dual-hat leadership and deep technical role at a major regional hospital. Bridging cutting-edge GenAI research with mission-critical healthcare operations where fault tolerance and data privacy are non-negotiable.",
+      "Designed and deployed an LLM-powered AI agent with a LangChain RAG pipeline on a multi-channel patient platform, connecting the agent to real hospital systems.",
     responsibilities: [
-      "Architect and maintain enterprise-grade Multi-Agent LLM Workflows and Clinical RAG systems.",
-      "Design AI Guardrail Gateways ensuring HIPAA-compliant PII/PHI redaction using Microsoft Presidio.",
-      "Manage cross-departmental digital workflow automation across 10+ hospital departments.",
-      "Monitor LLM production performance using CI/CD evaluation pipelines (DeepEval).",
+      "Deployed an LLM-powered AI agent using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B, with a LangChain RAG pipeline handling 1,000+ daily interactions.",
+      "Built agent workflows integrating APIs, internal databases, and messaging platforms via a 16-node n8n automation system.",
+      "Built and published a Model Context Protocol server giving AI agents structured, tool-based access to external systems.",
+      "Hardened the agent against low-confidence or incorrect outputs using fallback handling and data governance before data reached the LLM.",
     ],
     achievements: [
-      "Zero AI hallucinations across 1,000+ daily clinical queries for 12+ consecutive months.",
-      "25% reduction in system downtime after automated workflow deployment.",
-      "18% efficiency gain in administrative operations via parallel n8n automation.",
+      "1,000+ daily production interactions on a multi-channel patient platform.",
+      "Monitored agent output quality over time, refining prompt design and retrieval logic from real interaction failure patterns.",
       "High Performance Excellence Award — June 2025.",
     ],
-    stack: ["Python", "LangGraph", "FastAPI", "ChromaDB", "MS Presidio", "n8n", "GPT-OSS", "Groq"],
+    stack: ["Python", "LangChain", "OpenAI", "Gemini", "Groq", "Llama 3.3 70B", "n8n", "MCP"],
     impact:
-      "Modernized hospital operations, ensuring medical staff have instantaneous, secure access to clinical data, improving patient throughput and safety.",
+      "Gave clinical and operations teams a production AI agent grounded in hospital systems, with governance controls before any data reached the LLM.",
   },
   {
     company: "NovaSole Pakistan",
-    role: "Software Engineer & IT Manager",
+    role: "Automation Engineer & IT Manager",
     period: "Dec 2023 – Aug 2024",
     industry: "E-Commerce / Retail Tech",
     location: "Kasur, Pakistan",
     summary:
-      "Heavy full-stack engineering role architecting, scaling, and maintaining a high-traffic e-commerce platform. Demanded deep expertise in Next.js, database optimization, and third-party API integrations.",
+      "Built automated workflows and data pipelines connecting a high-traffic e-commerce platform to payment processors and inventory systems across three sales channels.",
     responsibilities: [
-      "Architect and develop the core e-commerce storefront and admin dashboard using Next.js and TypeScript.",
-      "Design and maintain PostgreSQL/MySQL schemas for product catalogs, user data, and order routing.",
-      "Integrate payment gateways, shipping APIs, and logistics providers across 3 distinct sales channels.",
-      "Manage IT operations ensuring high availability during traffic spikes.",
+      "Built automated workflows connecting an e-commerce platform serving 500,000+ monthly visitors with payment processors and inventory systems across 3 sales channels, using REST APIs and webhook-based triggers.",
+      "Built data pipelines and automated synchronisation logic, eliminating a previously manual daily reconciliation process.",
     ],
     achievements: [
-      "Scaled platform infrastructure to 500,000+ monthly visitors reliably.",
-      "Maintained 98%+ data accuracy across complex multi-channel inventory systems.",
-      "Drove monthly revenue of 10M PKR through platform performance.",
+      "Scaled platform infrastructure to 500,000+ monthly visitors.",
+      "Achieved 98%+ data accuracy across multi-channel inventory and payment systems.",
     ],
-    stack: ["Next.js", "TypeScript", "React", "PostgreSQL", "MySQL", "Node.js", "Tailwind CSS"],
+    stack: ["REST APIs", "Webhooks", "Data Pipelines", "Automation", "E-Commerce Integrations"],
     impact:
-      "Directly drove revenue by ensuring lightning-fast platform availability. API integrations eliminated manual logistics overhead and cart abandonment.",
+      "Removed manual daily reconciliation and kept inventory and payments consistent across three sales channels under high traffic.",
   },
   {
     company: "Ihsan Solar Energy Pvt. Ltd.",
@@ -69,21 +87,19 @@ const experiences = [
     industry: "Renewable Energy / Solar",
     location: "Raiwind, Pakistan",
     summary:
-      "Critical operational leadership combining hardware knowledge (solar PV systems) with software monitoring. Built a NOC from scratch to ensure maximum yield and uptime for deployed solar assets.",
+      "Built monitoring and alerting logic for a Network Operations Center and led a QA team using operational data to improve fault detection across installed solar capacity.",
     responsibilities: [
-      "Architect and develop the company's first centralized Network Operations Center.",
-      "Lead a 4-person engineering team monitoring 400+ kW of installed solar capacity.",
-      "Design and implement QA protocols for hardware installation and software telemetry.",
-      "Integrate inverter APIs and monitoring sensors into a unified real-time fault detection dashboard.",
+      "Built monitoring and alerting logic for a Network Operations Center, using collected operational data to identify patterns and improve fault detection across 400+ kW installed capacity.",
+      "Led a QA team of 4, introducing structured testing and data-driven analysis practices.",
     ],
     achievements: [
-      "Reduced operational faults by 25% within the first year.",
+      "Reduced operational faults by 25%.",
       "Successfully monitored and maintained 400+ kW of active solar capacity.",
       "Productivity Leader Award — July 2023.",
     ],
-    stack: ["REST APIs", "Inverter Telemetry", "Sensor Data Pipelines", "NOC Architecture", "Electrical Engineering"],
+    stack: ["REST APIs", "Inverter Telemetry", "Sensor Data Pipelines", "NOC Architecture", "QA"],
     impact:
-      "Transitioned the company from reactive maintenance to proactive monitoring. Drastically reduced dispatch costs and improved client satisfaction.",
+      "Moved operations from reactive maintenance to data-driven monitoring, cutting faults and improving yield across deployed solar assets.",
   },
   {
     company: "Transworld Home (ISP)",
@@ -92,42 +108,18 @@ const experiences = [
     industry: "Telecommunications / ISP",
     location: "Lahore, Pakistan",
     summary:
-      "High-pressure operational leadership at a major ISP. Managing large-scale network health, enforcing strict SLAs, and leading a 14-person TAC team for 50,000+ user connections.",
+      "Led a 14-person TAC team supporting 50,000+ active connections, using performance data to identify recurring issues and coach staff.",
     responsibilities: [
-      "Manage and mentor a 14-person Technical Assistance Center team.",
-      "Oversee network health and technical support for 50,000+ active connections.",
-      "Enforce strict SLAs for fault resolution and customer support escalations.",
-      "Optimize internal ticketing and routing workflows to reduce AHT.",
+      "Led a 14-person team achieving 98% issue resolution within SLA across 50,000+ active connections, using performance data to identify recurring issues.",
+      "Trained and mentored 10+ technical staff, reducing average fault resolution time.",
     ],
     achievements: [
-      "98% SLA resolution rate across the network.",
-      "99.95% network uptime maintained consistently.",
-      "18% reduction in fault resolution time.",
-      "Employee of the Month (September 2022), Workplace Commitment Award (October 2022).",
+      "98% issue resolution within SLA across 50,000+ active connections.",
+      "18% reduction in average fault resolution time.",
     ],
     stack: ["ISP Networking", "CRM/Ticketing Systems", "Incident Management", "SLA Enforcement"],
     impact:
-      "Directly impacted customer retention and brand reputation. Operational optimizations saved significant man-hours.",
-  },
-  {
-    company: "Sybrid Private Limited",
-    role: "Customer Operations Specialist",
-    period: "Nov 2021 – Feb 2022",
-    industry: "Customer Operations",
-    location: "Lahore, Pakistan",
-    summary:
-      "Established professional foundations in high-volume client communication and quality-driven execution. Handled complex customer workflows and escalations.",
-    responsibilities: [
-      "Process high-volume client communications and resolve critical escalations.",
-      "Ensure adherence to quality assurance standards in all interactions.",
-    ],
-    achievements: [
-      "Awarded Top Performer of the Month (×3).",
-      "Awarded Top Quality Champ.",
-    ],
-    stack: ["Client Communication", "Quality Assurance", "Workflow Execution"],
-    impact:
-      "Built a strong foundation in process execution and quality-driven operations, earning multiple performance awards.",
+      "Improved SLA performance and cut resolution time by coaching staff and targeting recurring network issues with operational data.",
   },
 ];
 
@@ -147,7 +139,7 @@ export function ExperienceTimeline() {
             Professional Experience
           </h2>
           <p className="text-lg text-secondary max-w-2xl">
-            Four years of progressively complex roles across healthcare, e-commerce, energy, and telecommunications — each producing measurable engineering outcomes.
+            Four years of progressively complex roles across applied AI, healthcare, e-commerce, energy, and telecommunications — each producing measurable engineering outcomes.
           </p>
         </motion.div>
 

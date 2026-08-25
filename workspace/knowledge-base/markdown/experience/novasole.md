@@ -1,13 +1,13 @@
 ---
 id: exp_novasole_001
-title: Software Engineer & IT Manager at NovaSole Pakistan
+title: Automation Engineer & IT Manager at NovaSole Pakistan
 category: Experience
-description: Detailed breakdown of the full-stack e-commerce software engineering role at NovaSole.
-aliases: [NovaSole Role, E-Commerce Software Engineer]
-tags: [experience, e-commerce, nextjs, full-stack, software engineer]
-keywords: [E-commerce backend scaling, Next.js developer, Supabase, high traffic SaaS]
+description: Detailed breakdown of the automation engineering and IT management role at NovaSole.
+aliases: [NovaSole Role, E-Commerce Automation Engineer]
+tags: [experience, e-commerce, automation, data pipelines, it manager]
+keywords: [E-commerce automation, REST APIs, webhooks, data pipelines, high traffic]
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-25
 version: 1.0.0
 confidence: High
 source_documents: []
@@ -17,10 +17,10 @@ related_skills: [Next.js, TypeScript, PostgreSQL, Node.js]
 related_services: [Full-Stack Software Engineering (Web & SaaS)]
 ---
 
-# Software Engineer & IT Manager
+# Automation Engineer & IT Manager
 
 ## Overview
-A heavy full-stack engineering role focused on architecting, scaling, and maintaining a high-traffic e-commerce platform. This role demanded deep expertise in modern web frameworks (Next.js), database optimization, and third-party API integrations (payments, shipping).
+An automation and IT management role focused on connecting a high-traffic e-commerce platform to payment processors and inventory systems. The work centred on REST APIs, webhook-based triggers, data pipelines, and eliminating manual daily reconciliation.
 
 ## Company
 **NovaSole Pakistan**
@@ -38,10 +38,8 @@ Full-Time
 Kasur, Pakistan
 
 ## Responsibilities
-- Architect and develop the core e-commerce storefront and admin dashboard using Next.js and TypeScript.
-- Design and maintain relational database schemas (PostgreSQL/MySQL) for product catalogs, user data, and complex order routing.
-- Integrate critical third-party REST APIs, including payment gateways and logistics providers.
-- Manage IT operations, ensuring high availability during traffic spikes and maintaining data integrity across 3 distinct sales channels.
+- Built automated workflows connecting an e-commerce platform serving 500,000+ monthly visitors with payment processors and inventory systems across 3 sales channels, using REST APIs and webhook-based triggers.
+- Built data pipelines and automated synchronisation logic, achieving 98%+ data accuracy and eliminating a previously manual daily reconciliation process.
 
 ## Technical Stack
 - **Frontend:** Next.js, React, TypeScript, Tailwind CSS

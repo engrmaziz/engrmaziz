@@ -8,6 +8,7 @@ import { HeroContainer } from "@/components/layout/HeroContainer";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { GlassPanel } from "@/components/ui/GlassPanel";
+import { DirectAnswer } from "@/components/seo/DirectAnswer";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -38,29 +39,31 @@ export function HomeHero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
-              <span className="text-xs font-medium text-primary">Available for Q4 2026</span>
+              <span className="text-xs font-medium text-primary">Open to freelance & full-time</span>
             </div>
-            <Badge variant="outline" className="font-sans">Principal AI Engineer</Badge>
+            <Badge variant="outline" className="font-sans">Senior AI Engineer</Badge>
           </motion.div>
           
-          <motion.h1 variants={fadeUp} className="text-5xl lg:text-7xl font-bold tracking-tight text-primary leading-[1.1]">
-            Architecting <span className="text-accent">Intelligence</span><br/> at Enterprise Scale.
+          <motion.h1 variants={fadeUp} className="text-4xl lg:text-6xl font-bold tracking-tight text-primary leading-[1.12]">
+            Hire a senior AI engineer for custom call agents, chatbots, and RAG.
           </motion.h1>
           
-          <motion.p variants={fadeUp} className="text-lg lg:text-xl text-secondary max-w-2xl leading-relaxed">
-            I design and build highly concurrent, fault-tolerant backend systems and production-grade RAG pipelines. Stop building wrappers—start building resilient AI infrastructure.
-          </motion.p>
+          <motion.div variants={fadeUp}>
+            <DirectAnswer title="Direct answer">
+              Musharraf Aziz is a senior AI engineer available for remote freelance projects and full-time roles. He builds custom AI call agents, custom AI chatbots, RAG agents, and workflow automation for California and Florida companies.
+            </DirectAnswer>
+          </motion.div>
           
           <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-4 mt-4">
-            <Link href="/projects">
+            <Link href="/contact?intent=freelance">
               <Button size="lg" className="gap-2 group">
-                View Architecture
+                Hire for a project
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link href="/contact">
+            <Link href="/hire">
               <Button variant="secondary" size="lg">
-                Discuss a Project
+                Freelance or full-time
               </Button>
             </Link>
           </motion.div>
@@ -84,7 +87,7 @@ export function HomeHero() {
               <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
               Download Resume
             </button>
-            <Link href="https://github.com" target="_blank">
+            <Link href="https://github.com/engrmaziz" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost" size="sm" className="gap-2 text-secondary hover:text-primary">
                 <Code2 className="w-4 h-4" /> GitHub
               </Button>

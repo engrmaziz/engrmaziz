@@ -16,8 +16,10 @@ import { FAQ } from "@/components/about/FAQ";
 import { ContactCTA } from "@/components/about/ContactCTA";
 
 export const metadata = {
-  title: "About Musharraf Aziz | AI Engineer & Senior Software Engineer",
-  description: "I build production-grade AI systems and high-performance full-stack platforms that solve real enterprise problems.",
+  title: "About Musharraf Aziz | Freelance & Full-Time Senior AI Engineer",
+  description:
+    "Senior AI engineer available for remote freelance projects and full-time US roles. Custom AI call agents, chatbots, RAG, and workflow automation for California and Florida.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

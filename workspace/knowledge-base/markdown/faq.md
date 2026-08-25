@@ -72,7 +72,7 @@ It ensures regulatory compliance (HIPAA, GDPR) by keeping sensitive data on-prem
 I measure ROI through specific operational metrics: reduction in manual processing hours, decrease in error rates, improvement in SLA response times (e.g., 25% faster ticket resolution at Transworld), and reduction in support staff headcount requirements.
 
 ### 17. Have you built AI systems for Healthcare?
-Yes, heavily. At Allama Iqbal Hospital, I built and manage their Clinical RAG systems and LLM Guardrail Gateways, achieving zero hallucinations over 12 months for 1,000+ daily queries.
+Yes, heavily. At Allama Iqbal Hospital I designed and deployed an LLM-powered agent with a LangChain RAG pipeline on a multi-channel patient platform handling 1,000+ daily interactions, using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B.
 
 ### 18. What is your approach to Prompt Engineering?
 I treat prompts as code. I use structured Few-Shot prompting, explicitly define the desired output schema (usually JSON), employ Chain of Thought (CoT) reasoning to improve logic, and version control my prompts alongside the application code.
@@ -147,16 +147,19 @@ For full-stack Next.js applications, I prefer Vercel due to its unparalleled edg
 
 ## Section 3: Projects & Experience (41-60)
 
-### 41. What was your role at Allama Iqbal Hospital?
-I serve as the AI Engineer & Operations Manager. I am responsible for modernizing the hospital's infrastructure by deploying Clinical RAG systems, enforcing AI data privacy via Guardrail Gateways, and automating 10+ departmental workflows using n8n.
+### 41. What is your current role?
+I am Senior Applied AI/ML Engineer at Cygnus Technologies in Lahore (July 2026 – Present). I design and deploy end-to-end AI and machine learning solutions covering ETL pipelines, custom ML/LLM/RAG applications, AI-powered reporting, and MLOps.
 
-### 42. How did you scale NovaSole to 500,000 monthly visitors?
-As Software Engineer & IT Manager at NovaSole, I architected a Next.js frontend with aggressive static generation (SSG) and edge caching. I optimized the PostgreSQL database queries and built a central data synchronization pipeline to manage inventory across 3 sales channels without locks.
+### 42. What was your role at Allama Iqbal Hospital?
+I served as AI Engineer & Operations Manager from August 2024 to July 2026. I designed and deployed an LLM-powered AI agent using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B, with a LangChain RAG pipeline on a multi-channel patient platform handling 1,000+ daily interactions. I also published an MCP server and connected the agent to hospital systems via a 16-node n8n automation graph.
 
-### 43. What did you achieve at Ihsan Solar Energy?
+### 43. How did you scale NovaSole to 500,000 monthly visitors?
+As Automation Engineer & IT Manager at NovaSole, I built automated workflows connecting the e-commerce platform to payment processors and inventory systems across 3 sales channels using REST APIs and webhook-based triggers. Data pipelines achieved 98%+ accuracy and eliminated a previously manual daily reconciliation process.
+
+### 44. What did you achieve at Ihsan Solar Energy?
 As QA & NOC Team Lead, I built a Network Operations Center from scratch. By integrating real-time inverter APIs and implementing strict QA protocols, my 4-person team reduced operational faults across 400+ kW of solar assets by 25%.
 
-### 44. Describe your leadership experience at Transworld Home.
+### 45. Describe your leadership experience at Transworld Home.
 I managed a 14-person Technical Assistance Center (TAC) team supporting 50,000+ ISP connections. I optimized escalation workflows to reduce fault resolution time by 18%, maintaining a 98% SLA resolution rate and winning multiple corporate awards.
 
 ### 45. What is AegisFlow?
@@ -189,14 +192,14 @@ It is a real-time AI voice backend that orchestrates Vapi.ai/Retell AI audio str
 ### 54. Have you worked with early-stage startups?
 Yes, the architectures I built for AegisFlow, AuraNode, and dentl2 were explicitly designed to help seed-stage tech companies deploy scalable MVPs rapidly without accruing technical debt.
 
-### 55. What was your earliest professional role?
-I started at Sybrid in customer support and operations, where I consistently won "Top Performer of the Month" and "Top Quality Champ," establishing a foundational understanding of customer friction and operational quality control.
+### 55. What was your earliest professional role listed on the current CV?
+Team Lead, Technical Assistance Center at Transworld Home (ISP), March 2022 to November 2022, leading a 14-person team across 50,000+ active connections.
 
 ### 56. Have you ever managed a team?
 Yes, extensively. I led a 14-person TAC team at Transworld Home and a 4-person engineering/NOC team at Ihsan Solar Energy.
 
 ### 57. What industries have you built software for?
-Healthcare (MedTech SaaS, Clinical AI), FinTech (Fraud detection), E-Commerce (High-traffic retail), Telecommunications (ISP operations), and Renewable Energy (Solar NOCs).
+Applied AI (Cygnus Technologies), Healthcare (MedTech SaaS, Clinical AI), FinTech (Fraud detection), E-Commerce (High-traffic retail), Telecommunications (ISP operations), and Renewable Energy (Solar NOCs).
 
 ### 58. Are your projects open-source or proprietary?
 The majority of my enterprise projects (AegisFlow, AuraNode, Guardrail Gateways) are proprietary commercial systems. However, developer tooling like the `Git Archaeologist MCP Server` is published open-source on NPM.

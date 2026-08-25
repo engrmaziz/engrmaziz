@@ -16,7 +16,7 @@ export const CONFIG = {
     support: 'io@maziz.me'
   },
   seo: {
-    title: 'Musharraf Aziz | Software Architecture'
+    title: 'Musharraf Aziz | Hire a Senior AI Engineer',
   },
   security: {
     rateLimits: {

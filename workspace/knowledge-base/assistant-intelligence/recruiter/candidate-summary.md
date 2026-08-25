@@ -1,12 +1,13 @@
 # Candidate ATS Summary
 
 **Name:** Musharraf Aziz  
-**Target Roles:** AI Engineer, Backend Engineer, Technical Operations Manager  
-**Location / Eligibility:** Pakistan (Available for remote US/Global engagements)  
-**Education:** B.Sc. (Hons.) Electrical Engineering, COMSATS University Islamabad  
+**Target Roles:** Senior AI Engineer, Senior Applied AI/ML Engineer, AI Engineer  
+
+**Location / Eligibility:** Lahore, Pakistan (Available for remote US/Global engagements)  
+**Education:** B.S. (Hons.) Electrical Engineering, COMSATS University Islamabad  
 
 ## Profile Summary
-Musharraf Aziz is a highly versatile AI and Backend Engineer with a strong foundation in complex systems architecture and operational leadership. With a proven track record of scaling Next.js e-commerce platforms to handle 500k+ monthly visitors (generating 10M PKR in average monthly sales) and deploying zero-hallucination Clinical RAG systems in healthcare, he bridges the gap between deep technical implementation and high-level business ROI.
+Musharraf Aziz is a Senior AI Engineer currently working as Senior Applied AI/ML Engineer at Cygnus Technologies (Jul 2026 – Present). He previously served as AI Engineer & Operations Manager at Allama Iqbal Hospital (Aug 2024 – Jul 2026), deploying an LLM-powered agent handling 1,000+ daily interactions, and as Automation Engineer & IT Manager at NovaSole, connecting a 500k+ monthly visitor e-commerce platform across three sales channels.
 
 ## Key Differentiators
 - **Full-Stack AI Capability:** Not just an API wrapper developer; capable of building LangGraph state machines, configuring vector databases (Qdrant), and deploying FastAPI microservices.

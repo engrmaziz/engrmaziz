@@ -1,0 +1,7 @@
+---
+description: Use SEO Skills AI for site audits, schema, GEO, and technical SEO.
+globs:
+alwaysApply: false
+---
+
+When the user asks for SEO audits, schema, GEO/llms.txt, crawl, drift, or ranking work, follow the SEO Skills AI skills in `.cursor/skills/` (especially `seo/SKILL.md`). Run scripts from `vendor/seo-skills-ai/scripts/` using the isolated Python at `%USERPROFILE%\.config\seoskillsai\venv\Scripts\python.exe`. Do not apply remediation patches automatically; print them for review.

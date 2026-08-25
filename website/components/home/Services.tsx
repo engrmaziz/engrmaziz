@@ -27,20 +27,20 @@ export function Services() {
           className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16"
         >
           <Badge variant="outline" className="mb-4">Capabilities</Badge>
-          <h2 className="text-3xl md:text-5xl font-bold text-primary mb-6">Engineering Solutions</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-primary mb-6">Custom AI Call Agents, Chatbots, RAG & Automation</h2>
           <p className="text-lg text-secondary">
-            Transforming complex business requirements into scalable, fault-tolerant technical architectures.
+            Production systems for California and Florida teams: voice, chat, retrieval, and the workflows that connect them.
           </p>
         </motion.div>
 
         <ContentGrid columns={3} gap="lg">
           {[
-            { title: "Backend Engineering", icon: Server, desc: "High-performance microservices, API gateways, and distributed databases built with Go and Python." },
-            { title: "AI/ML Engineering", icon: Cpu, desc: "Custom LLM orchestration, model fine-tuning, and production-grade agentic workflows." },
-            { title: "RAG Pipelines", icon: Database, desc: "Advanced vector search, semantic chunking, and contextual retrieval for enterprise knowledge bases." },
-            { title: "Full Stack Web Apps", icon: Globe, desc: "End-to-end web applications utilizing Next.js, React, and robust serverless architectures." },
-            { title: "Voice & Call Agents", icon: MessageSquare, desc: "Real-time conversational AI pipelines with sub-second latency for telephony integrations." },
-            { title: "Data Automation", icon: LineChart, desc: "ETL pipelines, workflow automation, and structured data extraction systems." }
+            { title: "Custom AI Call Agents", href: "/services/ai-agents/ai-call-agents", icon: MessageSquare, desc: "Inbound and outbound AI call agents with CRM write-back, queues, and human overflow—not a hosted receptionist with no memory." },
+            { title: "Custom AI Chatbots", href: "/services/ai-agents/chatbots", icon: Globe, desc: "Website and in-app chatbots with RAG, streaming, and actions that book, route, and escalate." },
+            { title: "RAG Agents", href: "/services/ai-engineering/rag-development", icon: Database, desc: "Production retrieval-augmented generation: hybrid search, citations, evals, and permission-aware corpora." },
+            { title: "Workflow Automation", href: "/services/technical-consulting/workflow-automation", icon: LineChart, desc: "Python, webhook, and agent workflows that connect phones, CRMs, and back-office systems." },
+            { title: "AI Voice Agents", href: "/services/ai-agents/voice-agents", icon: Cpu, desc: "Low-latency conversational voice with barge-in, tool-calling, and bilingual routing for Florida and California lines." },
+            { title: "Backend Engineering", href: "/services/software-engineering/backend-engineering", icon: Server, desc: "APIs, queues, and concurrency so call agents and RAG actually hold production load." }
           ].map((service, i) => (
             <motion.div 
               key={service.title}
@@ -60,7 +60,7 @@ export function Services() {
                   <p className="text-secondary leading-relaxed">{service.desc}</p>
                 </CardContent>
                 <CardFooter>
-                  <Link href={`/services#${service.title.toLowerCase().replace(/\s+/g, '-')}`} className="text-sm font-medium text-accent hover:text-accent-hover flex items-center gap-1 group">
+                  <Link href={service.href} className="text-sm font-medium text-accent hover:text-accent-hover flex items-center gap-1 group">
                     Learn more <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </CardFooter>

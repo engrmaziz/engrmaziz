@@ -8,6 +8,7 @@ export const emailTemplates = {
     <p><strong>Email:</strong> ${data.email}</p>
     <p><strong>Company:</strong> ${data.company || 'N/A'}</p>
     <p><strong>Project Type:</strong> ${data.projectType || 'N/A'}</p>
+    <p><strong>Engagement:</strong> ${data.engagement || 'N/A'}</p>
     <hr />
     <p><strong>Message:</strong></p>
     <p>${data.message}</p>
@@ -24,7 +25,7 @@ export const emailTemplates = {
       <p>If you have any supporting architecture diagrams or requirements documentation, feel free to reply directly to this thread.</p>
       <br/>
       <p>Best regards,</p>
-      <p><strong>Musharraf Aziz</strong><br/>Senior Software Architect<br/>${CONFIG.seo.title}</p>
+      <p><strong>Musharraf Aziz</strong><br/>Senior AI Engineer<br/>${CONFIG.seo.title}</p>
     </div>
   `
 };

@@ -6,10 +6,11 @@
   "dentl2": ["Dentl2", "Dental SaaS", "Dental 3D Platform"],
   "Git Archaeologist MCP Server": ["Git MCP", "Anthropic Git Server", "Git Context Protocol"],
   "LLM Guardrail Gateway": ["Guardrail API", "PII Redaction Gateway", "AI Security Proxy"],
-  "Allama Iqbal Hospital": ["AIHK", "AI Hospital", "Allama Iqbal Memorial Hospital"],
+  "Allama Iqbal Hospital": ["AIHK", "AI Hospital", "Allama Iqbal Memorial Hospital", "Allama Iqbal Hospital, Kasur"],
   "NovaSole Pakistan": ["NovaSole", "Nova Sole E-Commerce"],
   "Ihsan Solar Energy": ["Ihsan Solar", "ISE"],
   "Transworld Home": ["Transworld ISP", "TWH"],
+  "Cygnus Technologies": ["Cygnus", "Cygnus Tech"],
   "COMSATS University Islamabad": ["COMSATS", "CUI"],
   "Musharraf Aziz": ["Mak", "Musharraf", "Engr. Musharraf"]
 }

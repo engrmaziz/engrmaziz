@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 const ITEMS = [
   { id: 'nav-home', category: 'Navigation', title: 'Home', icon: Home, action: '/' },
   { id: 'nav-about', category: 'Navigation', title: 'About', icon: Info, action: '/about' },
+  { id: 'nav-hire', category: 'Navigation', title: 'Hire', icon: Briefcase, action: '/hire' },
   { id: 'nav-services', category: 'Navigation', title: 'Services', icon: Briefcase, action: '/services' },
   { id: 'nav-projects', category: 'Navigation', title: 'Projects', icon: Folder, action: '/projects' },
   { id: 'nav-blog', category: 'Navigation', title: 'Blog', icon: FileText, action: '/blog' },
@@ -22,7 +23,7 @@ const ITEMS = [
   { id: 'res-email', category: 'Resources', title: 'Email', icon: Mail, action: 'mailto:io@maziz.me' },
 
   { id: 'know-rag', category: 'Knowledge', title: 'RAG Architecture', icon: Database, action: '/services/ai-engineering' },
-  { id: 'know-backend', category: 'Knowledge', title: 'Backend Engineering', icon: Monitor, action: '/services/software-architecture' },
+  { id: 'know-backend', category: 'Knowledge', title: 'Backend Engineering', icon: Monitor, action: '/services/software-engineering' },
   { id: 'know-ai', category: 'Knowledge', title: 'AI Automation', icon: Bot, action: '/services/ai-agents' },
   
   { id: 'theme-dark', category: 'Theme', title: 'Dark Mode', icon: Moon, action: 'theme-dark' },

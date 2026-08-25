@@ -4,10 +4,13 @@
 
 import * as React from "react";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Send, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ContactForm() {
+  const searchParams = useSearchParams();
+  const defaultEngagement = searchParams.get("intent") || "";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -26,6 +29,7 @@ export function ContactForm() {
         company: formData.get('company') || undefined,
         role: formData.get('role') || undefined,
         projectType: formData.get('type') || undefined,
+        engagement: formData.get('engagement') || undefined,
         timeline: formData.get('timeline') || undefined,
         message: formData.get('message'),
         consent: formData.get('consent') === 'on',
@@ -109,6 +113,15 @@ export function ContactForm() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label htmlFor="engagement" className="text-xs font-bold uppercase tracking-wider text-primary">How do you want to work?</label>
+          <select defaultValue={defaultEngagement} disabled={isSubmitting} id="engagement" name="engagement" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all appearance-none disabled:opacity-50">
+            <option value="">Select an option</option>
+            <option value="freelance">Freelance / contract project</option>
+            <option value="full-time">Full-time hiring</option>
+            <option value="either">Either — let&apos;s talk</option>
+          </select>
+        </div>
         <div className="space-y-2">
           <label htmlFor="type" className="text-xs font-bold uppercase tracking-wider text-primary">Project Type</label>
           <select disabled={isSubmitting} id="type" name="type" className="w-full bg-base border border-border-default rounded-lg px-4 py-3 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all appearance-none disabled:opacity-50">
