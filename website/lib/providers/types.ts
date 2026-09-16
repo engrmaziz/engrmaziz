@@ -1,9 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-// Matches existing internal abstractions
+
 export interface ChatRequest {
-  messages?: any[];
+  messages?: Array<{ role: string; content: string }>;
   prompt?: string;
   context?: any;
+  model?: string;
+  maxTokens?: number;
+  temperature?: number;
+  timeoutMs?: number;
+  reasoningEffort?: 'none' | 'low' | 'medium' | 'high' | 'default';
+  includeReasoning?: boolean;
+  allowModelFallback?: boolean;
 }
 
 export interface ChatResponse {
@@ -23,7 +30,7 @@ export interface ChatProvider {
 
 export interface EmbeddingProvider {
   readonly name: string;
-  embed(text: string): Promise<number[]>;
+  embed(text: string, task?: string): Promise<number[]>;
 }
 
 export interface Document {

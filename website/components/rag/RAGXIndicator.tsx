@@ -3,11 +3,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Database, Cpu, Layers, RefreshCw, AlertCircle, X, ShieldCheck, BrainCircuit } from 'lucide-react';
+import { Activity, Database, Cpu, Layers, RefreshCw, AlertCircle, X, ShieldCheck, BrainCircuit, Zap } from 'lucide-react';
 
 interface RAGStatus {
   status: 'ONLINE' | 'OFFLINE';
   latency: number;
+  ttft: number;
   embeddingModel: string;
   documents: number;
   chunks: number;
@@ -36,6 +37,7 @@ export function RAGXIndicator() {
       setStatus({
         status: 'OFFLINE',
         latency: 0,
+        ttft: 0,
         embeddingModel: 'jina-embeddings-v4',
         documents: 0,
         chunks: 0,
@@ -215,6 +217,16 @@ export function RAGXIndicator() {
                   </div>
                   <span className="font-semibold text-primary">
                     {loading ? 'calculating...' : `${status?.latency ?? 0}ms`}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-secondary">
+                    <Zap className="h-3.5 w-3.5" />
+                    <span>TTFT</span>
+                  </div>
+                  <span className="font-semibold text-primary" title="Time to first token">
+                    {loading ? 'calculating...' : `${status?.ttft ?? 0}ms`}
                   </span>
                 </div>
 

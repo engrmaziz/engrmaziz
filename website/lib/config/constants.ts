@@ -2,8 +2,8 @@
 export const CONFIG = {
   ai: {
     models: {
-      fast: 'openai/gpt-oss-20b',
-      chat: 'openai/gpt-oss-20b',
+      fast: 'qwen/qwen3.8-27b',
+      chat: 'qwen/qwen3.8-27b',
       reasoning: 'openai/gpt-oss-120b'
     },
     embeddings: {

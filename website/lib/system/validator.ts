@@ -42,6 +42,8 @@ export const systemConfigSchema = z.object({
   EMBEDDING_MODEL: z.string().default(SystemConstants.DEFAULT_EMBEDDING_MODEL),
   DEFAULT_REASONING_MODEL: z.string().default(SystemConstants.DEFAULT_REASONING_MODEL),
   DEFAULT_FAST_MODEL: z.string().default(SystemConstants.DEFAULT_FAST_MODEL),
+  RAG_CHAT_MODEL: z.string().default(SystemConstants.RAG_CHAT_MODEL),
+  RAG_CHAT_FALLBACK_MODEL: z.string().default(SystemConstants.RAG_CHAT_FALLBACK_MODEL),
 
   // Providers
   CHAT_PROVIDER: z.string().default(SystemConstants.DEFAULT_CHAT_PROVIDER),

@@ -91,7 +91,14 @@ export class AgentRuntime {
             );
 
             // Execute actual LLM Generation
-            const llmRes = await aiClient.generate({ messages: requestContext.prompt.messages });
+            const { systemConfig } = await import('../system/config');
+            const llmRes = await aiClient.generate({
+              messages: requestContext.prompt.messages,
+              model: systemConfig.RAG_CHAT_MODEL || systemConfig.DEFAULT_FAST_MODEL,
+              maxTokens: 400,
+              temperature: 0.15,
+              timeoutMs: 2500
+            });
             requestContext.response.assistantResponse = llmRes.content;
             (requestContext as any)._lastLlmModel = llmRes.model || 'unknown';
             

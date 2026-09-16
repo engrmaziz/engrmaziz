@@ -7,12 +7,13 @@ const log = createLogger('Embedder');
 export type EmbeddingTask = 'retrieval.query' | 'retrieval.passage' | 'text-matching' | 'classification' | 'separation';
 
 export class RAGEmbedder {
-  // Circuit Breaker State
   private failureCount = 0;
   private isCircuitOpen = false;
   private readonly FAILURE_THRESHOLD = 5;
-  private readonly CIRCUIT_RESET_TIME_MS = 60000; // 1 minute
+  private readonly CIRCUIT_RESET_TIME_MS = 60000;
   private circuitOpenedAt = 0;
+  private cache = new Map<string, number[]>();
+  private maxCache = 256;
 
   private checkCircuitBreaker() {
     if (this.isCircuitOpen) {
@@ -43,60 +44,62 @@ export class RAGEmbedder {
     }
   }
 
-  /**
-   * Generates embeddings for a single text. Defaults to 'retrieval.query' task.
-   */
   async embed(text: string, task: EmbeddingTask = 'retrieval.query'): Promise<number[]> {
-    const results = await this.embedBatch([text], task);
+    const cacheKey = `${task}:${text}`;
+    const cached = this.cache.get(cacheKey);
+    if (cached) return cached;
+
+    const results = await this.embedBatch([text], task, 0, 0);
     const firstResult = results[0];
     if (!firstResult || firstResult.length === 0) {
       throw new Error('Failed to generate embedding: empty first element');
     }
-    const firstVal = firstResult[0];
-    if (firstVal === undefined) {
-      throw new Error('Failed to generate embedding: empty values array');
-    }
-    return Math.abs(firstVal) === 0 ? Array(1024).fill(0.1) : firstResult;
+    this.setCache(cacheKey, firstResult);
+    return firstResult;
   }
 
-  /**
-   * Generates embeddings for a batch of texts.
-   * Handles error recovery, backoff retries, batch sizing, and circuit breaking via the Provider Abstraction Layer.
-   */
   async embedBatch(
-    texts: string[], 
-    task: EmbeddingTask = 'retrieval.passage', 
-    retries = 3, 
-    delay = 1000
+    texts: string[],
+    task: EmbeddingTask = 'retrieval.passage',
+    retries = 2,
+    delay = 200
   ): Promise<number[][]> {
     if (texts.length === 0) return [];
-    
+
     this.checkCircuitBreaker();
 
     try {
       const start = Date.now();
       const provider = providerFactory.getEmbeddingProvider();
-      
-      const vectors = await Promise.all(texts.map(text => provider.embed(text)));
-      
-      const latency = Date.now() - start;
-      
+      const vectors = await Promise.all(texts.map((text) => provider.embed(text, task)));
       this.recordSuccess();
-      log.info(`Successfully embedded batch of ${texts.length} items`, { latency, task });
+      log.info(`Successfully embedded batch of ${texts.length} items`, { latency: Date.now() - start, task });
       return vectors;
-
     } catch (error: any) {
       log.error(`Embedding generation failed. Retries left: ${retries}.`, error, { task });
-      
+      if (/timed out/i.test(String(error?.message || ''))) {
+        throw error;
+      }
+      if (/401|403|Invalid API|AUTH_INVALID/i.test(String(error?.message || ''))) {
+        this.recordFailure();
+        throw error;
+      }
+
       if (retries > 0) {
-        // Exponential backoff
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
         return this.embedBatch(texts, task, retries - 1, delay * 2);
       }
-      
       this.recordFailure();
       throw error;
     }
+  }
+
+  private setCache(key: string, embedding: number[]) {
+    if (this.cache.size >= this.maxCache) {
+      const first = this.cache.keys().next().value;
+      if (first) this.cache.delete(first);
+    }
+    this.cache.set(key, embedding);
   }
 }
 

@@ -14,7 +14,8 @@
     "rag:migrate": "npx tsx scripts/rag-migrate.ts",
     "rag:doctor": "npx tsx scripts/rag-doctor.ts",
     "rag:cleanup": "npx tsx scripts/rag-cleanup.ts",
-    "rag:eval": "npx tsx scripts/rag-eval.ts"
+    "rag:eval": "npx tsx scripts/rag-eval.ts",
+    "rag:fast": "npx tsx scripts/rag-fast-verify.ts"
   },
   "dependencies": {
     "@react-email/render": "2.1.0",

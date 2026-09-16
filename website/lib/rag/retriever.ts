@@ -1,12 +1,9 @@
-// @ts-nocheck
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { ragEmbedder } from './embedder';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ragDatabase } from './supabase';
-import { ragReranker } from './reranker';
-import { telemetryLogger } from '../telemetry';
 import { ragContextBuilder } from './context-builder';
-import { providerFactory } from '../providers';
+import { telemetryLogger } from '../telemetry';
 import { systemConfig } from '../system/config';
+import { localKnowledgeIndex } from './local-index';
 
 export interface RetrievedChunk {
   chunkId: string;
@@ -17,230 +14,186 @@ export interface RetrievedChunk {
   score: number;
 }
 
-// Synonym Map for intent and technical abbreviation query expansions
-const SYNONYM_EXPANSION_MAP: Record<string, string[]> = {
-  'chatbot': ['chatbot', 'assistant', 'conversational agent', 'chat interface', 'user support'],
-  'agent': ['agent', 'workflow', 'langgraph', 'autonomous', 'orchestration', 'multi-agent'],
-  'rag': ['rag', 'retrieval-augmented generation', 'vector search', 'embeddings', 'pgvector', 'semantic search'],
-  'voicerag': ['voicerag', 'telephony', 'asterisk', 'voice assistant', 'call agent', 'real-time audio'],
-  'aegisflow': ['aegisflow', 'workflow automation', 'workflow engine', 'visual editor', 'integrations'],
-  'auranode': ['auranode', 'knowledge graph', 'neo4j', 'semantic metadata', 'nodes', 'relationships'],
-  'dentl2': ['dentl2', 'dental saas', '3d charting', 'three.js', 'patient dashboard'],
-  'concurrency': ['concurrency', 'high-throughput', 'throughput', 'load testing', 'performance scaling'],
-  'healthcare': ['healthcare', 'clinical protocols', 'hipaa', 'hospital', 'patient records'],
-  'nextjs': ['nextjs', 'next.js', 'react', 'ssr', 'web app', 'typescript'],
-  'python': ['python', 'fastapi', 'microservice', 'scipy', 'numpy', 'machine learning']
+const STOP = new Set(['the','and','for','with','that','this','from','your','about','what','how','does','have','been','into','their','you','are','was','can','could','would','please','explain','tell','more']);
+const INDEX_TITLES = /master knowledge|rag index|glossary|navigation/i;
+const JSONLD_RE = /"@context"\s*:\s*"https:\/\/schema\.org"/i;
+
+type RawHit = {
+  chunk_id: string;
+  document_id: string;
+  chunk_text: string;
+  chunk_number: number;
+  metadata?: Record<string, any>;
+  similarity?: number;
+  semantic_score?: number;
+  score?: number;
+  combined_score?: number;
 };
 
 export class RAGRetriever {
-  /**
-   * Normalizes the incoming user query by removing punctuation and lowercasing.
-   */
-  private normalizeQuery(query: string): string {
-    return query
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .trim();
-  }
-
-  /**
-   * Automatically expands query strings with synonymous technical jargon and concepts.
-   */
-  private expandQuery(query: string): string {
-    const words = this.normalizeQuery(query).split(/\s+/);
-    const expansions = new Set<string>(words);
-
-    for (const word of words) {
-      if (SYNONYM_EXPANSION_MAP[word]) {
-        SYNONYM_EXPANSION_MAP[word]!.forEach((expanded) => expansions.add(expanded));
-      }
-    }
-
-    return Array.from(expansions).join(' ');
-  }
-
-  /**
-   * Performs hybrid semantic and lexical retrieval on Supabase using Reciprocal Rank Fusion (RRF),
-   * applies metadata filtering, executes the reranker, and constructs the optimized prompt context.
-   * Integrates HyDE (Hypothetical Document Embeddings) for improved dense retrieval and CRAG evaluation.
-   */
   async retrieve(
     query: string,
-    limit: number = 5,
-    threshold: number = 0.3,
+    limit: number = 4,
+    threshold: number = 0.22,
     filters: Record<string, any> = {},
     queryVector?: number[]
-  ): Promise<{ contextText: string; chunks: RetrievedChunk[]; citations: any[], cragEval: string }> {
+  ): Promise<{ contextText: string; chunks: RetrievedChunk[]; citations: any[]; cragEval: string; stageTimings?: Record<string, number> }> {
+    const stageTimings: Record<string, number> = {};
+    const started = performance.now();
+
     try {
-      const stageTimings: Record<string, number> = {};
-      let start = performance.now();
-      
-      const normalizedQuery = this.normalizeQuery(query);
-      const expandedQuery = this.expandQuery(query);
-      stageTimings['Normalization'] = performance.now() - start;
-      
-      telemetryLogger.log('RAG', `Normalized Query: "${normalizedQuery}"`);
-      telemetryLogger.log('RAG', `Expanded Query: "${expandedQuery}"`);
+      const localStart = performance.now();
+      const localHits = localKnowledgeIndex.search(query, Math.max(limit, 4));
+      stageTimings['LocalSearch'] = performance.now() - localStart;
 
-      // --- 1. HyDE (Hypothetical Document Embeddings) ---
-      start = performance.now();
-      let hypotheticalDocument = normalizedQuery;
-      let finalEmbedding = queryVector;
-
-      // Skip HyDE if the query is sufficiently descriptive (e.g. > 40 chars)
-      const shouldRunHyde = normalizedQuery.length <= 40;
-
-      if (shouldRunHyde) {
-        try {
-          const { providerFactory } = await import('@/lib/providers');
-          const aiClient = providerFactory.getChatProvider();
-          const hydePrompt = `You are a technical expert. Write a concise, factual excerpt (3-4 sentences) that directly answers the following query. Write it in the style of official technical documentation.\n\nQuery: ${normalizedQuery}`;
-          
-          // Add a 350ms timeout to HyDE to bound latency strictly
-          const hydePromise = aiClient.generate({ prompt: hydePrompt });
-          const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('HyDE timeout')), 350));
-          
-          const hydeRes = await Promise.race([hydePromise, timeoutPromise]) as any;
-          
-          if (hydeRes && hydeRes.content) {
-            hypotheticalDocument = hydeRes.content.trim();
-            telemetryLogger.log('RAG', `HyDE generated: "${hypotheticalDocument.substring(0, 50)}..."`);
-            finalEmbedding = await ragEmbedder.embed(hypotheticalDocument);
-          }
-        } catch (hydeErr) {
-          telemetryLogger.log('RAG', `HyDE bounded latency exceeded or failed, continuing with original query vector.`);
-        }
-      } else {
-        telemetryLogger.log('RAG', `HyDE skipped: query sufficiently descriptive.`);
-      }
-      stageTimings['HyDE'] = performance.now() - start;
-
-      start = performance.now();
-      // If HyDE failed/timed out/skipped, and we weren't passed a queryVector, we must generate it.
-      if (!finalEmbedding) {
-        finalEmbedding = await ragEmbedder.embed(normalizedQuery);
-      }
-      stageTimings['Embedding'] = performance.now() - start;
-
-      // 3. Deterministic Vector Retrieval Pipeline
-      start = performance.now();
-      const { retrievalPipeline } = await import('../retrieval/pipeline');
-      
-      const retrievalResult = await retrievalPipeline.retrieve({
-        queryEmbedding: finalEmbedding,
-        limit: 200, // Fetch up to 200 chunks to ensure document diversity is possible before pruning
-        threshold,
-        filters,
-        strategy: 'vector_only'
-      });
-      stageTimings['VectorSearch'] = performance.now() - start;
-
-      telemetryLogger.log('RAG', `Deterministic retrieval candidate count: ${retrievalResult.statistics.candidateCount}`);
-
-      // 4. Document Diversity Selection
-      // Group by documentId and pull highest scored chunk from each document first,
-      // then fill remaining slots to ensure broad queries cover many distinct documents.
-      
-      // HEURISTIC: Retrieval Breadth Adjustment
-      // Broad queries (short, exploratory) need more taxonomy breadth (many documents, few chunks per doc).
-      // Deep queries (long, specific) need more depth (fewer documents, multiple consecutive chunks).
-      const isBroadQuery = normalizedQuery.length <= 40;
-      const DIVERSITY_POOL_SIZE = isBroadQuery ? 40 : 30; // Feed more diverse chunks to the reranker for broad queries
-      const MAX_CHUNKS_PER_DOC = isBroadQuery ? 1 : 5;    // Enforce 1-chunk limit per doc for broad queries to maximize breadth
-      
-      const docGroups = new Map<string, any[]>();
-      retrievalResult.candidates.forEach(candidate => {
-        const docId = candidate.document_id;
-        if (!docGroups.has(docId)) docGroups.set(docId, []);
-        docGroups.get(docId)!.push(candidate);
-      });
-
-      const diverseCandidates: any[] = [];
-      let round = 0;
-      
-      while (diverseCandidates.length < Math.min(DIVERSITY_POOL_SIZE, retrievalResult.candidates.length)) {
-        let addedInRound = false;
-        for (const [docId, chunks] of docGroups.entries()) {
-          if (diverseCandidates.length >= DIVERSITY_POOL_SIZE) break;
-          
-          if (round >= MAX_CHUNKS_PER_DOC) continue;
-          
-          if (chunks.length > round) {
-            diverseCandidates.push(chunks[round]);
-            addedInRound = true;
-          }
-        }
-        if (!addedInRound) break; // Exhausted all chunks
-        round++;
+      if (localHits.length > 0) {
+        const { contextText, citations } = ragContextBuilder.buildContext(
+          localHits as any,
+          Math.min(systemConfig.RAG_MAX_CONTEXT_TOKENS || 1600, 1600)
+        );
+        stageTimings['Total'] = performance.now() - started;
+        telemetryLogger.log('RAG', `Local retrieval returned ${localHits.length} chunks`);
+        return {
+          contextText,
+          chunks: localHits,
+          citations,
+          cragEval: 'RELEVANT',
+          stageTimings
+        };
       }
 
-      if (diverseCandidates.length === 0) {
+      const terms = this.toSearchTerms(query);
+      const ftsStart = performance.now();
+      const ftsRows = terms.length
+        ? await ragDatabase.keywordSearch(terms, 8).catch(() => [])
+        : [];
+
+      let vecRows: RawHit[] = [];
+      if (queryVector?.length) {
+        vecRows = await ragDatabase.matchEmbeddings(queryVector, threshold, 8, filters).catch(() => []) as RawHit[];
+      }
+      stageTimings['HybridSearch'] = performance.now() - ftsStart;
+
+      const fused = this.fuse(query, vecRows as RawHit[], ftsRows as RawHit[], Math.max(limit, 4));
+      if (fused.length === 0) {
         return { contextText: '', chunks: [], citations: [], cragEval: 'IRRELEVANT', stageTimings };
       }
 
-      // 5. Execute Reranker to filter down to the best diverse candidates
-      start = performance.now();
-      const rerankedResults = await ragReranker.rerank(normalizedQuery, diverseCandidates, limit);
-      stageTimings['Reranker'] = performance.now() - start;
-
-      start = performance.now();
-      const finalChunks = rerankedResults.map((r) => {
-        const originalRecord = diverseCandidates[r.index]!;
-        return {
-          chunkId: originalRecord.chunk_id,
-          documentId: originalRecord.document_id,
-          chunkText: originalRecord.chunk_text,
-          chunkNumber: originalRecord.chunk_number,
-          metadata: originalRecord.metadata || {},
-          score: r.relevanceScore
-        };
-      });
-
       const { contextText, citations } = ragContextBuilder.buildContext(
-        finalChunks as any,
-        systemConfig.RAG_MAX_CONTEXT_TOKENS
+        fused as any,
+        Math.min(systemConfig.RAG_MAX_CONTEXT_TOKENS || 1600, 1600)
       );
-      stageTimings['ContextAssembly'] = performance.now() - start;
-      
-      if (systemConfig.ENABLE_PERFORMANCE_PROFILING) {
-        console.log('\n[RETRIEVAL SUB-STAGE PROFILE]');
-        Object.entries(stageTimings).forEach(([stage, ms]) => {
-          console.log(`${stage.padEnd(20)}: ${ms.toFixed(2)} ms`);
-        });
-        console.log('-----------------------------');
-      }
 
-      // --- 8. CRAG (Corrective RAG) Context Evaluation ---
-      // The user approved moving this to a fire-and-forget background promise since it only logs telemetry
-      // and does not halt generation or influence retrieval.
-      const cragEval = 'RELEVANT';
-      import('@/lib/providers').then(({ providerFactory }) => {
-        const aiClient = providerFactory.getChatProvider();
-        const cragPrompt = `You are a grader evaluating the relevance of retrieved context to a user query. \n\nQuery: ${normalizedQuery}\n\nContext:\n${contextText}\n\nDoes the context contain sufficient relevant information to answer the query? Respond with exactly one word: "RELEVANT" or "IRRELEVANT".`;
-        aiClient.generate({ prompt: cragPrompt })
-          .then(cragRes => {
-            const evalScore = cragRes?.content?.trim().toUpperCase();
-            if (evalScore && evalScore.includes('IRRELEVANT')) {
-              telemetryLogger.log('RAG', `CRAG Evaluation marked context as IRRELEVANT.`);
-            } else {
-              telemetryLogger.log('RAG', `CRAG Evaluation marked context as RELEVANT.`);
-            }
-          })
-          .catch(err => telemetryLogger.error('RAG', `CRAG async evaluation failed.`, err));
-      });
+      stageTimings['Total'] = performance.now() - started;
+      telemetryLogger.log('RAG', `Hybrid retrieval returned ${fused.length} chunks`);
 
       return {
         contextText,
-        chunks: finalChunks,
+        chunks: fused,
         citations,
-        cragEval,
+        cragEval: 'RELEVANT',
         stageTimings
       };
-
     } catch (err: any) {
       telemetryLogger.error('RAG', 'Retrieval operation failed', err);
-      return { contextText: '', chunks: [], citations: [], cragEval: 'ERROR' };
+      return { contextText: '', chunks: [], citations: [], cragEval: 'ERROR', stageTimings };
     }
+  }
+
+  private toSearchTerms(query: string): string[] {
+    const extras: string[] = [];
+    const q = query.toLowerCase();
+    if (/\brag\b/.test(q) && !/ragx/.test(q)) extras.push('retrieval');
+    if (/\bchatbot/.test(q)) extras.push('chatbot');
+    if (/\bvoice|call agent|telephony/.test(q)) extras.push('voicerag');
+    if (/\baegis/.test(q)) extras.push('aegisflow');
+    if (/\bdentl/.test(q)) extras.push('dentl2');
+
+    const terms = `${query} ${extras.join(' ')}`
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, ' ')
+      .split(/\s+/)
+      .filter((t) => t.length > 3 && !STOP.has(t));
+
+    return Array.from(new Set(terms)).slice(0, 6);
+  }
+
+  private fuse(query: string, dense: RawHit[], sparse: RawHit[], limit: number): RetrievedChunk[] {
+    const q = query.toLowerCase();
+    const ranks = new Map<string, { hit: RawHit; denseRank: number; sparseRank: number }>();
+
+    dense.forEach((hit, idx) => {
+      if (!hit?.chunk_id || this.isJunk(hit)) return;
+      ranks.set(hit.chunk_id, { hit, denseRank: idx + 1, sparseRank: 999 });
+    });
+    sparse.forEach((hit, idx) => {
+      if (!hit?.chunk_id || this.isJunk(hit)) return;
+      const existing = ranks.get(hit.chunk_id);
+      if (existing) {
+        existing.sparseRank = idx + 1;
+      } else {
+        ranks.set(hit.chunk_id, { hit, denseRank: 999, sparseRank: idx + 1 });
+      }
+    });
+
+    const queryTerms = q.replace(/[^\w\s-]/g, ' ').split(/\s+/).filter((t) => t.length > 2);
+    const wantsServices = /service|offer|hire|build|need/.test(q);
+    const wantsProjects = /project|built|portfolio|aegis|voicerag|dentl|auranode/.test(q);
+
+    const scored = Array.from(ranks.values()).map(({ hit, denseRank, sparseRank }) => {
+      const text = (hit.chunk_text || '').toLowerCase();
+      const meta = hit.metadata || {};
+      const title = String(meta.title || '');
+      const url = String(meta.url || meta.source || '');
+      const category = String(meta.category || '').toLowerCase();
+
+      let score = 1 / (60 + denseRank) + 1 / (60 + sparseRank);
+      const denseSim = Number(hit.similarity || hit.semantic_score || 0);
+      if (denseSim > 0) score += denseSim * 0.35;
+
+      let lexical = 0;
+      for (const term of queryTerms) {
+        if (text.includes(term) || title.toLowerCase().includes(term)) lexical += term.length > 5 ? 1.4 : 1;
+      }
+      if (queryTerms.length) score += (lexical / queryTerms.length) * 0.25;
+
+      if (wantsServices && (url.includes('/services/') || category === 'service')) score += 0.18;
+      if (wantsProjects && (url.includes('/projects/') || category === 'project')) score += 0.18;
+      if (INDEX_TITLES.test(title) || category === 'index') score -= 0.35;
+      if (/faq|frequently asked/i.test(title) && !/faq/.test(q)) score -= 0.4;
+      if (queryTerms.some((term) => title.toLowerCase().includes(term))) score += 0.45;
+      if (JSONLD_RE.test(hit.chunk_text || '')) score -= 0.35;
+
+      return {
+        chunkId: hit.chunk_id,
+        documentId: hit.document_id,
+        chunkText: hit.chunk_text,
+        chunkNumber: hit.chunk_number,
+        metadata: meta,
+        score
+      } as RetrievedChunk;
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+
+    const seenDocs = new Map<string, number>();
+    const diverse: RetrievedChunk[] = [];
+    for (const chunk of scored) {
+      const count = seenDocs.get(chunk.documentId) || 0;
+      if (count >= 2) continue;
+      seenDocs.set(chunk.documentId, count + 1);
+      diverse.push(chunk);
+      if (diverse.length >= limit) break;
+    }
+
+    return diverse;
+  }
+
+  private isJunk(hit: RawHit): boolean {
+    const text = hit.chunk_text || '';
+    if (text.trim().length < 60) return true;
+    if (JSONLD_RE.test(text) && text.length < 280) return true;
+    return false;
   }
 }
 

@@ -66,4 +66,11 @@ export function validateStartup() {
   console.log('==========================================');
 
   telemetryLogger.log('SYSTEM', 'Startup validation completed successfully');
+
+  import('../rag/supabase').then(({ pgPool }) => {
+    pgPool.query('select 1').catch(() => {});
+  }).catch(() => {});
+  import('../rag/local-index').then(({ localKnowledgeIndex }) => {
+    localKnowledgeIndex.ensureLoaded();
+  }).catch(() => {});
 }

@@ -16,7 +16,8 @@ export const pgPool = new Pool({
   connectionString,
   max: 10,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
+  connectionTimeoutMillis: 4000,
+  keepAlive: true,
 });
 
 export interface DocumentRecord {
@@ -237,6 +238,45 @@ export class RAGDatabase {
     return rows;
   }
 
+  async keywordSearch(terms: string[], limit: number = 8) {
+    const patterns = terms
+      .filter((t) => t.length > 2)
+      .slice(0, 6)
+      .map((t) => `%${t.replace(/[%_]/g, '')}%`);
+    if (patterns.length === 0) return [];
+
+    const titleQuery = `
+      SELECT
+        dc.id as chunk_id,
+        dc.parent_document as document_id,
+        left(dc.chunk_text, 900) as chunk_text,
+        dc.chunk_number,
+        dc.metadata,
+        1.0 as score
+      FROM public.document_chunks dc
+      WHERE dc.metadata->>'title' ILIKE ANY($1::text[])
+      LIMIT $2
+    `;
+    const titleRes = await pgPool.query(titleQuery, [patterns, limit]);
+    if (titleRes.rows.length > 0) return titleRes.rows;
+
+    const bodyQuery = `
+      SELECT
+        dc.id as chunk_id,
+        dc.parent_document as document_id,
+        left(dc.chunk_text, 900) as chunk_text,
+        dc.chunk_number,
+        dc.metadata,
+        0.4 as score
+      FROM public.document_chunks dc
+      WHERE dc.chunk_text ILIKE ANY($1::text[])
+      LIMIT $2
+    `;
+    const bodyRes = await pgPool.query(bodyQuery, [patterns, limit]);
+    const seen = new Set(titleRes.rows.map((r: any) => r.chunk_id));
+    return [...titleRes.rows, ...bodyRes.rows.filter((r: any) => !seen.has(r.chunk_id))].slice(0, limit);
+  }
+
   async ftsSearch(
     queryText: string,
     limit: number,
@@ -249,9 +289,9 @@ export class RAGDatabase {
         dc.chunk_text,
         dc.chunk_number,
         dc.metadata,
-        ts_rank_cd(to_tsvector('english', dc.chunk_text), websearch_to_tsquery('english', $1)) as score
+        ts_rank_cd(to_tsvector('english', dc.chunk_text), plainto_tsquery('english', $1)) as score
       FROM public.document_chunks dc
-      WHERE to_tsvector('english', dc.chunk_text) @@ websearch_to_tsquery('english', $1)
+      WHERE $1 <> '' AND to_tsvector('english', dc.chunk_text) @@ plainto_tsquery('english', $1)
         AND (
           $3 = '{}'::jsonb
           OR dc.metadata @> $3
@@ -396,10 +436,10 @@ export class RAGDatabase {
 
   async getRecentMessages(conversationId: string, limit: number = 10) {
     const { rows } = await pgPool.query(
-      'SELECT * FROM public.messages WHERE conversation_id = $1 ORDER BY created_at ASC LIMIT $2', 
+      'SELECT role, content, created_at FROM public.messages WHERE conversation_id = $1 ORDER BY created_at DESC LIMIT $2',
       [conversationId, limit]
     );
-    return rows;
+    return rows.reverse();
   }
 
   async getUnsummarizedMessages(conversationId: string, offset: number) {

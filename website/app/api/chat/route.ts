@@ -22,6 +22,7 @@ export const runtime = 'nodejs';
 let isInitialized = false;
 
 export async function POST(req: NextRequest) {
+  const requestStart = Date.now();
   try {
     if (!isInitialized) {
       validateStartup();
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
       const { leadScoring } = await import('@/lib/services/LeadScoringService');
       const { emailService } = await import('@/lib/email/resend');
 
-      await conversationService.ensureConversationExists(data.conversationId, data.visitorInfo).catch(console.error);
+      conversationService.ensureConversationExists(data.conversationId, data.visitorInfo).catch(console.error);
 
       // Async lead qualification hook
       if (data.message.toLowerCase().includes('hire') || data.message.toLowerCase().includes('meet')) {
@@ -76,6 +77,9 @@ export async function POST(req: NextRequest) {
 
     if (intentResponse) {
       const { ragMemory } = await import('@/lib/rag/memory');
+      const { recordTtft } = await import('@/lib/rag/metrics');
+      const ttftMs = Date.now() - requestStart;
+      recordTtft(ttftMs);
       await ragMemory.saveUserMessage(data.conversationId, data.message).catch(console.error);
       await ragMemory.saveAssistantMessage(data.conversationId, intentResponse).catch(console.error);
       
@@ -83,6 +87,7 @@ export async function POST(req: NextRequest) {
         content: intentResponse,
         citations: [],
         modelUsed: 'intent-router',
+        ttftMs,
         tokenUsage: { promptTokens: 0, completionTokens: 0, totalTokens: 0 }
       });
     }
@@ -99,46 +104,19 @@ export async function POST(req: NextRequest) {
 
     if (response.answer && response.answer.includes("Your meeting request has been sent")) {
       const { emailService } = await import('@/lib/email/resend');
-      const { ragMemory } = await import('@/lib/rag/memory');
-      const { providerFactory } = await import('@/lib/providers');
-      
-      const { messages } = await ragMemory.loadConversationAndUnsummarized(data.conversationId);
-      const conversationLog = messages?.slice(-6).map((m: any) => `${m.role}: ${m.content}`).join('\n\n') || data.message;
-      
-      // Extract the requested date using a fast internal LLM call
-      const aiClient = providerFactory.getChatProvider();
-      const dateExtractRes = await aiClient.generate({
-        prompt: `Extract the requested meeting date and time from the following conversation. Return ONLY a valid ISO 8601 datetime string (YYYY-MM-DDTHH:mm:ssZ). If no specific date/time is found, return "UNKNOWN".\n\nConversation:\n${conversationLog}`
-      });
-      
-      const isoDate = dateExtractRes?.content?.trim() || 'UNKNOWN';
-      const parsedDate = new Date(isoDate);
-      
-      // Deterministic Server-Side Validation
-      if (isoDate === 'UNKNOWN' || isNaN(parsedDate.getTime()) || parsedDate.getTime() < Date.now()) {
-        console.warn(`[Booking Validation] Invalid or past date detected: ${isoDate}`);
-        response.answer = "I see you'd like to book a meeting, but the date and time provided seem to be invalid or in the past. Could you please specify a valid future date and time for the meeting?";
-        
-        // Prevent email dispatch and wipe the trigger from the LLM memory so it asks again
-        const lastIndex = messages?.length ? messages.length - 1 : -1;
-        if (lastIndex >= 0) {
-          // We will save the corrected assistant response in the persistence phase automatically
-        }
-      } else {
-        // Valid future date
-        await emailService.sendContactNotification({
-          name: data.visitorInfo?.name || 'Visitor',
-          email: data.visitorInfo?.email || 'Unknown',
-          projectType: 'Booking Request',
-          message: `A meeting request was confirmed for ${parsedDate.toLocaleString()}.\n\nRecent Conversation:\n${conversationLog}\n\nUser Confirmation: ${data.message}`
-        }).catch(console.error);
-      }
+      emailService.sendContactNotification({
+        name: data.visitorInfo?.name || 'Visitor',
+        email: data.visitorInfo?.email || 'Unknown',
+        projectType: 'Booking Request',
+        message: `Meeting request from RAGX.\n\nUser message:\n${data.message}`
+      }).catch(console.error);
     }
 
     return successResponse({
       content: response.answer,
       citations: response.citations,
       modelUsed: response.context?.executionContext?.metadata?.agentContext?.lastLlmModel || 'unknown',
+      ttftMs: response.ttftMs ?? response.latencyMs ?? 0,
       tokenUsage: {
         promptTokens: response.context?.executionContext?.diagnostics?.promptTokens || 0,
         completionTokens: response.context?.executionContext?.diagnostics?.completionTokens || 0,

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 export interface ContextChunk {
   chunkId: string;
   documentId: string;
@@ -19,110 +18,65 @@ export interface ContextChunk {
   score: number;
 }
 
-export class RAGContextBuilder {
-  private defaultMaxTokens = 6000;
+const JSONLD_RE = /"@context"\s*:\s*"https:\/\/schema\.org"/i;
 
-  /**
-   * Builds an optimized, structured context string from retrieved chunks
-   * by removing duplicates, merging neighboring sibling chunks, and enforcing a token budget.
-   */
+export class RAGContextBuilder {
+  private defaultMaxTokens = 1600;
+
   buildContext(chunks: ContextChunk[], maxTokens: number = this.defaultMaxTokens): {
     contextText: string;
-    citations: Array<{ title: string; url: string; category: string; pillar?: string }>;
+    citations: Array<{ id: number; title: string; url: string; category: string; pillar?: string }>;
   } {
     if (chunks.length === 0) {
-      return { contextText: 'No relevant context found.', citations: [] };
+      return { contextText: 'No additional source excerpts were retrieved.', citations: [] };
     }
 
-    // 1. Group chunks by document to preserve structural proximity
-    const docGroups: Record<string, ContextChunk[]> = {};
-    const uniqueCitations: Record<string, { id: number; title: string; url: string; category: string; pillar?: string }> = {};
-    let citationCounter = 1;
+    const citations: Array<{ id: number; title: string; url: string; category: string; pillar?: string }> = [];
+    const blocks: string[] = [];
+    let tokens = 0;
+    let sourceId = 1;
 
     for (const chunk of chunks) {
-      const docId = chunk.documentId;
-      if (!docGroups[docId]) {
-        docGroups[docId] = [];
-      }
-      docGroups[docId].push(chunk);
+      const text = this.cleanChunk(chunk.chunkText);
+      if (!text) continue;
 
-      // Collect human-readable citation references
-      const meta = chunk.metadata;
-      const citationKey = meta.url || meta.title;
-      if (citationKey && !uniqueCitations[citationKey]) {
-        uniqueCitations[citationKey] = {
-          id: citationCounter++,
-          title: meta.title,
-          url: meta.url || '#',
-          category: meta.category || 'general',
-          ...(meta.pillar ? { pillar: meta.pillar } : {})
-        };
-      }
-    }
+      const meta = chunk.metadata || {};
+      const title = meta.title || 'Untitled';
+      const url = meta.url || '#';
+      const heading = meta.heading ? ` | ${meta.heading}` : '';
+      const header = `[SOURCE ID: ${sourceId} | ${title}${heading}]`;
+      const block = `${header}\n${text}`;
+      const blockTokens = this.estimateTokens(block);
 
-    const contextBlocks: string[] = [];
-    let currentTokens = 0;
-    const tokenBudget = maxTokens;
-
-    // 2. Iterate through each document group and merge adjacent chunks
-    for (const docId of Object.keys(docGroups)) {
-      const docChunks = docGroups[docId]!;
-      // Sort chunks of the document in order of their sequence number
-      docChunks.sort((a, b) => a.chunkNumber - b.chunkNumber);
-
-      const mergedDocChunks: string[] = [];
-      let lastChunkNumber = -999;
-      let lastText = '';
-
-      for (const chunk of docChunks) {
-        const text = chunk.chunkText.trim();
-        
-        // If chunk is consecutive, merge to form a contiguous reading flow
-        if (chunk.chunkNumber === lastChunkNumber + 1) {
-          // Merge by checking for overlap. For simplicity and robustness, we join them
-          // with a clean visual separator to indicate continuity
-          lastText = `${lastText}\n\n[Continuity...]\n\n${text}`;
-          if (mergedDocChunks.length > 0) {
-            mergedDocChunks[mergedDocChunks.length - 1] = lastText;
-          }
-        } else {
-          lastText = text;
-          mergedDocChunks.push(lastText);
-        }
-        lastChunkNumber = chunk.chunkNumber;
-      }
-
-      // Format document blocks with clear metadata headers for the LLM
-      const sampleMeta = docChunks[0]!.metadata;
-      const citationKey = sampleMeta.url || sampleMeta.title;
-      const sourceId = uniqueCitations[citationKey]?.id || '?';
-      const docHeader = `[SOURCE ID: ${sourceId} | Title: ${sampleMeta.title}]\n---`;
-      
-      const docContent = mergedDocChunks.join('\n\n---\n\n');
-      const docBlock = `${docHeader}\n${docContent}`;
-      const docBlockTokens = this.estimateTokens(docBlock);
-
-      // Enforce hard token budget limits
-      if (currentTokens + docBlockTokens <= tokenBudget) {
-        contextBlocks.push(docBlock);
-        currentTokens += docBlockTokens;
-      } else {
-        // If we exceed the budget, see if we can pack parts of it
-        const truncatedContent = docContent.substring(0, (tokenBudget - currentTokens) * 4);
-        if (truncatedContent.length > 100) {
-          contextBlocks.push(`${docHeader}\n${truncatedContent}\n... [Context truncated due to size limits]`);
+      if (tokens + blockTokens > maxTokens) {
+        const remaining = Math.max(0, (maxTokens - tokens) * 4);
+        if (remaining > 180) {
+          blocks.push(`${header}\n${text.slice(0, remaining)}`);
+          citations.push({ id: sourceId, title, url, category: meta.category || 'general', ...(meta.pillar ? { pillar: meta.pillar } : {}) });
         }
         break;
       }
+
+      blocks.push(block);
+      citations.push({ id: sourceId, title, url, category: meta.category || 'general', ...(meta.pillar ? { pillar: meta.pillar } : {}) });
+      tokens += blockTokens;
+      sourceId += 1;
     }
 
-    const contextText = contextBlocks.join('\n\n==================================================\n\n');
-    const citations = Object.values(uniqueCitations);
-
     return {
-      contextText,
+      contextText: blocks.join('\n\n---\n\n') || 'No additional source excerpts were retrieved.',
       citations
     };
+  }
+
+  private cleanChunk(raw: string): string {
+    if (!raw) return '';
+    if (JSONLD_RE.test(raw) && raw.trim().startsWith('```')) {
+      const stripped = raw.replace(/```json[\s\S]*?```/g, '').trim();
+      if (stripped.length < 80) return '';
+      return stripped.replace(/\s+/g, ' ').trim();
+    }
+    return raw.replace(/\s+/g, ' ').trim();
   }
 
   private estimateTokens(text: string): number {

@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RAG_SYSTEM_PROMPT } from './prompts';
-import { getAllServices } from '../services';
+import { RAG_IDENTITY_FACTS, getCompactServiceCatalog } from './identity';
 
 export class PromptBuilder {
-  /**
-   * Assembles the final LLM prompt strictly following the enterprise order:
-   * System Prompt -> Summary -> Recent Messages -> RAG Context -> User Query
-   */
   buildPrompt(
     summary: string | null,
     recentMessages: { role: string; content: string }[],
@@ -15,35 +11,23 @@ export class PromptBuilder {
     toolOutputs: any[] = [],
     visitorInfo?: { name: string; email: string }
   ): { role: 'system' | 'user' | 'assistant'; content: string }[] {
-    let systemContent = RAG_SYSTEM_PROMPT.replace('{context}', 'See context below.');
-    
-    // Inject Structured Service Index for broad queries to prevent chunk-dropping omission
-    if (currentQuery.toLowerCase().includes('service') || currentQuery.toLowerCase().includes('offer')) {
-      try {
-        const allServices = getAllServices();
-        if (allServices && allServices.length > 0) {
-          const serviceList = allServices.map((s) => `- ${s.title}${s.description ? `: ${s.description}` : ''}`).join('\n');
-          systemContent += `\n\n--- Complete Service Catalog (Use this to ensure you do not omit any services) ---\n${serviceList}`;
-        }
-      } catch (e) {
-        console.warn('Failed to load service index for prompt builder', e);
-      }
-    }
+    let systemContent = RAG_SYSTEM_PROMPT
+      .replace('{identity}', RAG_IDENTITY_FACTS)
+      .replace('{catalog}', getCompactServiceCatalog())
+      .replace('{context}', ragContext || 'No additional source excerpts were retrieved.');
 
     if (visitorInfo) {
-      systemContent += `\n\n--- Visitor Session Info ---\nName: ${visitorInfo.name}\nEmail: ${visitorInfo.email}\nNote: The user has already provided their name and email. Do NOT ask for them again.`;
+      systemContent += `\n\nVisitor: ${visitorInfo.name} <${visitorInfo.email}>. Do not ask for name or email again.`;
     }
 
     if (summary) {
-      systemContent += `\n\n--- Conversation Summary ---\n${summary}`;
+      systemContent += `\n\nConversation summary:\n${summary.slice(0, 600)}`;
     }
 
-    systemContent += `\n\n--- RAG Context ---\n${ragContext}`;
-
     if (toolOutputs && toolOutputs.length > 0) {
-      systemContent += `\n\n--- Tool Execution Results ---\n`;
+      systemContent += `\n\nTool results:\n`;
       for (const t of toolOutputs) {
-        systemContent += `Tool [${t.toolName}]: ${JSON.stringify(t.output || t.error)}\n`;
+        systemContent += `- ${t.toolName || t.tool}: ${JSON.stringify(t.output || t.error).slice(0, 400)}\n`;
       }
     }
 
@@ -51,14 +35,17 @@ export class PromptBuilder {
       { role: 'system', content: systemContent }
     ];
 
-    for (const msg of recentMessages) {
+    const trimmedHistory = recentMessages.slice(-4);
+    for (const msg of trimmedHistory) {
       if (msg.role === 'user' || msg.role === 'assistant') {
-        messages.push({ role: msg.role, content: msg.content });
+        messages.push({
+          role: msg.role,
+          content: (msg.content || '').slice(0, 500)
+        });
       }
     }
 
     messages.push({ role: 'user', content: currentQuery });
-
     return messages;
   }
 }
