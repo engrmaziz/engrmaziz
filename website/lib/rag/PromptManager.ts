@@ -22,9 +22,8 @@ export class PromptManager {
   }
 
   async validatePromptSecurity(prompt: string): Promise<boolean> {
-    // Implement prompt injection/jailbreak detection heuristics here
-    const blockedKeywords = ['ignore previous', 'system prompt', 'you are now', 'bypass'];
-    return !blockedKeywords.some(kw => prompt.toLowerCase().includes(kw));
+    const { containsPromptInjection } = await import("@/lib/security/input");
+    return !containsPromptInjection(prompt);
   }
 }
 

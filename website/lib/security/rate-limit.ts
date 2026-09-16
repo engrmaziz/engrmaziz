@@ -40,20 +40,22 @@ export async function checkRateLimit(ip: string, endpoint: string, limit: number
 }
 
 export function getClientIp(request: Request | any): string {
-  // 1. Try Vercel specific Real IP
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp) return realIp;
+  const vercel = request.headers.get("x-vercel-forwarded-for");
+  if (vercel) return vercel.split(",")[0]?.trim() || "127.0.0.1";
 
-  // 2. Try Vercel / Standard Forwarded For
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  if (forwardedFor) return forwardedFor.split(',')[0]?.trim() || '127.0.0.1';
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) return realIp.trim();
 
-  // 3. Try Cloudflare connecting IP header
-  const cfIp = request.headers.get('cf-connecting-ip');
-  if (cfIp) return cfIp;
-  
-  // 4. Try Next.js native `ip` property on NextRequest
+  const cfIp = request.headers.get("cf-connecting-ip");
+  if (cfIp) return cfIp.trim();
+
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    const hops = forwardedFor.split(",").map((part: string) => part.trim()).filter(Boolean);
+    return hops[hops.length - 1] || "127.0.0.1";
+  }
+
   if (request.ip) return request.ip;
-  
-  return '127.0.0.1'; // Default fallback
+
+  return "127.0.0.1";
 }

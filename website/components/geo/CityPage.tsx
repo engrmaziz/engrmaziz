@@ -106,7 +106,7 @@ export function CityPage({ market, city }: { market: GeoMarket; city: GeoCity })
             Custom AI systems for {city.name}
           </h2>
           <Link href="/contact">
-            <Button size="lg" className="font-bold bg-accent text-base hover:bg-accent/90">
+            <Button size="lg" className="font-bold bg-accent text-[color:var(--color-bg-base)] hover:bg-accent/90">
               Contact
             </Button>
           </Link>

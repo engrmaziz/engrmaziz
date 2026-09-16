@@ -11,14 +11,13 @@ const chatRequestSchema = z.object({
   conversationId: z.string().uuid(),
   message: z.string().min(1).max(2000),
   visitorInfo: z.object({
-    name: z.string().min(2),
-    email: z.string().email(),
+    name: z.string().min(2).max(80),
+    email: z.string().email().max(120),
   }).optional(),
   messages: z.array(z.object({
-    role: z.enum(['user', 'assistant', 'system']),
-    content: z.string().max(8000),
-  })).max(40).optional(),
-  flags: z.record(z.any()).optional(),
+    role: z.enum(['user', 'assistant']),
+    content: z.string().max(1600),
+  })).max(16).optional(),
 });
 
 export const runtime = 'nodejs';
@@ -37,8 +36,8 @@ export async function POST(req: NextRequest) {
     await checkRateLimit(ip, 'chat', 20, 60000); // 20 requests per minute
 
     const data = await validateRequest(chatRequestSchema, req);
+    const { containsPromptInjection, sanitizeClientMessages, sanitizeVisitor } = await import('@/lib/security/input');
 
-    // Identity Gate check
     if (!data.visitorInfo) {
       return successResponse({
         content: "Hello, I'm RAGX. May I know your name and email before we begin?",
@@ -46,24 +45,30 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 1. Pre-computation hooks (Lead scoring & Persistence)
-    if (data.visitorInfo) {
-      const { conversationService } = await import('@/lib/db/services');
+    const visitorInfo = sanitizeVisitor(data.visitorInfo);
+    if (containsPromptInjection(data.message) || containsPromptInjection(visitorInfo.name)) {
+      return successResponse({
+        content: "I can help with Musharraf's services, projects, and hiring. Ask about call agents, RAG, or booking a discovery call.",
+        citations: [],
+        modelUsed: 'guard',
+        ttftMs: Date.now() - requestStart,
+        tokenUsage: { promptTokens: 0, completionTokens: 0, totalTokens: 0 }
+      });
+    }
+
+    const { conversationService } = await import('@/lib/db/services');
+    await conversationService.assertVisitorOwnsConversation(data.conversationId, visitorInfo);
+
+    if (data.message.toLowerCase().includes('hire') || data.message.toLowerCase().includes('meet')) {
       const { leadScoring } = await import('@/lib/services/LeadScoringService');
       const { emailService } = await import('@/lib/email/resend');
-
-      conversationService.ensureConversationExists(data.conversationId, data.visitorInfo).catch(console.error);
-
-      // Async lead qualification hook
-      if (data.message.toLowerCase().includes('hire') || data.message.toLowerCase().includes('meet')) {
-        const score = leadScoring.calculateScore({ email: data.visitorInfo.email, projectDescription: data.message });
-        if (score > 50) {
-          emailService.sendContactNotification({ ...data.visitorInfo, message: data.message, projectType: 'RAGX Lead' }).catch(console.error);
-        }
+      const score = leadScoring.calculateScore({ email: visitorInfo.email, projectDescription: data.message });
+      if (score > 50) {
+        emailService.sendContactNotification({ ...visitorInfo, message: data.message, projectType: 'RAGX Lead' }).catch(console.error);
       }
     }
 
-    const priorTurns = (data.messages || []).filter((m) => m.role === 'user' || m.role === 'assistant');
+    const priorTurns = sanitizeClientMessages(data.messages);
     const hasThread = priorTurns.length > 0;
 
     // 2. Lightweight Intent Router
@@ -105,18 +110,17 @@ export async function POST(req: NextRequest) {
       query: data.message,
       sessionId: data.conversationId,
       filters: {},
-      flags: (data as any).flags,
-      visitorInfo: data.visitorInfo,
+      visitorInfo,
       messages: priorTurns,
     });
 
     if (response.answer && /meeting request has been sent/i.test(response.answer)) {
       const { emailService } = await import('@/lib/email/resend');
       const { formatBookingEmail, slotsFromSession } = await import('@/lib/rag/session-memory');
-      const slots = slotsFromSession(priorTurns, data.message, data.visitorInfo);
+      const slots = slotsFromSession(priorTurns, data.message, visitorInfo);
       emailService.sendContactNotification({
-        name: data.visitorInfo?.name || 'Visitor',
-        email: data.visitorInfo?.email || 'Unknown',
+        name: visitorInfo.name,
+        email: visitorInfo.email,
         projectType: 'Booking Request',
         message: formatBookingEmail(slots, priorTurns, data.message)
       }).catch(console.error);
@@ -131,35 +135,22 @@ export async function POST(req: NextRequest) {
         promptTokens: response.context?.executionContext?.diagnostics?.promptTokens || 0,
         completionTokens: response.context?.executionContext?.diagnostics?.completionTokens || 0,
         totalTokens: response.context?.executionContext?.diagnostics?.totalTokens || 0
-      },
-      trace: response.context?.executionContext?.trace?.exportTrace()
+      }
     });
   } catch (error: any) {
-    // 1. Capture complete exception before any formatting (Step 1)
     console.error('CHAT API ERROR [RAW]:', {
       name: error?.name,
       message: error?.message,
-      stack: error?.stack,
-      cause: error?.cause,
       code: error?.code,
-      details: error?.details,
-      raw: error
     });
 
-    // 2. Map standard exceptions into AppError instances (Step 3 & 5)
-    let standardizedError = error;
-
-    if (!(error instanceof AppError)) {
-      if (error?.name === 'ProviderConfigurationError' || error?.name === 'ProviderExecutionError') {
-        standardizedError = new AppError(error.message, 500, 'PROVIDER_ERROR');
-      } else if (error?.code && typeof error.code === 'string' && error.code.match(/^[0-9A-Z]{5}$/)) {
-        // Postgres/Supabase error codes are typically 5 characters
-        standardizedError = new AppError('Database operation failed', 500, 'DATABASE_ERROR');
-      } else {
-        standardizedError = new AppError(error?.message || 'An unexpected error occurred.', 500, 'INTERNAL_ERROR');
+    if (error instanceof AppError) {
+      if (error.statusCode >= 500) {
+        return errorResponse(new AppError('An unexpected error occurred.', 500, 'INTERNAL_ERROR'));
       }
+      return errorResponse(error);
     }
 
-    return errorResponse(standardizedError);
+    return errorResponse(new AppError('An unexpected error occurred.', 500, 'INTERNAL_ERROR'));
   }
 }

@@ -22,8 +22,12 @@ export class ConversationMemoryService {
       ragDatabase.getConversation(conversationId).catch(() => null),
       ragDatabase.getRecentMessages(conversationId, 24).catch(() => []),
     ]);
+    const serverHistory = mergeHistories(db as ChatTurn[], recallTurns(conversationId));
+    const history = serverHistory.length >= 2
+      ? serverHistory
+      : mergeHistories(serverHistory, clientMessages);
     return {
-      history: mergeHistories(db as ChatTurn[], recallTurns(conversationId), clientMessages),
+      history,
       summary: (conv?.summary as string | undefined) || null,
     };
   }

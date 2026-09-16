@@ -25,7 +25,7 @@ export const ArticleCard = React.forwardRef<HTMLDivElement, ArticleCardProps>(
               </span>
             )}
             <CardTitle className="text-2xl group-hover:text-accent transition-colors">{title}</CardTitle>
-            <CardDescription className="line-clamp-3 mt-3 text-base">{excerpt}</CardDescription>
+            <CardDescription className="line-clamp-3 mt-3 text-copy">{excerpt}</CardDescription>
           </CardHeader>
           <CardFooter className="mt-auto p-0 sm:p-6 pt-4 sm:pt-4">
             <div className="flex items-center gap-4 text-xs text-secondary">

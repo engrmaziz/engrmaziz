@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import { pgPool } from '@/lib/rag/supabase';
-import { systemConfig } from '@/lib/system/config';
 import { getLastTtft, probeTtft } from '@/lib/rag/metrics';
 import { localKnowledgeIndex } from '@/lib/rag/local-index';
 import { getLastVoiceTelemetry } from '@/lib/voice/metrics';
@@ -33,7 +32,7 @@ export async function GET() {
       status: 'ONLINE',
       latency,
       ttft,
-      embeddingModel: systemConfig.JINA_EMBEDDING_MODEL || 'jina-embeddings-v4',
+      embeddingModel: 'jina-embeddings-v4',
       documents: kb.documents,
       chunks: kb.chunks,
       lastSync: new Date().toISOString(),
@@ -46,7 +45,6 @@ export async function GET() {
             ttsMs: voice.ttsMs,
             totalMs: voice.totalMs,
             voice: voice.voice,
-            model: voice.model,
             updatedAt: voice.updatedAt,
           }
         : null,
@@ -57,13 +55,11 @@ export async function GET() {
       status: 'OFFLINE',
       latency: 0,
       ttft: 0,
-      embeddingModel: 'jina-embeddings-v4',
       documents: 0,
       chunks: 0,
       lastSync: null,
       health: 'CRITICAL',
       voice: getLastVoiceTelemetry(),
-      error: error.message || String(error),
     }, { status: 503 });
   }
 }

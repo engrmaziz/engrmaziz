@@ -201,7 +201,7 @@ export function LocationHub({ market }: { market: GeoMarket }) {
             Custom AI call agents, chatbots, RAG agents, and workflow automation—engineered, not packaged.
           </p>
             <Link href="/hire">
-              <Button size="lg" className="font-bold bg-accent text-base hover:bg-accent/90">
+              <Button size="lg" className="font-bold bg-accent text-[color:var(--color-bg-base)] hover:bg-accent/90">
                 Hire freelance or full-time
               </Button>
             </Link>

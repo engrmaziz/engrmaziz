@@ -12,7 +12,7 @@ interface VoiceStats {
   ttsMs: number;
   totalMs: number;
   voice: string;
-  model: string;
+  model?: string;
   updatedAt: string;
 }
 
@@ -214,8 +214,8 @@ export function RAGXIndicator() {
                       </div>
                       <div className="flex items-center justify-between py-1">
                         <span className="text-[#8BA0B5]">Model</span>
-                        <span className="max-w-[150px] truncate text-right text-[#8BA0B5]" title={voiceStats.model}>
-                          {voiceStats.model.replace('canopylabs/', '')}
+                        <span className="max-w-[150px] truncate text-right text-[#8BA0B5]" title={voiceStats.model || ""}>
+                          {(voiceStats.model || "orpheus").replace("canopylabs/", "")}
                         </span>
                       </div>
                       <div className="flex items-center justify-between py-1">

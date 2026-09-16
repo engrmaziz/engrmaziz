@@ -98,7 +98,7 @@ export function Projects() {
           <Magnetic>
             <Link
               href="/projects"
-              className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-accent/50 bg-transparent px-8 text-lg font-semibold text-accent transition-colors hover:border-accent hover:bg-accent/10"
+              className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-accent/50 bg-transparent px-8 text-lg font-semibold text-[color:var(--color-accent)] transition-colors hover:border-accent hover:bg-accent/10"
             >
               View All Projects <ArrowRight className="h-4 w-4" />
             </Link>

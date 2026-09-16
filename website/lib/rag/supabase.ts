@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+import 'server-only';
 import { Pool } from 'pg';
 import { systemConfig } from '../system/config';
 
@@ -420,6 +420,16 @@ export class RAGDatabase {
   async getConversation(id: string) {
     const { rows } = await pgPool.query('SELECT * FROM public.conversations WHERE id = $1 LIMIT 1', [id]);
     return rows[0] || null;
+  }
+
+  async bindConversationVisitor(id: string, name: string, email: string) {
+    await pgPool.query(
+      `UPDATE public.conversations
+       SET visitor_name = COALESCE(NULLIF(visitor_name, ''), $2),
+           visitor_email = COALESCE(NULLIF(visitor_email, ''), $3)
+       WHERE id = $1`,
+      [id, name, email]
+    );
   }
 
   async createConversation(id?: string, visitorId: string = 'anonymous') {

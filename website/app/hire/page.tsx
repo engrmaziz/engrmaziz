@@ -199,13 +199,13 @@ export default function HirePage() {
             <li>4. If full-time: include remote policy and whether you sponsor or already expect Pakistan-based remote.</li>
           </ul>
           <div className="flex flex-wrap gap-3 mt-8">
-            <Link href="/services/california" className="px-4 py-2 rounded-full border border-border-default text-sm font-medium hover:border-accent/50">
+            <Link href="/services/california" className="px-4 py-2 rounded-full border border-accent/50 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
               California services
             </Link>
-            <Link href="/services/florida" className="px-4 py-2 rounded-full border border-border-default text-sm font-medium hover:border-accent/50">
+            <Link href="/services/florida" className="px-4 py-2 rounded-full border border-accent/50 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
               Florida services
             </Link>
-            <Link href="/about" className="px-4 py-2 rounded-full border border-border-default text-sm font-medium hover:border-accent/50">
+            <Link href="/about" className="px-4 py-2 rounded-full border border-accent/50 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
               Experience
             </Link>
           </div>

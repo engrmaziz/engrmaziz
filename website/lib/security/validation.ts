@@ -13,7 +13,6 @@ export async function validateRequest<T>(schema: z.ZodType<T>, req: Request): Pr
   const result = schema.safeParse(body);
   if (!result.success) {
     console.error('[Validation] Schema parsing failed:', JSON.stringify(result.error.flatten(), null, 2));
-    console.error('[Validation] Received body:', JSON.stringify(body, null, 2));
     throw new ValidationError('Invalid request payload', result.error.flatten());
   }
   

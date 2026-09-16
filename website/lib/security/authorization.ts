@@ -2,6 +2,7 @@ import { systemConfig } from '../system/config';
 import { AuthenticatedUser, Permission, AuthorizationResult } from './types';
 import { AuthenticationError, AuthorizationError, ForbiddenError } from './errors';
 import { PERMISSIONS } from './policies';
+import { isPlaceholderSecret, timingSafeEqualString } from './crypto';
 
 export class AuthorizationService {
   /**
@@ -10,22 +11,21 @@ export class AuthorizationService {
    */
   public authenticate(authHeader: string | null): AuthenticatedUser {
     if (!authHeader) {
-      throw new AuthenticationError('Missing Authorization header');
+      throw new AuthenticationError('Unauthorized');
     }
 
-    const match = authHeader.match(/^Bearer\s+(.*)$/);
-    if (!match) {
-      throw new AuthenticationError('Invalid Authorization header format. Expected "Bearer <token>"');
+    const match = authHeader.match(/^Bearer\s+(.+)$/);
+    if (!match?.[1]) {
+      throw new AuthenticationError('Unauthorized');
     }
 
-    const token = match[1];
-
-    if (!systemConfig.ADMIN_API_TOKEN) {
-      throw new AuthenticationError('System configuration is missing ADMIN_API_TOKEN. Administration is locked.');
+    const expected = systemConfig.ADMIN_API_TOKEN;
+    if (isPlaceholderSecret(expected)) {
+      throw new AuthenticationError('Unauthorized');
     }
 
-    if (token !== systemConfig.ADMIN_API_TOKEN) {
-      throw new AuthenticationError('Invalid authentication token');
+    if (!timingSafeEqualString(match[1], expected || "")) {
+      throw new AuthenticationError('Unauthorized');
     }
 
     return {
@@ -37,6 +37,10 @@ export class AuthorizationService {
         PERMISSIONS.SYSTEM_READ
       ]
     };
+  }
+
+  public authenticateRequest(req: Request): AuthenticatedUser {
+    return this.authenticate(req.headers.get("Authorization"));
   }
 
   /**

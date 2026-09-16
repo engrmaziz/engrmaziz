@@ -88,7 +88,7 @@ export function AIAssistant() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 w-14 h-14 bg-accent text-white rounded-full shadow-xl flex items-center justify-center hover:scale-110 hover:shadow-2xl transition-all z-50 focus:outline-none focus:ring-4 focus:ring-accent/30 group"
+            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 w-14 h-14 bg-accent text-[color:var(--color-bg-base)] rounded-full shadow-xl flex items-center justify-center hover:scale-110 hover:shadow-2xl transition-all z-50 focus:outline-none focus:ring-4 focus:ring-accent/30 group"
             aria-label="Open AI Assistant"
           >
             <Sparkles className="w-6 h-6 group-hover:animate-pulse" />
@@ -156,7 +156,7 @@ export function AIAssistant() {
                   <div className={cn(
                     "p-4 rounded-2xl text-sm leading-relaxed shadow-sm",
                     msg.role === 'user' 
-                      ? "bg-accent text-white rounded-tr-sm" 
+                      ? "bg-accent text-[color:var(--color-bg-base)] rounded-tr-sm" 
                       : "bg-elevated border border-border-default text-primary rounded-tl-sm"
                   )}>
                     {msg.content}
@@ -228,7 +228,7 @@ export function AIAssistant() {
                 <button 
                   onClick={() => handleSend(inputValue)}
                   disabled={!inputValue.trim() || isTyping}
-                  className="absolute right-2 p-2 bg-accent text-white rounded-lg hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="absolute right-2 p-2 bg-accent text-[color:var(--color-bg-base)] rounded-lg hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <Send className="w-4 h-4" />
                 </button>

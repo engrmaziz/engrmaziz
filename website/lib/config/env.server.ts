@@ -19,6 +19,8 @@ const serverSchema = z.object({
   RAG_EMAIL: z.string().email().optional(),
   SANITY_API_READ_TOKEN: z.string().optional(),
   SANITY_API_WRITE_TOKEN: z.string().optional(),
+  SANITY_WEBHOOK_SECRET: z.string().optional(),
+  ADMIN_API_TOKEN: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   GOOGLE_REFRESH_TOKEN: z.string().optional(),

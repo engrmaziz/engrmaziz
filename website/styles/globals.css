@@ -217,6 +217,24 @@
 }
 
 @layer utilities {
+  /* Font size only. Never use Tailwind `text-base` — `base` is a background color. */
+  .text-copy {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  @media (min-width: 640px) {
+    .sm\:text-copy {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+  @media (min-width: 768px) {
+    .md\:text-copy {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;

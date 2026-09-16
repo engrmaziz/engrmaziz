@@ -22,8 +22,8 @@ export function errorResponse(error: unknown) {
       success: false,
       error: {
         code: error.code,
-        message: error.message,
-        details: (error as any).details,
+        message: error.statusCode >= 500 ? "An unexpected error occurred." : error.message,
+        details: error.statusCode >= 500 ? undefined : (error as any).details,
       }
     };
     return NextResponse.json(payload, { status: error.statusCode });

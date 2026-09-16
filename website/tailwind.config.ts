@@ -9,6 +9,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // `base` is a BACKGROUND color. Never use `text-base` / `sm:text-base` for type size —
+      // those utilities paint navy (`--color-bg-base`) and hide outline buttons on dark UI.
+      fontSize: {
+        copy: ["1rem", { lineHeight: "1.5" }],
+      },
       colors: {
         base: "var(--color-bg-base)",
         elevated: "var(--color-bg-elevated)",

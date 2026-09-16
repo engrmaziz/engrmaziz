@@ -22,7 +22,7 @@ export const CaseStudyCard = React.forwardRef<HTMLDivElement, CaseStudyCardProps
               <span className="text-sm font-mono font-medium text-accent uppercase tracking-widest">
                 {client}
               </span>
-              <div className="w-8 h-8 rounded-full bg-secondary/5 flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-colors">
+              <div className="w-8 h-8 rounded-full bg-secondary/5 flex items-center justify-center group-hover:bg-accent group-hover:text-[color:var(--color-bg-base)] transition-colors">
                 <ArrowUpRight className="w-4 h-4" />
               </div>
             </div>

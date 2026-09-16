@@ -3,6 +3,7 @@ import React from "react";
 import { Copy } from "lucide-react";
 import { Mermaid } from "@/components/ui/Mermaid";
 import { cn } from "@/lib/utils";
+import { sanitizeHref } from "@/lib/security/input";
 
 export const MarkdownComponents = {
   code({ node, inline, className, children, ...props }: any) {
@@ -84,16 +85,21 @@ export const MarkdownComponents = {
     );
   },
   a({ children, href, ...props }: any) {
+    const safe = sanitizeHref(href);
+    if (!safe) return <span className="text-accent">{children}</span>;
+    const internal = safe.startsWith("/");
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline break-all" {...props}>
+      <a href={safe} target={internal ? undefined : "_blank"} rel={internal ? undefined : "noopener noreferrer"} className="text-accent hover:underline break-all">
         {children}
       </a>
     );
   },
-  img({ src, alt, ...props }: any) {
+  img({ src, alt }: any) {
+    const safe = sanitizeHref(src);
+    if (!safe || safe.startsWith("mailto:")) return null;
     return (
       <div className="rounded-xl overflow-hidden border border-border-default my-4 bg-base">
-        <img src={src} alt={alt} className="max-w-full h-auto object-contain" loading="lazy" {...props} />
+        <img src={safe} alt={alt || ""} className="max-w-full h-auto object-contain" loading="lazy" />
       </div>
     );
   }

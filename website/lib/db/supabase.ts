@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+import 'server-only';
 import { createClient } from '@supabase/supabase-js';
 import { envClient } from '@/lib/config/env.client';
 import { envServer } from '@/lib/config/env.server';
-// import 'server-only';
 
 // Create a single supabase client for interacting with your database
 // This is the admin/service_role client, meaning it bypasses RLS.

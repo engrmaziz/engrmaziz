@@ -27,7 +27,7 @@ export const Body = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn("text-base md:text-lg text-secondary leading-relaxed", className)}
+      className={cn("text-copy md:text-lg text-secondary leading-relaxed", className)}
       {...props}
     />
   )

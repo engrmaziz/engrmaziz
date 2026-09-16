@@ -11,7 +11,7 @@ export const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
     const variantClasses = {
       base: "bg-base text-primary",
       elevated: "bg-elevated text-primary",
-      accent: "bg-accent text-base",
+      accent: "bg-accent text-[color:var(--color-bg-base)]",
       transparent: "bg-transparent text-primary",
     };
 

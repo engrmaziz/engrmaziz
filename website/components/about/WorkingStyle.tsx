@@ -83,7 +83,7 @@ export function WorkingStyle() {
                   <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
                     <span className="text-accent text-xs font-bold">{i + 1}</span>
                   </div>
-                  <h3 className="text-base font-bold text-primary">{point.title}</h3>
+                  <h3 className="text-copy font-bold text-primary">{point.title}</h3>
                 </div>
                 <p className="text-secondary text-sm leading-relaxed">
                   {point.description}

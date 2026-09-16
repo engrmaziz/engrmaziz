@@ -157,7 +157,7 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-xl font-bold text-primary">
-                    Available Services <span className="text-secondary font-normal text-base ml-2">({filteredServices.length})</span>
+                    Available Services <span className="text-secondary font-normal text-copy ml-2">({filteredServices.length})</span>
                   </h2>
                 </div>
 

@@ -8,6 +8,7 @@ import { MessageSquare, X, Send, User, Mail, Trash2, Bot, AlertCircle, Download,
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { MarkdownComponents } from "@/components/markdown/MarkdownComponents";
+import { sanitizeHref } from "@/lib/security/input";
 import { RAGXVoiceHud } from "@/components/rag/RAGXVoiceHud";
 import { useRagxVoice } from "@/hooks/useRagxVoice";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
@@ -55,15 +56,16 @@ const SUGGESTIONS = [
 
 const ChatMarkdown = {
   ...MarkdownComponents,
-  a({ children, href, ...props }: any) {
-    const internal = typeof href === "string" && href.startsWith("/");
+  a({ children, href }: any) {
+    const safe = sanitizeHref(href);
+    if (!safe) return <span className="text-[#7DF9FF]">{children}</span>;
+    const internal = safe.startsWith("/");
     return (
       <a
-        href={href}
+        href={safe}
         target={internal ? undefined : "_blank"}
         rel={internal ? undefined : "noopener noreferrer"}
         className="text-[#7DF9FF] underline decoration-[#00D4FF]/40 underline-offset-2 hover:decoration-[#C9A227] break-words"
-        {...props}
       >
         {children}
       </a>
@@ -237,7 +239,7 @@ export function RAGXChatAssistant() {
     setMessages(prev => [...prev.filter(m => m.role !== "system"), um]);
     setInputValue(""); setIsLoading(true);
     try {
-      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId, message: um.content, visitorInfo, messages: [...messagesRef.current.filter(m => m.role === "user" || m.role === "assistant"), um].slice(-24).map(m => ({ role: m.role, content: m.content })) }) });
+      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId, message: um.content, visitorInfo, messages: [...messagesRef.current.filter(m => m.role === "user" || m.role === "assistant"), um].slice(-16).map(m => ({ role: m.role, content: m.content })) }) });
       const data = await res.json();
       if (!res.ok) throw new Error(typeof data.error === "string" ? data.error : (data.error?.message || "Error"));
       setMessages(prev => [...prev, { id: generateUUID(), role: "assistant", content: data.data?.content || data.content, citations: data.data?.citations || data.citations, timestamp: new Date().toISOString(), isStreaming: true }]);
@@ -518,7 +520,7 @@ export function RAGXChatAssistant() {
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 bg-base/90 backdrop-blur-sm flex items-center justify-center p-6">
                       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-elevated border border-border-default rounded-2xl p-6 max-w-sm w-full shadow-2xl">
                         <div className="w-12 h-12 bg-orange-500/10 rounded-full flex items-center justify-center mb-4 mx-auto"><LogOut className="w-6 h-6 text-orange-500" /></div>
-                        <h3 className="text-base font-bold text-primary text-center mb-2">End this session?</h3>
+                        <h3 className="text-copy font-bold text-primary text-center mb-2">End this session?</h3>
                         <p className="text-sm text-secondary text-center mb-6">An AI summary will be generated and sent to Musharraf. Your conversation will be saved.</p>
                         <div className="flex gap-3">
                           <button onClick={() => setShowEndConfirm(false)} className="flex-1 py-2.5 rounded-xl border border-border-default text-sm font-medium text-secondary hover:text-primary transition-colors">Cancel</button>

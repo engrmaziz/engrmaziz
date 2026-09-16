@@ -24,17 +24,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       primary:
         "overflow-hidden bg-gold text-[color:var(--color-bg-base)] hover:bg-gold-hover border border-transparent shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)]",
       secondary:
-        "bg-elevated/80 text-primary hover:border-accent/50 border border-border-default backdrop-blur-md",
+        "bg-elevated/80 text-[color:var(--color-text-primary)] hover:border-accent/50 border border-border-default backdrop-blur-md",
       outline:
-        "bg-transparent border border-accent/50 text-accent hover:bg-accent/10 hover:border-accent",
-      ghost: "overflow-visible bg-transparent text-primary hover:bg-elevated border border-transparent",
-      link: "bg-transparent text-accent underline-offset-4 hover:underline border-transparent !p-0 !h-auto rounded-none",
+        "bg-transparent border border-accent/50 text-[color:var(--color-accent)] hover:bg-accent/10 hover:border-accent",
+      ghost: "overflow-visible bg-transparent text-[color:var(--color-text-primary)] hover:bg-elevated border border-transparent",
+      link: "bg-transparent text-[color:var(--color-accent)] underline-offset-4 hover:underline border-transparent !p-0 !h-auto rounded-none",
     };
 
     const sizes = {
       sm: "min-h-11 px-4 py-2 text-sm whitespace-nowrap",
-      md: "min-h-11 px-5 py-2.5 text-base whitespace-nowrap sm:px-6",
-      lg: "min-h-11 px-5 py-3 text-sm whitespace-nowrap sm:min-h-12 sm:px-7 sm:text-base",
+      md: "min-h-11 px-5 py-2.5 text-copy whitespace-nowrap sm:px-6",
+      lg: "min-h-11 px-5 py-3 text-sm whitespace-nowrap sm:min-h-12 sm:px-7 sm:text-copy",
       icon: "h-11 w-11 min-h-11 min-w-11 p-0 overflow-visible",
     };
 

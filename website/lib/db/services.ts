@@ -20,20 +20,52 @@ export class ConversationService {
   }
 
   async ensureConversationExists(id: string, visitorInfo?: any) {
-    // Attempt to insert the conversation. If it exists, do nothing (onConflict: 'id').
     const payload: any = { id, status: 'active' };
     if (visitorInfo) {
       payload.visitor_name = visitorInfo.name;
-      payload.visitor_email = visitorInfo.email;
+      payload.visitor_email = String(visitorInfo.email || "").trim().toLowerCase();
     }
     
     try {
       await db.insert('conversations', payload);
     } catch (err: any) {
-      // If it's a unique constraint violation (code 23505), it already exists, which is fine.
       if (err.code !== '23505') {
         throw err;
       }
+    }
+  }
+
+  async assertExistingConversationOwner(id: string, visitorInfo: { name: string; email: string }) {
+    const { ragDatabase } = await import("@/lib/rag/supabase");
+    const email = String(visitorInfo.email || "").trim().toLowerCase();
+    const conv = await ragDatabase.getConversation(id);
+    if (!conv) {
+      const { AppError } = await import("@/lib/utils/errors");
+      throw new AppError("Session does not match this visitor.", 403, "FORBIDDEN");
+    }
+    const bound = String(conv.visitor_email || "").trim().toLowerCase();
+    if (!bound || bound !== email) {
+      const { AppError } = await import("@/lib/utils/errors");
+      throw new AppError("Session does not match this visitor.", 403, "FORBIDDEN");
+    }
+  }
+
+  async assertVisitorOwnsConversation(id: string, visitorInfo: { name: string; email: string }) {
+    const { ragDatabase } = await import("@/lib/rag/supabase");
+    const email = String(visitorInfo.email || "").trim().toLowerCase();
+    const name = String(visitorInfo.name || "").trim().slice(0, 80);
+    const conv = await ragDatabase.getConversation(id);
+    if (!conv) {
+      await this.ensureConversationExists(id, { name, email });
+      return;
+    }
+    const bound = String(conv.visitor_email || "").trim().toLowerCase();
+    if (bound && bound !== email) {
+      const { AppError } = await import("@/lib/utils/errors");
+      throw new AppError("Session does not match this visitor.", 403, "FORBIDDEN");
+    }
+    if (!bound && email) {
+      await ragDatabase.bindConversationVisitor(id, name, email);
     }
   }
 

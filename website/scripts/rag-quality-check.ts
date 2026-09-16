@@ -23,7 +23,8 @@ async function main() {
     const result = await ragOrchestrator.execute({
       query,
       sessionId: randomUUID(),
-      flags: { bypassCache: true }
+      flags: { bypassCache: true },
+      internal: true,
     });
     const answer = result.answer || '';
     const model = result.context?.executionContext?.metadata?.agentContext?.lastLlmModel || 'unknown';

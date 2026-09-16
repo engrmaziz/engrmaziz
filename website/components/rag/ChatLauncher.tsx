@@ -17,7 +17,7 @@ export const ChatLauncher = React.forwardRef<HTMLButtonElement, ChatLauncherProp
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className={cn(
-          "fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-accent text-white shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent",
+          "fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-accent text-[color:var(--color-bg-base)] shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent",
           className
         )}
         aria-label="Toggle AI Assistant"

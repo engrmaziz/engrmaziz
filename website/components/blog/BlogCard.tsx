@@ -53,7 +53,7 @@ export const BlogCard = React.forwardRef<HTMLDivElement, BlogCardProps>(
             <ArrowUpRight className="w-5 h-5 text-secondary shrink-0 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-300 mt-1" />
           </CardTitle>
           
-          <CardDescription className="text-base text-secondary leading-relaxed line-clamp-3">
+          <CardDescription className="text-copy text-secondary leading-relaxed line-clamp-3">
             {description}
           </CardDescription>
         </div>

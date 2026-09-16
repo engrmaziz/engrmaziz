@@ -23,14 +23,14 @@ export function CTA() {
                 <Magnetic>
                   <Link
                     href="/contact?intent=freelance"
-                    className="inline-flex min-h-11 cursor-pointer items-center justify-center whitespace-nowrap rounded-full bg-gold px-7 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)] transition-colors hover:bg-gold-hover sm:min-h-12 sm:text-base"
+                    className="inline-flex min-h-11 cursor-pointer items-center justify-center whitespace-nowrap rounded-full bg-gold px-7 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)] transition-colors hover:bg-gold-hover sm:min-h-12 sm:text-copy"
                   >
                     Hire for a project
                   </Link>
                 </Magnetic>
                 <Link
                   href="/hire"
-                  className="inline-flex min-h-11 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-accent/50 px-7 py-3 text-sm font-semibold text-accent transition-colors hover:bg-accent/10 hover:border-accent sm:min-h-12 sm:text-base"
+                  className="inline-flex min-h-11 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-accent/50 px-7 py-3 text-sm font-semibold text-[color:var(--color-accent)] transition-colors hover:bg-accent/10 hover:border-accent sm:min-h-12 sm:text-copy"
                 >
                   See hiring options
                 </Link>

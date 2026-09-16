@@ -85,7 +85,8 @@ export class RAGOrchestrator {
     }
 
     const conversational = Boolean(sessionId) && (clientMessages.length > 0 || isBookingQuery(queryText) || isFollowUpQuery(queryText));
-    if (!requestBody.flags?.bypassCache && !conversational && !sessionId) {
+    const allowCacheBypass = requestBody.internal === true && requestBody.flags?.bypassCache;
+    if (!allowCacheBypass && !conversational && !sessionId) {
       const cached = await ragCache.getExact(queryText);
       if (cached) {
         const trace = new RequestTrace(requestId);

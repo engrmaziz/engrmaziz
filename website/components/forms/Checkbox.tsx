@@ -22,7 +22,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           ref={ref}
           {...props}
         />
-        <Check className="absolute w-3.5 h-3.5 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" />
+        <Check className="absolute w-3.5 h-3.5 text-[color:var(--color-bg-base)] pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" />
       </div>
     );
   }

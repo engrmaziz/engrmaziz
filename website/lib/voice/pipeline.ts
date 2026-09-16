@@ -151,6 +151,14 @@ export async function runVoiceTurn(opts: {
   const transcript = stt.text.replace(/\s+/g, ' ').trim();
   emit({ type: 'transcript', text: transcript, sttMs: stt.ms });
 
+  const { containsPromptInjection } = await import('@/lib/security/input');
+  if (containsPromptInjection(transcript)) {
+    const spoken = 'I can help with Musharraf’s services, projects, and hiring. Ask about call agents, RAG, or a discovery call.';
+    emit({ type: 'answer', text: spoken, ragMs: 0 });
+    emit({ type: 'done', modelUsed: 'guard', voice: 'daniel', timings: { sttMs: stt.ms, ragMs: 0, ttsMs: 0, totalMs: Date.now() - started, ttfaMs: Date.now() - started } });
+    return;
+  }
+
   const speaker = createSpeaker(emit, started);
   let spoken = '';
   let ragMs = 0;
@@ -224,7 +232,7 @@ export async function runVoiceTurn(opts: {
   const session = opts.conversationId
     ? await withTimeout(ragMemory.loadSession(opts.conversationId, opts.messages), 800, { history: opts.messages || [], summary: null })
     : { history: opts.messages || [], summary: null };
-  const history = mergeHistories(session.history, opts.messages);
+  const history = session.history;
   const slots = slotsFromSession(history, transcript, opts.visitorInfo);
   const bookingReply = resolveBookingReply({ slots, query: transcript, history, channel: 'voice' });
 

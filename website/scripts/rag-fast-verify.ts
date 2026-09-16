@@ -20,7 +20,8 @@ async function main() {
   await ragOrchestrator.execute({
     query: 'What is VoiceRAG?',
     sessionId: randomUUID(),
-    flags: { bypassCache: true }
+    flags: { bypassCache: true },
+    internal: true,
   }).catch((err: any) => console.error('warmup failed', err.message));
 
   let failures = 0;
@@ -29,7 +30,8 @@ async function main() {
     const result = await ragOrchestrator.execute({
       query: test.query,
       sessionId: randomUUID(),
-      flags: { bypassCache: true }
+      flags: { bypassCache: true },
+    internal: true,
     });
     const ms = Date.now() - start;
     const answer = (result.answer || '').toLowerCase();

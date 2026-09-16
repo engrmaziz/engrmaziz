@@ -7,7 +7,7 @@ export const systemConfigSchema = z.object({
   // Database
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().default('http://localhost:54321'),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional().default('dummy'),
-  SUPABASE_DB_PASSWORD: z.string().default('Ptcl@2728229'), // Default local fallback
+  SUPABASE_DB_PASSWORD: z.string().optional(),
 
   // APIs
   GROQ_API_KEY: z.string().optional().default('dummy'),

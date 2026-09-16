@@ -105,10 +105,10 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogData[] }) {
                 
                 {/* Newsletter Placeholder UI */}
                 <div className="bg-elevated p-6 rounded-xl border border-border-default">
-                   <h3 className="text-base font-bold text-primary mb-2">Join the Newsletter</h3>
+                   <h3 className="text-copy font-bold text-primary mb-2">Join the Newsletter</h3>
                    <p className="text-sm text-secondary mb-4">Get production engineering insights delivered directly to your inbox monthly.</p>
                    <input type="email" placeholder="engineer@example.com" className="w-full bg-base border border-border-default rounded-lg px-3 py-2 text-sm mb-3" />
-                   <button className="w-full bg-primary text-base-inverted text-sm font-bold py-2 rounded-lg hover:bg-accent transition-colors">Subscribe</button>
+                   <button className="w-full min-h-11 cursor-pointer bg-gold text-[color:var(--color-bg-base)] text-sm font-bold py-2 rounded-full hover:bg-gold-hover transition-colors">Subscribe</button>
                 </div>
               </div>
             }
@@ -116,7 +116,7 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogData[] }) {
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-xl font-bold text-primary">
-                    Latest Publications <span className="text-secondary font-normal text-base ml-2">({filteredPosts.length})</span>
+                    Latest Publications <span className="text-secondary font-normal text-copy ml-2">({filteredPosts.length})</span>
                   </h2>
                 </div>
 

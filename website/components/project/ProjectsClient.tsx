@@ -200,7 +200,7 @@ export function ProjectsClient({ initialProjects }: { initialProjects: ProjectDa
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-xl font-bold text-primary">
-                    All Projects <span className="text-secondary font-normal text-base ml-2">({filteredProjects.length})</span>
+                    All Projects <span className="text-secondary font-normal text-copy ml-2">({filteredProjects.length})</span>
                   </h2>
                 </div>
 

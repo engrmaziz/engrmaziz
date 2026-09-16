@@ -7,6 +7,7 @@ import { GET, DELETE } from '../app/api/admin/knowledge/[id]/route';
 import { adminKnowledgeService } from '../lib/knowledge/admin-service';
 import { logger } from '../lib/utils/logger';
 import { systemConfig } from '../lib/system';
+import { isPlaceholderSecret } from '../lib/security/crypto';
 
 async function verifySecurityLayer() {
   logger.info('Starting Security & Authorization Verification...');
@@ -65,7 +66,7 @@ async function verifySecurityLayer() {
   if (serviceInvoked) throw new Error('Service invoked on invalid auth');
   logger.info('[PASS] POST invalid Authorization -> 401');
 
-  // Test: Valid Token
+  // Test: Configured Token
   resetSpy();
   req = new Request('http://localhost/api/admin/knowledge', {
     method: 'POST', 
@@ -73,9 +74,15 @@ async function verifySecurityLayer() {
     body: JSON.stringify({ id: '1', type: 'markdown', content: 'test' })
   });
   res = await POST(req);
-  if (res.status !== 201) throw new Error(`Valid auth should be 201, got ${res.status}`);
-  if (!serviceInvoked) throw new Error('Service NOT invoked on valid auth');
-  logger.info('[PASS] POST valid Authorization -> 201');
+  if (isPlaceholderSecret(VALID_TOKEN)) {
+    if (res.status !== 401) throw new Error(`Placeholder admin token should be 401, got ${res.status}`);
+    if (serviceInvoked) throw new Error('Service invoked on placeholder token');
+    logger.info('[PASS] POST placeholder ADMIN_API_TOKEN stays locked -> 401');
+  } else {
+    if (res.status !== 201) throw new Error(`Valid auth should be 201, got ${res.status}`);
+    if (!serviceInvoked) throw new Error('Service NOT invoked on valid auth');
+    logger.info('[PASS] POST valid Authorization -> 201');
+  }
 
   // --- GET Tests ---
 
@@ -87,15 +94,20 @@ async function verifySecurityLayer() {
   if (serviceInvoked) throw new Error('Service invoked on missing auth');
   logger.info('[PASS] GET missing Authorization -> 401');
 
-  // Test: Valid Token
+  // Test: Configured Token
   resetSpy();
   req = new Request('http://localhost/api/admin/knowledge/1', {
     headers: { 'Authorization': `Bearer ${VALID_TOKEN}` }
   });
   res = await GET(req, { params: { id: '1' } });
-  if (res.status !== 200) throw new Error(`Valid auth should be 200, got ${res.status}`);
-  if (!serviceInvoked) throw new Error('Service NOT invoked on valid auth');
-  logger.info('[PASS] GET valid Authorization -> 200');
+  if (isPlaceholderSecret(VALID_TOKEN)) {
+    if (res.status !== 401) throw new Error(`Placeholder admin token should be 401, got ${res.status}`);
+    logger.info('[PASS] GET placeholder ADMIN_API_TOKEN stays locked -> 401');
+  } else {
+    if (res.status !== 200) throw new Error(`Valid auth should be 200, got ${res.status}`);
+    if (!serviceInvoked) throw new Error('Service NOT invoked on valid auth');
+    logger.info('[PASS] GET valid Authorization -> 200');
+  }
 
   // --- DELETE Tests ---
 
@@ -110,16 +122,21 @@ async function verifySecurityLayer() {
   if (serviceInvoked) throw new Error('Service invoked on invalid auth');
   logger.info('[PASS] DELETE invalid Authorization -> 401');
 
-  // Test: Valid Token
+  // Test: Configured Token
   resetSpy();
   req = new Request('http://localhost/api/admin/knowledge/1', {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${VALID_TOKEN}` }
   });
   res = await DELETE(req, { params: { id: '1' } });
-  if (res.status !== 200) throw new Error(`Valid auth should be 200, got ${res.status}`);
-  if (!serviceInvoked) throw new Error('Service NOT invoked on valid auth');
-  logger.info('[PASS] DELETE valid Authorization -> 200');
+  if (isPlaceholderSecret(VALID_TOKEN)) {
+    if (res.status !== 401) throw new Error(`Placeholder admin token should be 401, got ${res.status}`);
+    logger.info('[PASS] DELETE placeholder ADMIN_API_TOKEN stays locked -> 401');
+  } else {
+    if (res.status !== 200) throw new Error(`Valid auth should be 200, got ${res.status}`);
+    if (!serviceInvoked) throw new Error('Service NOT invoked on valid auth');
+    logger.info('[PASS] DELETE valid Authorization -> 200');
+  }
 
   // Restore mocks
   adminKnowledgeService.createDocument = originalCreate;

@@ -160,7 +160,7 @@ export function GeoServicePage({
             Build {service.primaryKeyword} for {market.name}
           </h2>
             <Link href="/hire">
-              <Button size="lg" className="font-bold bg-accent text-base hover:bg-accent/90">
+              <Button size="lg" className="font-bold bg-accent text-[color:var(--color-bg-base)] hover:bg-accent/90">
                 Hire Musharraf
               </Button>
             </Link>

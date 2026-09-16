@@ -31,7 +31,7 @@ export const MessageBubble = React.forwardRef<HTMLDivElement, MessageBubbleProps
           className={cn(
             "max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed",
             isUser 
-              ? "bg-accent text-white rounded-tr-sm" 
+              ? "bg-accent text-[color:var(--color-bg-base)] rounded-tr-sm" 
               : "bg-elevated border border-border-default text-primary rounded-tl-sm"
           )}
         >

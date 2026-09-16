@@ -143,7 +143,7 @@ export function CommandPalette() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="What are you looking for?"
-                className="w-full bg-transparent border-0 h-14 px-4 text-primary focus:outline-none focus:ring-0 text-base"
+                className="w-full bg-transparent border-0 h-14 px-4 text-primary focus:outline-none focus:ring-0 text-copy"
                 aria-expanded={isOpen}
                 aria-controls="command-palette-list"
                 aria-activedescendant={filteredItems.length > 0 ? filteredItems[selectedIndex]?.id : undefined}

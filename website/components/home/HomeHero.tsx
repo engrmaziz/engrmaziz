@@ -68,7 +68,7 @@ export function HomeHero() {
             <Magnetic>
               <Link
                 href="/contact?intent=freelance"
-                className="group relative isolate inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-gold px-7 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)] transition-colors hover:bg-gold-hover sm:min-h-12 sm:text-base"
+                className="group relative isolate inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-gold px-7 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)] transition-colors hover:bg-gold-hover sm:min-h-12 sm:text-copy"
               >
                 Hire for a project
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -76,7 +76,7 @@ export function HomeHero() {
             </Magnetic>
             <Link
               href="/hire"
-              className="inline-flex min-h-11 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-border-default bg-elevated/80 px-7 py-3 text-sm font-semibold text-primary backdrop-blur-md transition-colors hover:border-accent/50 sm:min-h-12 sm:text-base"
+              className="inline-flex min-h-11 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-accent/50 bg-transparent px-7 py-3 text-sm font-semibold text-[color:var(--color-accent)] backdrop-blur-md transition-colors hover:border-accent hover:bg-accent/10 sm:min-h-12 sm:text-copy"
             >
               Freelance or full-time
             </Link>

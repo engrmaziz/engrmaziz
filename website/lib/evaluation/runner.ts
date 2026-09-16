@@ -37,7 +37,8 @@ export class EvaluationRunner {
           query: testCase.input,
           sessionId: randomUUID(),
           filters: {},
-          flags: { bypassCache: true }
+          flags: { bypassCache: true },
+          internal: true,
         });
 
         const durationMs = Date.now() - start;

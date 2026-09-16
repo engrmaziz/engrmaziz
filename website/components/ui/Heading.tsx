@@ -15,8 +15,8 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       2: "text-2xl md:text-4xl font-semibold tracking-tight",
       3: "text-xl md:text-2xl font-semibold tracking-tight",
       4: "text-lg md:text-xl font-medium",
-      5: "text-base md:text-lg font-medium",
-      6: "text-sm md:text-base font-medium uppercase tracking-wider",
+      5: "text-copy md:text-lg font-medium",
+      6: "text-sm md:text-copy font-medium uppercase tracking-wider",
     };
 
     return (
