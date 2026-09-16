@@ -68,12 +68,15 @@ export const metadata: Metadata = {
   publisher: siteMetadata.author,
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "48x48" },
       { url: "/icon.png", type: "image/png", sizes: "32x32" },
-      { url: "/icon-light.svg", type: "image/svg+xml", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark.svg", type: "image/svg+xml", media: "(prefers-color-scheme: dark)" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
+      { url: "/icon-light.png", type: "image/png", sizes: "32x32", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark.png", type: "image/png", sizes: "32x32", media: "(prefers-color-scheme: dark)" },
     ],
-    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: "/favicon.ico",
   },
   formatDetection: {
     email: false,
@@ -87,7 +90,7 @@ export const metadata: Metadata = {
     siteName: siteMetadata.author,
     images: [
       {
-        url: "/images/maklight.webp",
+        url: "/images/og.webp",
         width: 1200,
         height: 630,
         alt: "Musharraf Aziz — AI Engineer, Full-Stack Developer & Enterprise AI Solutions",

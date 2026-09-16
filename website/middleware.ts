@@ -50,6 +50,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|icon.svg|apple-icon.svg|icon-light.svg|icon-dark.svg|icon.png|apple-touch-icon.png).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|icon.png|icon-dark.png|icon-light.png|icon-192.png|icon-512.png|apple-touch-icon.png|apple-icon.png).*)',
   ],
 };

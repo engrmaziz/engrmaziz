@@ -7,7 +7,7 @@ export const siteMetadata = {
   author: "Musharraf Aziz",
   jobTitle: "Senior AI Engineer",
   email: "io@maziz.me",
-  image: "/images/maklight.webp",
+  image: "/images/og.webp",
   social: {
     github: "https://github.com/engrmaziz",
     linkedin: "https://www.linkedin.com/in/musharrafazizq/",
