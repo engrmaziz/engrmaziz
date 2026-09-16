@@ -30,9 +30,9 @@ export function CityPage({ market, city }: { market: GeoMarket; city: GeoCity })
                 {paragraph}
               </p>
             ))}
-            <Link href="/contact">
-              <Button size="lg" className="font-bold mt-4">
-                Talk about a {city.name} build <ArrowRight className="w-4 h-4 ml-2" />
+            <Link href="/contact" className="mt-4 inline-flex w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto font-bold" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                Start a {city.name} project
               </Button>
             </Link>
           </div>

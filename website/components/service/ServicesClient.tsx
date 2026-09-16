@@ -208,9 +208,9 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
               Stop settling for quick-fixes and brittle code. Let&apos;s build infrastructure that scales with your business logic gracefully.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link href="/contact">
-                <Button variant="secondary" size="lg" className="bg-base text-primary hover:bg-border-default font-bold border-none px-8">
-                  Schedule a Consultation <ArrowRight className="w-4 h-4 ml-2" />
+              <Link href="/contact" className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto bg-base text-primary hover:bg-border-default font-bold border-none" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                  Book a consult
                 </Button>
               </Link>
             </div>

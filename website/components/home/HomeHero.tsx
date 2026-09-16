@@ -67,14 +67,13 @@ export function HomeHero() {
             className="mt-2 flex flex-wrap items-center gap-4"
           >
             <Magnetic>
-              <Link href="/contact?intent=freelance">
-                <Button size="lg" className="gap-2">
+              <Link href="/contact?intent=freelance" className="inline-flex">
+                <Button size="lg" rightIcon={<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />}>
                   Hire for a project
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
             </Magnetic>
-            <Link href="/hire">
+            <Link href="/hire" className="inline-flex">
               <Button variant="secondary" size="lg">
                 Freelance or full-time
               </Button>

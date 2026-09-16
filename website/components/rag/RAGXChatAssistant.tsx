@@ -82,17 +82,28 @@ const ChatMarkdown = {
 
 function TypewriterText({ text, onComplete }: { text: string; onComplete?: () => void }) {
   const [displayedText, setDisplayedText] = useState("");
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
   useEffect(() => {
     const safeText = text || "";
-    if (!safeText) { if (onComplete) onComplete(); return; }
+    if (!safeText) {
+      onCompleteRef.current?.();
+      return;
+    }
     let index = 0;
-    const id = setInterval(() => {
+    setDisplayedText("");
+    const id = window.setInterval(() => {
+      index = Math.min(index + 3, safeText.length);
       setDisplayedText(safeText.slice(0, index));
-      index += 3;
-      if (index > safeText.length) { clearInterval(id); setDisplayedText(safeText); if (onComplete) onComplete(); }
-    }, 15);
-    return () => clearInterval(id);
-  }, [text, onComplete]);
+      if (index >= safeText.length) {
+        window.clearInterval(id);
+        onCompleteRef.current?.();
+      }
+    }, 16);
+    return () => window.clearInterval(id);
+  }, [text]);
+
   return (
     <div className="max-w-none break-words">
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={ChatMarkdown}>{displayedText}</ReactMarkdown>
@@ -540,13 +551,12 @@ export function RAGXChatAssistant() {
                               ref={textareaRef}
                               value={inputValue}
                               onChange={e => { setInputValue(e.target.value); e.target.style.height = "auto"; e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`; }}
-                              onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+                              onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (!isLoading) handleSend(); } }}
                               placeholder="Ask what Musharraf can ship..."
-                              disabled={isLoading}
-                              className="flex-1 max-h-[140px] bg-transparent text-sm resize-none focus:outline-none disabled:opacity-50 text-[#E8F4FF] placeholder-[#8BA0B5] py-0.5 leading-relaxed"
+                              className="flex-1 max-h-[140px] bg-transparent text-sm resize-none focus:outline-none text-[#E8F4FF] placeholder-[#8BA0B5] py-0.5 leading-relaxed"
                               rows={1}
                             />
-                            <button onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="shrink-0 p-2 rounded-xl bg-[#00D4FF] text-[#050a14] disabled:opacity-40 hover:bg-[#7DF9FF] transition-all self-end" aria-label="Send"><Send className="w-4 h-4" /></button>
+                            <button onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="cursor-pointer shrink-0 p-2 min-h-11 min-w-11 rounded-xl bg-[#00D4FF] text-[#050a14] disabled:opacity-40 hover:bg-[#7DF9FF] transition-all self-end" aria-label="Send"><Send className="w-4 h-4" /></button>
                           </div>
                           <div className="flex justify-between items-center mt-2 px-1">
                             <span className="text-[10px] font-mono text-[#8BA0B5]">Enter to send</span>

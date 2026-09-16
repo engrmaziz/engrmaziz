@@ -246,8 +246,8 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
                         Whether it&apos;s a complex RAG pipeline, a secure API gateway, or a scalable SaaS platform, let&apos;s discuss the architecture.
                       </p>
                       <Link href="/contact" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-sm inline-block">
-                        <Button variant="primary" size="lg" className="px-8 font-bold">
-                          Schedule Architecture Review
+                        <Button variant="primary" size="lg" className="font-bold">
+                          Book a review
                         </Button>
                       </Link>
                     </div>

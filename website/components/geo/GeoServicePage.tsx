@@ -49,15 +49,15 @@ export function GeoServicePage({
                 {paragraph}
               </p>
             ))}
-            <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <Link href="/contact">
-                <Button size="lg" className="font-bold">
-                  Start a {market.abbreviation} build <ArrowRight className="w-4 h-4 ml-2" />
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-8">
+              <Link href="/contact" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto font-bold" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                  Start a {market.abbreviation} build
                 </Button>
               </Link>
-              <Link href={service.canonicalPath}>
-                <Button variant="outline" size="lg" className="font-bold">
-                  National {service.shortName} page
+              <Link href={service.canonicalPath} className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto font-bold">
+                  {service.shortName} overview
                 </Button>
               </Link>
             </div>

@@ -104,14 +104,14 @@ export default function HirePage() {
             builds custom AI call agents, custom AI chatbots, RAG agents, and workflow automation for California and
             Florida companies. Delivery is remote from Lahore with Pacific and Eastern overlap—not a fake US office.
           </DirectAnswer>
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Link href="/contact?intent=freelance">
-              <Button size="lg" className="font-bold">
-                Start a freelance project <ArrowRight className="w-4 h-4 ml-2" />
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-8">
+            <Link href="/contact?intent=freelance" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto font-bold" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                Start a freelance project
               </Button>
             </Link>
-            <Link href="#full-time">
-              <Button variant="outline" size="lg" className="font-bold">
+            <Link href="#full-time" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto font-bold">
                 Full-time hiring
               </Button>
             </Link>

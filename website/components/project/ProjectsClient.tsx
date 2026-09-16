@@ -257,14 +257,14 @@ export function ProjectsClient({ initialProjects }: { initialProjects: ProjectDa
               The architectures presented in these case studies don&apos;t emerge from unlimited resources — they emerge from building the tightest possible system within the sharpest possible boundaries.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link href="/services">
-                <Button variant="primary" size="lg" className="px-8">
-                  View Technical Services
+              <Link href="/services" className="w-full sm:w-auto">
+                <Button variant="primary" size="lg" className="w-full sm:w-auto">
+                  View services
                 </Button>
               </Link>
-              <Link href="/contact">
-                <Button variant="secondary" size="lg" className="px-8">
-                  Discuss a Project <ArrowRight className="w-4 h-4 ml-2" />
+              <Link href="/contact" className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                  Discuss a project
                 </Button>
               </Link>
             </div>

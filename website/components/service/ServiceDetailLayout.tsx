@@ -5,7 +5,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { ChevronRight, ArrowLeft, ArrowUp, Hash, Check, ArrowRight, CheckCircle2 } from "lucide-react";
+import { ChevronRight, ArrowLeft, Hash, Check, ArrowRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
@@ -16,7 +16,8 @@ import { cn } from "@/lib/utils";
 import { ServiceCard } from "@/components/service/ServiceCard";
 import { Accordion } from "@/components/ui/Accordion";
 import { DynamicSectionRenderer } from "@/components/service/DynamicSectionRenderer";
-import Image from "next/image";
+import { ServiceMedia } from "@/components/service/ServiceMedia";
+import { compactCta } from "@/lib/cta";
 
 export function ServiceDetailLayout({ service }: { service: AnyServiceContent }) {
   const [activeSection, setActiveSection] = useState<string>("");
@@ -118,11 +119,7 @@ export function ServiceDetailLayout({ service }: { service: AnyServiceContent })
     setTimeout(() => setCopiedLink(null), 2000);
   };
 
-  // Resolve Image
-  // For specialized services, try to load their specific image, otherwise fallback to the pillar image.
-  const serviceSlug = service.slugArray[service.slugArray.length - 1];
-  const pillarSlug = service.slugArray[0];
-  const heroImageSrc = `/images/services/${serviceSlug}-hero.png`;
+  const serviceSlug = service.slugArray.join("/");
 
   return (
     <>
@@ -164,15 +161,19 @@ export function ServiceDetailLayout({ service }: { service: AnyServiceContent })
               {heroData["Subheadline"] || service.description}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Link href="/contact">
-                <Button size="lg" className="w-full sm:w-auto font-bold bg-accent text-base hover:bg-accent/90">
-                  {heroData["Primary CTA"] || "Discuss Your Project"} <ArrowRight className="w-4 h-4 ml-2" />
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mb-8">
+              <Link href="/contact" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto font-bold bg-accent hover:bg-accent/90"
+                  rightIcon={<ArrowRight className="h-4 w-4" />}
+                >
+                  {compactCta(heroData["Primary CTA"], "Start a project")}
                 </Button>
               </Link>
-              <Link href="#subservices">
+              <Link href={service.children?.length ? "#subservices" : "/projects"} className="w-full sm:w-auto">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto font-bold">
-                  {heroData["Secondary CTA"] || "View Capabilities"}
+                  {compactCta(heroData["Secondary CTA"], "View case studies")}
                 </Button>
               </Link>
             </div>
@@ -188,23 +189,7 @@ export function ServiceDetailLayout({ service }: { service: AnyServiceContent })
             )}
           </div>
           
-          <div className="relative h-[400px] lg:h-[500px] w-full rounded-2xl overflow-hidden border border-border-default shadow-2xl hidden lg:block">
-            <Image 
-              src={heroImageSrc} 
-              alt={service.title}
-              fill
-              className="object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                const fallback = `/images/services/${pillarSlug}-hero.png`;
-                if (target.src.endsWith(fallback)) {
-                  target.src = 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80';
-                } else {
-                  target.src = fallback;
-                }
-              }}
-            />
-          </div>
+          <ServiceMedia slug={serviceSlug} kind="hero" alt={service.title} className="shadow-2xl" />
         </Container>
       </Section>
 
@@ -310,9 +295,9 @@ export function ServiceDetailLayout({ service }: { service: AnyServiceContent })
                 Ready to scale your enterprise?
               </h2>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-10">
-                <Link href="/contact">
-                  <Button size="lg" className="w-full sm:w-auto font-bold bg-accent text-base hover:bg-accent/90 px-8 py-6 text-lg shadow-xl shadow-accent/20">
-                    Schedule a Technical Consultation
+                <Link href="/contact" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto font-bold bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20">
+                    Book a technical consult
                   </Button>
                 </Link>
               </div>

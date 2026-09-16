@@ -10,7 +10,7 @@ import { MarkdownComponents } from "@/components/markdown/MarkdownComponents";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { ServiceMedia } from "@/components/service/ServiceMedia";
 
 interface SectionProps {
   title: string;
@@ -89,33 +89,9 @@ export function DynamicSectionRenderer({ title, content, index, slug = "" }: Sec
   }
 
   if (t.includes('architecture')) {
-    // If it's a child service, slug might be 'ai-agents/whatsapp-agents'. Let's extract the last part.
-    const serviceName = slug.split('/').pop() || 'ai-agents';
-    // Fallback to pillar image if child image doesn't exist
-    const pillarName = slug.split('/')[0] || 'ai-agents';
-    const techImageSrc = `/images/services/${serviceName}-tech.png`;
-
     return (
       <div className="space-y-12">
-        {/* 3D Tech Architecture Image */}
-        <div className="relative h-[300px] md:h-[400px] w-full rounded-2xl overflow-hidden border border-border-default shadow-lg bg-base">
-          <Image 
-            src={techImageSrc}
-            alt={`${title} Illustration`}
-            fill
-            className="object-cover"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              const fallback = `/images/services/${pillarName}-tech.png`;
-              // Prevent infinite loop if fallback also fails
-              if (target.src.endsWith(fallback)) {
-                target.src = 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80';
-              } else {
-                target.src = fallback;
-              }
-            }}
-          />
-        </div>
+        <ServiceMedia slug={slug} kind="tech" alt={`${title} illustration`} />
 
         {/* Prose Content (Includes Mermaid automatically) */}
         {content.trim() ? (

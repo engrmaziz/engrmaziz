@@ -43,14 +43,14 @@ export function LocationHub({ market }: { market: GeoMarket }) {
               </p>
             ))}
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <Link href="/contact">
-                <Button size="lg" className="font-bold">
-                  Discuss a {market.abbreviation} project <ArrowRight className="w-4 h-4 ml-2" />
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-8">
+              <Link href="/contact" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto font-bold" rightIcon={<ArrowRight className="h-4 w-4" />}>
+                  Discuss a {market.abbreviation} project
                 </Button>
               </Link>
-              <Link href="/hire">
-                <Button variant="outline" size="lg" className="font-bold">
+              <Link href="/hire" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto font-bold">
                   Freelance or full-time
                 </Button>
               </Link>
