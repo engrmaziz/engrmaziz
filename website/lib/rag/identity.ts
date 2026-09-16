@@ -111,7 +111,7 @@ const EXPERIENCE_RE =
 const IDENTITY_RE =
   /\b(who is|about musharraf|your background|tell me about (you|him|musharraf)|who are you)\b/i;
 const HIRE_RE =
-  /\b(hire you|how do i hire|book a meeting|get in touch|reach (him|musharraf)|full[- ]time|freelance)\b/i;
+  /\b(hire you|how do i hire|book a meeting|get in touch|reach (him|musharraf)|full[- ]time|freelance|discovery call|schedule|available this)\b/i;
 
 export function classifyRagIntent(query: string): RagIntent {
   const q = query.toLowerCase().trim();

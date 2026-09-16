@@ -128,6 +128,7 @@ export function useRagxVoice(opts: {
   enabled: boolean;
   identified: boolean;
   sessionEnded: boolean;
+  getHistory?: () => { role: string; content: string }[];
   onUserUtterance: (text: string) => void;
   onAssistantUtterance: (text: string, timings?: VoiceTimings) => void;
 }) {
@@ -358,6 +359,11 @@ export function useRagxVoice(opts: {
     const form = new FormData();
     form.append("conversationId", conversationId);
     form.append("visitorInfo", JSON.stringify({ name: visitorInfo.name, email: visitorInfo.email }));
+    const history = (optsRef.current.getHistory?.() || [])
+      .filter((item) => item.role === "user" || item.role === "assistant")
+      .slice(-24)
+      .map((item) => ({ role: item.role, content: item.content }));
+    if (history.length) form.append("messages", JSON.stringify(history));
     if (greeting) form.append("greeting", "1");
     else {
       form.append("audio", blob, mimeType.includes("mp4") ? "turn.m4a" : "turn.webm");

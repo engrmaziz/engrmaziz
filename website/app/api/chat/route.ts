@@ -14,6 +14,10 @@ const chatRequestSchema = z.object({
     name: z.string().min(2),
     email: z.string().email(),
   }).optional(),
+  messages: z.array(z.object({
+    role: z.enum(['user', 'assistant', 'system']),
+    content: z.string().max(8000),
+  })).max(40).optional(),
   flags: z.record(z.any()).optional(),
 });
 
@@ -59,19 +63,22 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const priorTurns = (data.messages || []).filter((m) => m.role === 'user' || m.role === 'assistant');
+    const hasThread = priorTurns.length > 0;
+
     // 2. Lightweight Intent Router
     const msgLower = data.message.toLowerCase().trim();
     const isGreeting = /^(hello|hi|hey|greetings|how are you|good morning|good afternoon|what's up)\b/.test(msgLower) && msgLower.length < 40;
     const isResume = /\b((download|get|send|share).{0,24}\b(resume|cv)|(resume|cv).{0,16}\b(download|pdf|file|link))\b/i.test(msgLower) && msgLower.length < 80;
-    const isContact = /\b(contact|email|reach out|get in touch)\b/.test(msgLower) && msgLower.length < 50;
+    const isContact = /\b(contact|email|reach out|get in touch)\b/.test(msgLower) && msgLower.length < 50 && !/\b(book|meeting|discovery|schedule|available)\b/.test(msgLower);
 
     let intentResponse: string | null = null;
     
     if (isResume) {
       intentResponse = "Download the current resume as [Musharraf_Aziz_CV.pdf](/Musharraf_Aziz_CV.pdf).";
-    } else if (isContact) {
+    } else if (isContact && !hasThread) {
       intentResponse = "You can reach Musharraf directly at io@maziz.me, or use the [Contact Form](/contact) for project inquiries.";
-    } else if (isGreeting) {
+    } else if (isGreeting && !hasThread) {
       intentResponse = "Hello! I'm RAGX, Musharraf's AI Knowledge Assistant. Ask me anything about his services, projects, or expertise — or let me know if you'd like to book a meeting.";
     }
 
@@ -97,18 +104,21 @@ export async function POST(req: NextRequest) {
     const response = await ragOrchestrator.execute({
       query: data.message,
       sessionId: data.conversationId,
-      filters: {}, // No active filters sent from UI yet
+      filters: {},
       flags: (data as any).flags,
-      visitorInfo: data.visitorInfo
+      visitorInfo: data.visitorInfo,
+      messages: priorTurns,
     });
 
-    if (response.answer && response.answer.includes("Your meeting request has been sent")) {
+    if (response.answer && /meeting request has been sent/i.test(response.answer)) {
       const { emailService } = await import('@/lib/email/resend');
+      const { formatBookingEmail, slotsFromSession } = await import('@/lib/rag/session-memory');
+      const slots = slotsFromSession(priorTurns, data.message, data.visitorInfo);
       emailService.sendContactNotification({
         name: data.visitorInfo?.name || 'Visitor',
         email: data.visitorInfo?.email || 'Unknown',
         projectType: 'Booking Request',
-        message: `Meeting request from RAGX.\n\nUser message:\n${data.message}`
+        message: formatBookingEmail(slots, priorTurns, data.message)
       }).catch(console.error);
     }
 

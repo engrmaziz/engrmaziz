@@ -13,6 +13,16 @@ import { CitationFormatter } from './citation-formatter';
 import { buildExtractiveAnswer, buildGroundedFallback } from './extractive';
 import { providerFactory } from '../providers/factory';
 import { recordTtft, getLastTtft } from './metrics';
+import {
+  alreadySentMeeting,
+  formatSessionState,
+  isBookingQuery,
+  mergeHistories,
+  resolveBookingReply,
+  slotsFromSession,
+  stripCurrentUserTurn,
+  type ChatTurn,
+} from './session-memory';
 
 export interface RequestContext {
   request: {
@@ -68,12 +78,14 @@ export class RAGOrchestrator {
     const filters = requestBody.filters || {};
     const visitorInfo = requestBody.visitorInfo;
     const isVoice = requestBody.channel === 'voice';
+    const clientMessages: ChatTurn[] = Array.isArray(requestBody.messages) ? requestBody.messages : [];
 
     if (!queryText.trim()) {
       throw new Error('Query text cannot be empty.');
     }
 
-    if (!requestBody.flags?.bypassCache) {
+    const conversational = Boolean(sessionId) && (clientMessages.length > 0 || isBookingQuery(queryText) || isFollowUpQuery(queryText));
+    if (!requestBody.flags?.bypassCache && !conversational && !sessionId) {
       const cached = await ragCache.getExact(queryText);
       if (cached) {
         const trace = new RequestTrace(requestId);
@@ -140,16 +152,17 @@ export class RAGOrchestrator {
     trace.startStage('Memory');
     trace.startStage('Retrieval');
     try {
-      const needsHistory = Boolean(sessionId && isFollowUpQuery(queryText));
-      const historyPromise = needsHistory
-        ? withTimeout(ragMemory.loadRecentMessages(sessionId, 6), 120, [])
-        : Promise.resolve([]);
+      const sessionPromise = sessionId
+        ? withTimeout(ragMemory.loadSession(sessionId, clientMessages), 800, { history: clientMessages, summary: null })
+        : Promise.resolve({ history: clientMessages, summary: null });
 
       const retrievalPromise = ragRetriever.retrieve(queryText, 6, 0.22, filters);
 
-      const [history, firstRetrieval] = await Promise.all([historyPromise, retrievalPromise]);
-      ctx.memory.history = Array.isArray(history) ? history : [];
+      const [session, firstRetrieval] = await Promise.all([sessionPromise, retrievalPromise]);
+      ctx.memory.history = stripCurrentUserTurn(mergeHistories(session.history, clientMessages), queryText);
+      if (session.summary) ctx.memory.summary = session.summary;
       ctx.executionContext.diagnostics.memoryMessagesLoaded = ctx.memory.history.length;
+      ctx.executionContext.diagnostics.summaryUsed = Boolean(ctx.memory.summary);
       ctx.request.optimizedQuery = expandFollowUpQuery(queryText, ctx.memory.history);
       trace.endStage('Memory', true);
 
@@ -170,6 +183,15 @@ export class RAGOrchestrator {
       ctx.executionContext.errors.push(`Memory/Retrieval Error: ${err.message}`);
     }
 
+    const slots = slotsFromSession(ctx.memory.history, queryText, visitorInfo);
+    const sessionState = formatSessionState(slots, ctx.memory.history.length);
+    const bookingReply = resolveBookingReply({
+      slots,
+      query: queryText,
+      history: ctx.memory.history,
+      channel: isVoice ? 'voice' : 'text',
+    });
+
     trace.startStage('PromptAssembly');
     ctx.prompt.messages = promptBuilder.buildPrompt(
       ctx.memory.summary || null,
@@ -178,13 +200,21 @@ export class RAGOrchestrator {
       queryText,
       ctx.response.toolOutputs,
       ctx.request.visitorInfo,
-      { channel: isVoice ? 'voice' : 'text' }
+      { channel: isVoice ? 'voice' : 'text', sessionState }
     );
     trace.endStage('PromptAssembly', true);
 
+    if (sessionId) {
+      await ragMemory.createConversation(sessionId).catch(() => undefined);
+      await ragMemory.saveUserMessage(sessionId, queryText).catch(() => undefined);
+    }
+
     trace.startStage('Generation');
     try {
-      if (isToolHarnessQuery(queryText)) {
+      if (bookingReply) {
+        ctx.response.assistantResponse = bookingReply;
+        (ctx as any)._lastLlmModel = 'booking-state';
+      } else if (isToolHarnessQuery(queryText)) {
         const { agentRuntime } = await import('../agent/agent-runtime');
         await agentRuntime.execute(ctx);
       } else {
@@ -201,15 +231,18 @@ export class RAGOrchestrator {
             null
           );
           const text = (generated?.content || '').trim();
+          const bookingTurn = isBookingQuery(queryText) || Boolean(slots.dateText) || ctx.memory.history.length > 0;
           const weak = isVoice
             ? text.length < 24
             : text.length < 80 || /json-ld|hero section|related services|^\s*source code:/i.test(text);
-          if (!weak) {
+          if (!weak || (bookingTurn && text.length >= 24)) {
             ctx.response.assistantResponse = text;
             (ctx as any)._lastLlmModel = generated?.model || 'groq';
           } else {
-            ctx.response.assistantResponse = buildGroundedFallback(ctx.retrieval.chunks || [], queryText);
-            (ctx as any)._lastLlmModel = 'grounded-fallback';
+            ctx.response.assistantResponse = bookingTurn
+              ? (text || buildGroundedFallback(ctx.retrieval.chunks || [], queryText))
+              : buildGroundedFallback(ctx.retrieval.chunks || [], queryText);
+            (ctx as any)._lastLlmModel = bookingTurn ? (generated?.model || 'groq') : 'grounded-fallback';
           }
         } catch (genErr: any) {
           telemetryLogger.error('AGENT', 'Generation failed, using grounded fallback', genErr);
@@ -218,12 +251,12 @@ export class RAGOrchestrator {
         }
       }
 
-      if (!ctx.response.assistantResponse || ctx.response.assistantResponse.length < 20) {
+      if (!bookingReply && (!ctx.response.assistantResponse || ctx.response.assistantResponse.length < 20)) {
         ctx.response.assistantResponse = buildExtractiveAnswer(queryText, ctx.retrieval.chunks || []);
         (ctx as any)._lastLlmModel = (ctx as any)._lastLlmModel || 'extractive-fallback';
       }
 
-      if (isVoice) {
+      if (isVoice || bookingReply) {
         ctx.response.assistantResponse = ctx.response.assistantResponse || '';
       } else {
         ctx.response.assistantResponse = CitationFormatter.format(
@@ -260,44 +293,39 @@ export class RAGOrchestrator {
 
     trace.startStage('Persistence');
     const llmModel = ctx.executionContext.metadata?.agentContext?.lastLlmModel || 'unknown';
-    const persistWork = async () => {
-      if (sessionId && ctx.response.assistantResponse) {
-        const existing = await ragDatabase.getConversation(sessionId).catch(() => null);
-        if (!existing) {
-          await ragMemory.createConversation(sessionId).catch(() => {});
-        }
-        await ragMemory.saveUserMessage(sessionId, queryText).catch(() => {});
-        await ragMemory.saveAssistantMessage(
-          sessionId,
-          ctx.response.assistantResponse,
-          ctx.retrieval.citations,
-          llmModel,
-          trace.exportTrace().stages['Total']?.durationMs || 0
-        ).catch(() => {});
-        const { ragSummary } = await import('./memory');
-        ragSummary.triggerAsyncSummarization(sessionId).catch((err) => telemetryLogger.error('SUMMARY', 'triggerAsyncSummarization failed', err));
-      }
+    if (sessionId && ctx.response.assistantResponse) {
+      await ragMemory.saveAssistantMessage(
+        sessionId,
+        ctx.response.assistantResponse,
+        ctx.retrieval.citations,
+        llmModel,
+        trace.exportTrace().stages['Total']?.durationMs || 0
+      ).catch(() => undefined);
+      const { ragSummary } = await import('./memory');
+      ragSummary.triggerAsyncSummarization(sessionId).catch((err) => telemetryLogger.error('SUMMARY', 'triggerAsyncSummarization failed', err));
+    }
 
+    const cacheable = !sessionId && !isBookingQuery(queryText) && !alreadySentMeeting(ctx.memory.history);
+    if (cacheable) {
       ragCache.set(
         ctx.request.optimizedQuery,
         [],
         ctx.response.assistantResponse || '',
         { citations: ctx.retrieval.citations }
       ).catch(() => {});
+    }
 
-      ragDatabase.logAnalytics({
-        sessionId: sessionId || undefined,
-        queryText,
-        responseText: ctx.response.assistantResponse || '',
-        latencyMs: trace.exportTrace().stages['Total']?.durationMs || 0,
-        llmModel,
-        promptTokens: ctx.executionContext.diagnostics.promptTokens,
-        completionTokens: ctx.executionContext.diagnostics.completionTokens,
-        totalTokens: ctx.executionContext.diagnostics.totalTokens,
-        metadata: { citations: ctx.retrieval.citations, originalQuery: queryText, trace: trace.exportTrace() }
-      }).catch((err) => telemetryLogger.error('PIPELINE', 'Failed to log final telemetry', err));
-    };
-    void persistWork();
+    ragDatabase.logAnalytics({
+      sessionId: sessionId || undefined,
+      queryText,
+      responseText: ctx.response.assistantResponse || '',
+      latencyMs: trace.exportTrace().stages['Total']?.durationMs || 0,
+      llmModel,
+      promptTokens: ctx.executionContext.diagnostics.promptTokens,
+      completionTokens: ctx.executionContext.diagnostics.completionTokens,
+      totalTokens: ctx.executionContext.diagnostics.totalTokens,
+      metadata: { citations: ctx.retrieval.citations, originalQuery: queryText, trace: trace.exportTrace() }
+    }).catch((err) => telemetryLogger.error('PIPELINE', 'Failed to log final telemetry', err));
     trace.endStage('Persistence', true);
 
     trace.endStage('Total', true);

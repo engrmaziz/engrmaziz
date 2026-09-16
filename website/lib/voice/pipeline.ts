@@ -8,6 +8,16 @@ import { buildGroundedFallback } from '../rag/extractive';
 import { streamChatCompletion, synthesizeSpeech, transcribeAudio } from './groq-audio';
 import { lockVisitorAddress, pullCompleteSentences, spokenIntentReply, toSpokenText, VOICE_GREETING, VOICE_MISHEAR } from './spoken';
 import { recordVoiceTelemetry } from './metrics';
+import {
+  alreadySentMeeting,
+  formatBookingEmail,
+  formatSessionState,
+  isBookingQuery,
+  mergeHistories,
+  resolveBookingReply,
+  slotsFromSession,
+  type ChatTurn,
+} from '../rag/session-memory';
 
 export type VoiceEvent =
   | { type: 'transcript'; text: string; sttMs: number }
@@ -75,12 +85,23 @@ function createSpeaker(emit: (event: VoiceEvent) => void, started: number) {
   };
 }
 
-export async function runVoiceGreeting(emit: (event: VoiceEvent) => void, visitor?: Visitor) {
+export async function runVoiceGreeting(
+  emit: (event: VoiceEvent) => void,
+  visitor?: Visitor,
+  conversationId?: string,
+  clientMessages?: ChatTurn[]
+) {
   const started = Date.now();
   const name = visitor?.name?.split(' ')[0];
-  const text = name
-    ? `Hello ${name}. I am RAGX, Musharraf Aziz's assistant. Tell me what you want him to ship.`
-    : VOICE_GREETING;
+  const history = conversationId
+    ? (await withTimeout(ragMemory.loadSession(conversationId, clientMessages), 800, { history: clientMessages || [], summary: null })).history
+    : mergeHistories(clientMessages);
+  const alreadyTalking = history.some((turn) => turn.role === 'assistant' || turn.role === 'user');
+  const text = alreadyTalking
+    ? (name ? `I'm listening, ${name}. Pick up where we left off.` : "I'm listening. Pick up where we left off.")
+    : name
+      ? `Hello ${name}. I am RAGX, Musharraf Aziz's assistant. Tell me what you want him to ship.`
+      : VOICE_GREETING;
   emit({ type: 'answer', text, ragMs: 0 });
   emit({ type: 'status', stage: 'tts' });
   const speaker = createSpeaker(emit, started);
@@ -89,7 +110,11 @@ export async function runVoiceGreeting(emit: (event: VoiceEvent) => void, visito
   if (speaker.state.index === 0) {
     emit({ type: 'tts_fallback', text });
   }
-    emit({
+  if (conversationId && !alreadyTalking) {
+    await ragMemory.createConversation(conversationId).catch(() => undefined);
+    await ragMemory.saveAssistantMessage(conversationId, text).catch(() => undefined);
+  }
+  emit({
       type: 'done',
       modelUsed: speaker.state.model,
       voice: speaker.state.voice,
@@ -117,6 +142,7 @@ export async function runVoiceTurn(opts: {
   mimeType: string;
   conversationId: string;
   visitorInfo: Visitor;
+  messages?: ChatTurn[];
   emit: (event: VoiceEvent) => void;
 }) {
   const started = Date.now();
@@ -194,7 +220,15 @@ export async function runVoiceTurn(opts: {
   }
 
   const intent = spokenIntentReply(transcript, opts.visitorInfo.name);
-  if (intent) {
+  const isGreetingIntent = /^(hello|hi|hey|greetings|how are you|good morning|good afternoon|what's up|yo)\b/i.test(transcript) && transcript.length < 40;
+  const session = opts.conversationId
+    ? await withTimeout(ragMemory.loadSession(opts.conversationId, opts.messages), 800, { history: opts.messages || [], summary: null })
+    : { history: opts.messages || [], summary: null };
+  const history = mergeHistories(session.history, opts.messages);
+  const slots = slotsFromSession(history, transcript, opts.visitorInfo);
+  const bookingReply = resolveBookingReply({ slots, query: transcript, history, channel: 'voice' });
+
+  if (intent && !(isGreetingIntent && history.length > 0) && !isBookingQuery(transcript) && !bookingReply) {
     spoken = lockVisitorAddress(intent, opts.visitorInfo.name);
     emit({ type: 'answer', text: spoken, ragMs: 0 });
     emit({ type: 'status', stage: 'tts' });
@@ -203,21 +237,37 @@ export async function runVoiceTurn(opts: {
     return;
   }
 
+  if (bookingReply) {
+    spoken = lockVisitorAddress(bookingReply, opts.visitorInfo.name);
+    emit({ type: 'answer', text: spoken, ragMs: 0 });
+    emit({ type: 'status', stage: 'tts' });
+    speaker.speak(spoken);
+    if (/meeting request has been sent/i.test(spoken) && !alreadySentMeeting(history)) {
+      void import('@/lib/email/resend').then(({ emailService }) => {
+        emailService.sendContactNotification({
+          name: opts.visitorInfo.name,
+          email: opts.visitorInfo.email,
+          projectType: 'Booking Request',
+          message: formatBookingEmail(slots, history, transcript),
+        }).catch(() => undefined);
+      }).catch(() => undefined);
+    }
+    await finish();
+    return;
+  }
+
   emit({ type: 'status', stage: 'rag' });
   const ragStarted = Date.now();
-  const history = opts.conversationId
-    ? await withTimeout(ragMemory.loadRecentMessages(opts.conversationId, 6), 150, [])
-    : [];
-  const optimized = expandFollowUpQuery(transcript, Array.isArray(history) ? history : []);
+  const optimized = expandFollowUpQuery(transcript, history);
   const retrieval = await ragRetriever.retrieve(optimized, 5, 0.22, {});
   const messages = promptBuilder.buildPrompt(
-    null,
-    Array.isArray(history) ? history : [],
+    session.summary,
+    history,
     retrieval.contextText || '',
     transcript,
     [],
     opts.visitorInfo,
-    { channel: 'voice' }
+    { channel: 'voice', sessionState: formatSessionState(slots, history.length) }
   );
 
   let pending = '';

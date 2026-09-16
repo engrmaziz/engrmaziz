@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RAG_SYSTEM_PROMPT, RAG_VOICE_SYSTEM_PROMPT } from './prompts';
 import { RAG_IDENTITY_FACTS, getCompactServiceCatalog } from './identity';
+import { stripCurrentUserTurn, type ChatTurn } from './session-memory';
 
 export class PromptBuilder {
   buildPrompt(
@@ -10,7 +11,7 @@ export class PromptBuilder {
     currentQuery: string,
     toolOutputs: any[] = [],
     visitorInfo?: { name: string; email: string },
-    options?: { channel?: 'text' | 'voice' }
+    options?: { channel?: 'text' | 'voice'; sessionState?: string }
   ): { role: 'system' | 'user' | 'assistant'; content: string }[] {
     const template = options?.channel === 'voice' ? RAG_VOICE_SYSTEM_PROMPT : RAG_SYSTEM_PROMPT;
     let systemContent = template
@@ -27,8 +28,12 @@ export class PromptBuilder {
       }
     }
 
+    if (options?.sessionState) {
+      systemContent += `\n\nSESSION STATE:\n${options.sessionState}`;
+    }
+
     if (summary) {
-      systemContent += `\n\nConversation summary:\n${summary.slice(0, 600)}`;
+      systemContent += `\n\nConversation summary:\n${summary.slice(0, 1200)}`;
     }
 
     if (toolOutputs && toolOutputs.length > 0) {
@@ -42,12 +47,12 @@ export class PromptBuilder {
       { role: 'system', content: systemContent }
     ];
 
-    const trimmedHistory = recentMessages.slice(-4);
-    for (const msg of trimmedHistory) {
+    const history = stripCurrentUserTurn(recentMessages as ChatTurn[], currentQuery).slice(-16);
+    for (const msg of history) {
       if (msg.role === 'user' || msg.role === 'assistant') {
         messages.push({
           role: msg.role,
-          content: (msg.content || '').slice(0, 500)
+          content: (msg.content || '').slice(0, 1600)
         });
       }
     }

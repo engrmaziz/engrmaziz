@@ -237,7 +237,7 @@ export function RAGXChatAssistant() {
     setMessages(prev => [...prev.filter(m => m.role !== "system"), um]);
     setInputValue(""); setIsLoading(true);
     try {
-      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId, message: um.content, visitorInfo }) });
+      const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId, message: um.content, visitorInfo, messages: [...messagesRef.current.filter(m => m.role === "user" || m.role === "assistant"), um].slice(-24).map(m => ({ role: m.role, content: m.content })) }) });
       const data = await res.json();
       if (!res.ok) throw new Error(typeof data.error === "string" ? data.error : (data.error?.message || "Error"));
       setMessages(prev => [...prev, { id: generateUUID(), role: "assistant", content: data.data?.content || data.content, citations: data.data?.citations || data.citations, timestamp: new Date().toISOString(), isStreaming: true }]);
@@ -397,6 +397,7 @@ export function RAGXChatAssistant() {
     enabled: isOpen && mode === "voice" && isIdentified && !sessionEnded,
     identified: isIdentified,
     sessionEnded,
+    getHistory: () => messagesRef.current.filter((m) => m.role === "user" || m.role === "assistant").map((m) => ({ role: m.role, content: m.content })),
     onUserUtterance: appendVoiceUser,
     onAssistantUtterance: appendVoiceAssistant,
   });

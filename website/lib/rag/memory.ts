@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { ragDatabase } from './supabase';
 import { telemetryLogger } from '../telemetry';
+import { mergeHistories, recallTurns, rememberTurn, type ChatTurn } from './session-memory';
 
 export class ConversationMemoryService {
   async loadConversation(conversationId: string) {
@@ -12,7 +13,29 @@ export class ConversationMemoryService {
   }
 
   async loadRecentMessages(conversationId: string, limit: number = 10) {
-    return await ragDatabase.getRecentMessages(conversationId, limit);
+    const db = await ragDatabase.getRecentMessages(conversationId, limit);
+    return mergeHistories(db as ChatTurn[], recallTurns(conversationId));
+  }
+
+  async loadSession(conversationId: string, clientMessages?: ChatTurn[]) {
+    const [conv, db] = await Promise.all([
+      ragDatabase.getConversation(conversationId).catch(() => null),
+      ragDatabase.getRecentMessages(conversationId, 24).catch(() => []),
+    ]);
+    return {
+      history: mergeHistories(db as ChatTurn[], recallTurns(conversationId), clientMessages),
+      summary: (conv?.summary as string | undefined) || null,
+    };
+  }
+
+  async saveUserMessage(conversationId: string, content: string) {
+    rememberTurn(conversationId, 'user', content);
+    return await ragDatabase.insertMessage(conversationId, 'user', content);
+  }
+
+  async saveAssistantMessage(conversationId: string, content: string, citations?: any, model?: string, latency?: number) {
+    rememberTurn(conversationId, 'assistant', content);
+    return await ragDatabase.insertMessage(conversationId, 'assistant', content, citations, model, latency);
   }
 
   async loadUnsummarizedMessages(conversationId: string, offset: number) {
@@ -21,14 +44,6 @@ export class ConversationMemoryService {
 
   async loadConversationAndUnsummarized(conversationId: string) {
     return await ragDatabase.getConversationWithUnsummarized(conversationId);
-  }
-
-  async saveUserMessage(conversationId: string, content: string) {
-    return await ragDatabase.insertMessage(conversationId, 'user', content);
-  }
-
-  async saveAssistantMessage(conversationId: string, content: string, citations?: any, model?: string, latency?: number) {
-    return await ragDatabase.insertMessage(conversationId, 'assistant', content, citations, model, latency);
   }
 }
 

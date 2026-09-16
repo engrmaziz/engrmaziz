@@ -39,6 +39,16 @@ export async function POST(req: NextRequest) {
         visitorInfo = undefined;
       }
     }
+    let clientMessages: { role: 'user' | 'assistant' | 'system'; content: string }[] = [];
+    const rawMessages = form.get('messages');
+    if (typeof rawMessages === 'string' && rawMessages) {
+      try {
+        const parsed = JSON.parse(rawMessages);
+        if (Array.isArray(parsed)) clientMessages = parsed.filter((item) => item && (item.role === 'user' || item.role === 'assistant') && typeof item.content === 'string').slice(-32);
+      } catch {
+        clientMessages = [];
+      }
+    }
 
     if (!visitorInfo) {
       return errorResponse(new AppError('Identify with name and email before talking to RAGX.', 400, 'IDENTITY_REQUIRED'));
@@ -55,7 +65,7 @@ export async function POST(req: NextRequest) {
         };
         try {
           if (greeting) {
-            await runVoiceGreeting(emit, visitorInfo);
+            await runVoiceGreeting(emit, visitorInfo, conversationId || undefined, clientMessages);
           } else {
             const audioField = form.get('audio');
             const audioBlob = audioField instanceof Blob ? audioField : null;
@@ -70,6 +80,7 @@ export async function POST(req: NextRequest) {
               mimeType,
               conversationId: conversationId || crypto.randomUUID(),
               visitorInfo,
+              messages: clientMessages,
               emit,
             });
           }
