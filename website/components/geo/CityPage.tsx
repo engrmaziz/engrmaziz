@@ -22,7 +22,7 @@ export function CityPage({ market, city }: { market: GeoMarket; city: GeoCity })
             <Badge variant="outline" className="mb-4">
               {city.metro}
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight">
+            <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary md:text-6xl">
               {city.h1}
             </h1>
             {city.intro.map((paragraph) => (

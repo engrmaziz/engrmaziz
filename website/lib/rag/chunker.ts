@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { isSkipHeading } from './knowledge-clean';
 
 export interface Chunk {
   text: string;
@@ -56,6 +57,10 @@ export class RAGChunker {
       if (!el) continue;
 
       // Update heading hierarchy
+      if (el.type === 'yaml' || el.type === 'code') {
+        continue;
+      }
+
       if (el.type === 'heading' && el.level !== undefined) {
         const level = el.level;
         headingHierarchy[level] = el.text;
@@ -66,6 +71,11 @@ export class RAGChunker {
         }
 
         activeHeading = el.text;
+        if (isSkipHeading(el.text)) {
+          currentChunkElements = [];
+          currentTokens = 0;
+          continue;
+        }
         // Find closest parent heading (any higher level heading present in hierarchy)
         let foundParent = '';
         for (let l = level - 1; l >= 1; l--) {
@@ -75,6 +85,10 @@ export class RAGChunker {
           }
         }
         activeParentHeading = foundParent;
+      }
+
+      if (isSkipHeading(activeHeading)) {
+        continue;
       }
 
       // If el itself exceeds maxTokens, we must ingest it as a single chunk

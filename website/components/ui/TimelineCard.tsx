@@ -27,7 +27,7 @@ export const TimelineCard = React.forwardRef<HTMLDivElement, TimelineCardProps>(
             {/* Timeline Dot */}
             <div className="absolute left-[-2.35rem] md:left-[-2.85rem] top-2 w-3 h-3 rounded-full bg-base border-2 border-accent" />
             
-            <div className="bg-elevated border border-border-default p-6 rounded-xl shadow-sm">
+            <div className="bg-elevated border border-border-default p-6 rounded-xl shadow-sm hud-corners">
               <h4 className="text-lg font-bold text-primary">{title}</h4>
               {subtitle && <span className="block text-sm text-secondary font-medium mt-1 mb-3">{subtitle}</span>}
               <p className="text-secondary leading-relaxed mt-2">{description}</p>

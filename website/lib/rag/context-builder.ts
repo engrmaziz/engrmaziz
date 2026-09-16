@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { looksLikeBoilerplate, sliceAtBoundary, stripForRetrieval } from './knowledge-clean';
+
 export interface ContextChunk {
   chunkId: string;
   documentId: string;
@@ -17,8 +19,6 @@ export interface ContextChunk {
   };
   score: number;
 }
-
-const JSONLD_RE = /"@context"\s*:\s*"https:\/\/schema\.org"/i;
 
 export class RAGContextBuilder {
   private defaultMaxTokens = 1600;
@@ -71,12 +71,12 @@ export class RAGContextBuilder {
 
   private cleanChunk(raw: string): string {
     if (!raw) return '';
-    if (JSONLD_RE.test(raw) && raw.trim().startsWith('```')) {
-      const stripped = raw.replace(/```json[\s\S]*?```/g, '').trim();
-      if (stripped.length < 80) return '';
-      return stripped.replace(/\s+/g, ' ').trim();
-    }
-    return raw.replace(/\s+/g, ' ').trim();
+    const stripped = stripForRetrieval(raw)
+      .replace(/^#+\s+/gm, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (stripped.length < 60 || looksLikeBoilerplate(stripped)) return '';
+    return sliceAtBoundary(stripped, 900);
   }
 
   private estimateTokens(text: string): number {

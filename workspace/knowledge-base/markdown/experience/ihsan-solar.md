@@ -6,6 +6,7 @@ description: Detailed breakdown of the quality assurance and operations role in 
 aliases: [Ihsan Solar Role, NOC Lead, QA Lead Solar]
 tags: [experience, solar energy, qa, noc, leadership]
 keywords: [NOC development, solar industry software, API monitoring, operational fault reduction]
+rag_priority: 3
 created: 2026-07-08
 updated: 2026-07-08
 version: 1.0.0
@@ -20,7 +21,7 @@ related_services: [Workflow Automation & Integration]
 # Team Lead, Quality Assurance & NOC Development
 
 ## Overview
-A critical operational leadership role combining hardware understanding (solar PV systems) with software monitoring. This role required building a Network Operations Center (NOC) from scratch to ensure maximum yield and uptime for deployed solar assets.
+December 2022 – December 2023. Earlier operational leadership at Ihsan Solar Energy: QA and a Network Operations Center for solar assets. This is background in uptime and process, not the current AI/ML hiring narrative. Lead with Cygnus Technologies, Allama Iqbal Hospital production RAG, and Bano Qabil teaching.
 
 ## Company
 **Ihsan Solar Energy Pvt. Ltd.**

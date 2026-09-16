@@ -36,7 +36,7 @@ export function ResumeDownload() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-elevated border border-border-default rounded-xl p-6 shadow-sm w-full max-w-2xl mx-auto mb-16">
+      <div className="flex flex-col sm:flex-row items-center gap-4 bg-elevated border border-border-default rounded-xl p-6 shadow-sm w-full max-w-2xl mx-auto mb-16 hud-corners">
         <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
           <FileText className="w-6 h-6 text-accent" />
         </div>

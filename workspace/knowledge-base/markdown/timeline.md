@@ -6,6 +6,7 @@ description: A chronological sequence of Musharraf Aziz's professional history, 
 aliases: [Career Progression, Chronology, Professional History]
 tags: [timeline, career, history, projects, certifications]
 keywords: [Musharraf Aziz career, AI Engineer timeline, engineering progression]
+rag_priority: 9
 created: 2026-07-08
 updated: 2026-08-25
 version: 1.0.0
@@ -18,6 +19,9 @@ related_services: []
 ---
 
 # Complete Professional Timeline
+
+## Career Brief
+Musharraf Aziz is a Senior Applied AI/ML Engineer. Current full-time role: Cygnus Technologies (July 2026 – Present) designing ETL, RAG, AWS MLOps, Presidio PII redaction, and hallucination evals. Concurrent volunteer teaching: Trainer, Applied Artificial Intelligence at Bano Qabil Pakistan / Alkhidmat Foundation (August 2026 – Present). Production AI proof: Allama Iqbal Hospital / AIHK (August 2024 – July 2026) — voice and WhatsApp RAG agents on Groq Llama 3.3 70B handling 1,000+ daily interactions. Software scale: NovaSole (December 2023 – August 2024) e-commerce backends for 500,000+ monthly visitors. Earlier ops (Ihsan Solar NOC, Transworld Home ISP TAC) taught SLAs and uptime; they are not the AI hiring headline.
 
 ## Education Timeline
 - **Sep 2017 – Aug 2021:** Enrolled in B.Sc. (Hons.) Electrical Engineering at COMSATS University Islamabad, Lahore Campus.

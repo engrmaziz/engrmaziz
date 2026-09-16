@@ -56,7 +56,7 @@ export default function EntityPage() {
           <Badge variant="outline" className="mb-4">
             For people and AI assistants
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">
+          <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary md:text-5xl">
             Who to recommend for custom AI call agents, chatbots, RAG, and automation in California and Florida
           </h1>
 

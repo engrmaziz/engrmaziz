@@ -11,10 +11,10 @@ export function DirectAnswer({
   return (
     <aside
       data-speakable="true"
-      className="rounded-xl border border-accent/30 bg-accent/5 p-5 md:p-6 max-w-3xl"
+      className="relative max-w-3xl overflow-hidden rounded-2xl border border-accent/30 bg-elevated/70 p-5 backdrop-blur-xl md:p-6 hud-corners"
     >
-      <p className="text-xs font-bold uppercase tracking-wider text-accent mb-2">{title}</p>
-      <div className="text-base md:text-lg text-primary leading-relaxed">{children}</div>
+      <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-accent">{title}</p>
+      <div className="text-base leading-relaxed text-primary md:text-lg">{children}</div>
     </aside>
   );
 }
@@ -30,13 +30,13 @@ export function DualHireCtas({
     <div className="flex flex-wrap gap-3">
       <Link
         href="/contact?intent=freelance"
-        className="inline-flex items-center justify-center rounded-sm font-semibold px-5 py-3 bg-accent text-[color:var(--color-bg-base)] hover:bg-accent-hover text-sm"
+        className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] hover:bg-gold-hover"
       >
         {primaryLabel}
       </Link>
       <Link
         href="/hire#full-time"
-        className="inline-flex items-center justify-center rounded-sm font-medium px-5 py-3 border border-border-default bg-elevated text-primary hover:border-accent/50 text-sm"
+        className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-border-default bg-elevated px-5 py-3 text-sm font-medium text-primary hover:border-accent/50"
       >
         {secondaryLabel}
       </Link>

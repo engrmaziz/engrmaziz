@@ -141,7 +141,7 @@ export function ProjectDetailLayout({ project }: { project: ProjectData }) {
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-6 leading-tight">
+          <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary md:text-5xl lg:text-6xl">
             {project.title}
           </h1>
           

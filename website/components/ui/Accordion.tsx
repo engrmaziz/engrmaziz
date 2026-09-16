@@ -19,7 +19,7 @@ export function AccordionItem({ title, content, isOpen, onClick, className }: Ac
       <button
         type="button"
         onClick={onClick}
-        className="flex w-full items-center justify-between py-4 text-left font-medium transition-colors hover:text-accent"
+        className="flex min-h-11 w-full cursor-pointer items-center justify-between py-4 text-left font-medium transition-colors hover:text-accent"
         aria-expanded={isOpen}
       >
         <span>{title}</span>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { BackToTop } from "@/components/navigation/BackToTop";
 import { BrandLogo } from "@/components/common/BrandLogo";
+import { Marquee } from "@/components/ui/Marquee";
 
 const FOOTER_LINKS = {
   Navigation: [
@@ -34,100 +35,88 @@ const FOOTER_LINKS = {
     { name: "GitHub", href: "https://github.com/engrmaziz" },
     { name: "LinkedIn", href: "https://www.linkedin.com/in/musharrafazizq/" },
     { name: "Email", href: "mailto:io@maziz.me" },
-  ]
+  ],
 };
+
+const MARQUEE = [
+  "Custom AI Call Agents",
+  "RAG Pipelines",
+  "Voice Agents",
+  "LangGraph",
+  "FastAPI",
+  "pgvector",
+  "California",
+  "Florida",
+  "Cygnus",
+  "Bano Qabil",
+];
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-base border-t border-border-default pt-16 pb-8">
+    <footer className="relative mt-8 w-full overflow-hidden border-t border-border-default bg-base pt-10">
+      <div className="mb-10 border-y border-border-default/70 py-3">
+        <Marquee>
+          {MARQUEE.map((item) => (
+            <span key={item} className="font-mono text-xs uppercase tracking-[0.28em] text-secondary">
+              {item} <span className="mx-6 text-accent">/</span>
+            </span>
+          ))}
+        </Marquee>
+      </div>
+
       <Container>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 lg:gap-8 mb-16">
-          
-          {/* Brand & Status Column */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
-            <Link 
-              href="/" 
-              className="group flex items-center gap-2 w-fit focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
+        <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6 lg:gap-8">
+          <div className="flex flex-col gap-6 lg:col-span-2">
+            <Link
+              href="/"
+              className="group flex w-fit items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <BrandLogo size="lg" className="transition-transform duration-300 group-hover:scale-[1.02]" />
             </Link>
-            
-            <p className="text-secondary leading-relaxed max-w-sm">
+            <p className="max-w-sm leading-relaxed text-secondary">
               Custom AI call agents, chatbots, RAG agents, and workflow automation for California and Florida teams. Remote freelance builds and full-time hiring.
             </p>
-
-            <div className="flex items-center gap-3 mt-2 px-4 py-2 bg-elevated border border-border-default rounded-full w-fit">
+            <div className="mt-2 flex w-fit items-center gap-3 rounded-full border border-border-default bg-elevated px-4 py-2">
               <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-accent" />
               </span>
               <span className="text-sm font-medium text-primary">Available for new projects</span>
             </div>
           </div>
 
-          {/* Links Columns */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-semibold text-primary">Navigation</h3>
-            <ul className="flex flex-col gap-3">
-              {FOOTER_LINKS.Navigation.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-secondary hover:text-accent transition-colors text-sm">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <h3 className="font-semibold text-primary">Services</h3>
-            <ul className="flex flex-col gap-3">
-              {FOOTER_LINKS.Services.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-secondary hover:text-accent transition-colors text-sm">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <h3 className="font-semibold text-primary">Locations</h3>
-            <ul className="flex flex-col gap-3">
-              {FOOTER_LINKS.Locations.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-secondary hover:text-accent transition-colors text-sm">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <h3 className="font-semibold text-primary">Socials</h3>
-            <ul className="flex flex-col gap-3">
-              {FOOTER_LINKS.Socials.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined} className="text-secondary hover:text-accent transition-colors text-sm">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {Object.entries(FOOTER_LINKS).map(([group, links]) => (
+            <div key={group} className="flex flex-col gap-4">
+              <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">{group}</h3>
+              <ul className="flex flex-col gap-3">
+                {links.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      className="text-sm text-secondary transition-colors hover:text-accent"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-border-default gap-4">
-          <p className="text-secondary text-sm">
-            © {currentYear} Musharraf Aziz. All rights reserved.
-          </p>
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-border-default py-8 md:flex-row">
+          <p className="text-sm text-secondary">© {currentYear} Musharraf Aziz. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="text-secondary hover:text-primary transition-colors text-sm">Privacy Policy</Link>
-            <Link href="/terms" className="text-secondary hover:text-primary transition-colors text-sm">Terms of Service</Link>
+            <Link href="/privacy" className="text-sm text-secondary transition-colors hover:text-primary">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm text-secondary transition-colors hover:text-primary">
+              Terms of Service
+            </Link>
           </div>
         </div>
       </Container>

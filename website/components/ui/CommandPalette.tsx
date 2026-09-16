@@ -141,7 +141,7 @@ export function CommandPalette() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-2xl bg-base border border-border-default rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[60vh]"
+            className="relative w-full max-w-2xl bg-base border border-border-default rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[60vh] hud-corners"
           >
             <div className="flex items-center px-4 border-b border-border-default">
               <Search className="w-5 h-5 text-secondary shrink-0" />

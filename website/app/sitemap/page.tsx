@@ -23,7 +23,7 @@ export default function HtmlSitemapPage() {
   return (
     <Section className="pt-32 pb-24 bg-base">
       <Container>
-        <h1 className="text-4xl font-bold text-primary mb-4">Sitemap</h1>
+        <h1 className="mb-4 font-display text-4xl font-bold text-primary">Sitemap</h1>
         <p className="text-secondary mb-4 max-w-2xl">
           Human-readable map of the site. Machine sitemap:{" "}
           <Link href="/sitemap.xml" className="text-accent font-medium hover:underline">

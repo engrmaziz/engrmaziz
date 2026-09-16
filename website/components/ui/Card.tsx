@@ -14,8 +14,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         variant="elevated"
         border={true}
         className={cn(
-          "relative rounded-xl overflow-hidden flex flex-col",
-          interactive && "transition-transform duration-normal custom-ease hover:-translate-y-1 hover:shadow-lg",
+          "relative overflow-hidden rounded-xl flex flex-col",
+          interactive && "transition-transform duration-normal custom-ease hover:-translate-y-1 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--color-accent)_12%,transparent)]",
           className
         )}
         {...props}

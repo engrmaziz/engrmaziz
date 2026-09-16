@@ -12,7 +12,7 @@ export const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
     return (
       <div ref={ref} className={cn("flex flex-col gap-3 group", className)} {...props}>
         {icon && (
-          <div className="w-10 h-10 rounded-lg bg-accent/10 text-accent flex items-center justify-center mb-2 group-hover:bg-accent group-hover:text-white transition-colors">
+          <div className="w-10 h-10 rounded-lg bg-accent/10 text-accent flex items-center justify-center mb-2 group-hover:bg-accent group-hover:text-[color:var(--color-bg-base)] transition-colors">
             {icon}
           </div>
         )}

@@ -41,7 +41,7 @@ export function GeoServicePage({
             <Badge variant="outline" className="mb-4">
               {service.category} · {market.abbreviation}
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight">
+            <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary md:text-6xl">
               {copy.h1}
             </h1>
             {copy.intro.map((paragraph) => (

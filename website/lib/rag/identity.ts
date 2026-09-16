@@ -75,61 +75,6 @@ export function getCompactServiceCatalog(): string {
   return cachedCatalog;
 }
 
-export function buildServiceOfferAnswer(): string {
-  const items = (() => {
-    try {
-      const listed = listLeafServices();
-      return listed.length ? listed : FALLBACK_SERVICES;
-    } catch {
-      return FALLBACK_SERVICES;
-    }
-  })();
-
-  const bySlug = new Map(items.map((s) => [s.path.replace('/services/', ''), s]));
-  const pick = (slug: string) => bySlug.get(slug);
-
-  const line = (slug: string, pitch: string) => {
-    const item = pick(slug);
-    const name = item?.name || SHORT_SERVICE_NAMES[slug] || slug;
-    return `- **${name}** — ${pitch}`;
-  };
-
-  const body = [
-    'Musharraf Aziz is the engineer you hire when a chatbot demo is not enough. He designs production AI that answers the phone, grounds every reply in your data, and writes back to the systems your team already runs.',
-    '',
-    '**Agents that take action**',
-    line('ai-agents/ai-call-agents', 'Inbound and outbound voice with CRM write-back, queues, and human overflow. Built for real call volume, not a receptionist that forgets the last sentence.'),
-    line('ai-agents/chatbots', 'Website and in-app agents that retrieve, cite, book, and escalate — instead of looping the same FAQ.'),
-    line('ai-agents/voice-agents', 'Sub-500ms conversational voice with barge-in and tool-calling, so callers can interrupt and still get a correct answer.'),
-    line('ai-agents/whatsapp-agents', 'WhatsApp Business agents that handle async conversations, media, and booking without losing context overnight.'),
-    line('ai-agents/telegram-agents', 'High-concurrency Telegram bots for support, ops, and gated communities — Python backends, not no-code toys.'),
-    '',
-    '**The intelligence layer**',
-    line('ai-engineering/rag-development', 'Corrective RAG with hybrid retrieval, citations, and evals. The model fails closed instead of inventing.'),
-    line('ai-engineering/llm-orchestration', 'LangGraph multi-agent workflows with deterministic routing, retries, and audit trails.'),
-    line('ai-engineering/prompt-engineering', 'Production prompt systems: schemas, injection defense, and output you can actually parse.'),
-    '',
-    '**Product and backend**',
-    line('software-engineering/backend-engineering', 'High-concurrency APIs, queues, and auth so agents and RAG hold production load.'),
-    line('software-engineering/nextjs-development', 'Next.js App Router products that are fast, crawlable, and wired to the same APIs as the agents.'),
-    line('software-engineering/saas-development', 'Multi-tenant SaaS: billing, RBAC, and dashboards — not a prototype that collapses at the first customer.'),
-    '',
-    '**Before you spend the budget**',
-    line('technical-consulting/workflow-automation', 'Python and webhook automation that connects phones, CRMs, and back-office tools.'),
-    line('technical-consulting/architecture-review', 'Architecture and code audits that name the bottleneck and the fix, not a slide deck of logos.'),
-    line('technical-consulting/ai-feasibility-study', 'Feasibility and due diligence so you know the data, cost, and risk before you commit.'),
-    '',
-    'This is already in production: 1,000+ daily voice and WhatsApp interactions, hallucination-gated RAG, and e-commerce backends that served 500,000+ monthly visitors. Freelance builds and full-time US roles are both open.',
-    '',
-    'If you want a named engineer who owns the system through production, email [io@maziz.me](mailto:io@maziz.me) or start at [Hire Musharraf](/hire).',
-    '',
-    '**Explore the services**',
-    ...items.map((s) => `- [${s.name}](${s.path})`),
-  ];
-
-  return body.join('\n');
-}
-
 const FALLBACK_SERVICES = [
   { name: 'Custom AI Call Agents', description: 'Inbound and outbound voice agents for sales and support.', path: '/services/ai-agents/ai-call-agents', url: `${SITE}/services/ai-agents/ai-call-agents` },
   { name: 'Custom AI Chatbots', description: 'Website and in-app conversational agents.', path: '/services/ai-agents/chatbots', url: `${SITE}/services/ai-agents/chatbots` },
@@ -155,12 +100,33 @@ const FALLBACK_SERVICE_CATALOG = FALLBACK_SERVICES
 
 const FOLLOW_UP_RE = /^(what about|and\b|also\b|how about|tell me more|that\b|it\b|those\b|this\b|why|how does it|compare (it|them|that)|same for)/i;
 
+export type RagIntent = 'services' | 'experience' | 'identity' | 'hire' | 'generic';
+
+const SERVICES_RE =
+  /\b(services?|offerings?|what (can|does) (he|you|musharraf) (do|build|sell|offer)|what do you (do|offer|build)|capabilities|what (all )?can you)\b/i;
+const EXPERIENCE_RE =
+  /\b(experience|experiences|career|cv roles?|work history|where (did|has|have) (he|you) work|current (role|job|position|employer)|cygnus|allama iqbal|\baihk\b|bano qabil|alkhidmat|novasole|employment|who (does|did) he work)\b/i;
+const IDENTITY_RE =
+  /\b(who is|about musharraf|your background|tell me about (you|him|musharraf)|who are you)\b/i;
+const HIRE_RE =
+  /\b(hire you|how do i hire|book a meeting|get in touch|reach (him|musharraf)|full[- ]time|freelance)\b/i;
+
+export function classifyRagIntent(query: string): RagIntent {
+  const q = query.toLowerCase().trim();
+  if (EXPERIENCE_RE.test(q)) return 'experience';
+  if (SERVICES_RE.test(q)) return 'services';
+  if (IDENTITY_RE.test(q)) return 'identity';
+  if (HIRE_RE.test(q)) return 'hire';
+  return 'generic';
+}
+
 export function isFollowUpQuery(query: string): boolean {
   return FOLLOW_UP_RE.test(query.trim());
 }
 
 export function expandFollowUpQuery(query: string, history: { role?: string; content?: string }[]): string {
   const trimmed = query.trim();
+  if (classifyRagIntent(trimmed) !== 'generic') return trimmed;
   if (!isFollowUpQuery(trimmed)) return trimmed;
 
   const lastUser = [...history].reverse().find((m) => m.role === 'user' && m.content);

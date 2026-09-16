@@ -5,7 +5,6 @@ import { Mail, MapPin, Clock, Code, Briefcase, FileText, CalendarCheck, ShieldCh
 import { envClient } from "@/lib/config/env.client";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
-import { Badge } from "@/components/ui/Badge";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { SplitLayout } from "@/components/layout/SplitLayout";
 
@@ -15,8 +14,11 @@ export function ContactClient() {
       <Section className="pt-24 pb-12 bg-base border-b border-border-default">
         <Container>
           <div className="max-w-4xl">
-            <Badge variant="outline" className="mb-4">Engagement & Inquiry</Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight">
+            <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+              <span className="h-px w-6 bg-accent/70" aria-hidden />
+              Engagement & Inquiry
+            </p>
+            <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary md:text-6xl">
               Hire me for a project — or a full-time seat.
             </h1>
             <p className="text-xl text-secondary leading-relaxed max-w-3xl">
@@ -114,7 +116,7 @@ export function ContactClient() {
               </div>
             }
             right={
-              <div className="bg-elevated p-8 md:p-12 rounded-2xl border border-border-default shadow-sm relative">
+              <div className="relative rounded-2xl border border-border-default bg-elevated p-8 shadow-sm md:p-12 hud-corners">
                 <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
                   <ShieldCheck className="w-32 h-32" />
                 </div>
@@ -147,7 +149,7 @@ export function ContactClient() {
               href={envClient.NEXT_PUBLIC_BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-accent text-[color:var(--color-bg-base)] font-bold rounded-lg hover:bg-accent/90 transition-colors shrink-0 cursor-pointer relative z-50 inline-flex items-center justify-center text-center"
+              className="px-8 py-4 bg-gold text-[color:var(--color-bg-base)] font-bold rounded-full hover:bg-gold-hover transition-colors shrink-0 cursor-pointer relative z-50 inline-flex items-center justify-center text-center min-h-11"
             >
               Request Calendar Invite
             </a>

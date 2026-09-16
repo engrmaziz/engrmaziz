@@ -10,23 +10,23 @@ import { Menu, X, Code2, FileText, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
 import { useScroll } from "@/hooks/useScroll";
 import { BrandLogo } from "@/components/common/BrandLogo";
+import { Magnetic } from "@/components/fx/Magnetic";
 
 async function openResume() {
   try {
-    const res = await fetch('/api/resume');
-    if (!res.ok) throw new Error('Failed to fetch resume URL');
+    const res = await fetch("/api/resume");
+    if (!res.ok) throw new Error("Failed to fetch resume URL");
     const data = await res.json();
     const url = data?.url || data?.data?.url;
     if (url) {
-      window.open(url, '_blank', 'noopener,noreferrer');
+      window.open(url, "_blank", "noopener,noreferrer");
     } else {
-      throw new Error('No URL returned');
+      throw new Error("No URL returned");
     }
   } catch {
-    window.open('/resume.pdf', '_blank', 'noopener,noreferrer');
+    window.open("/resume.pdf", "_blank", "noopener,noreferrer");
   }
 }
 
@@ -46,24 +46,16 @@ export function Navbar() {
 
   const isLinkActive = (href: string) => {
     if (!pathname) return false;
-    if (href === "/") {
-      return pathname === "/";
-    }
+    if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
-  // Close mobile menu on route change
   React.useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
 
-  // Lock body scroll when mobile menu is open
   React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
@@ -72,24 +64,22 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-4 inset-x-4 md:inset-x-8 max-w-5xl mx-auto z-40 pointer-events-auto transition-all duration-300 rounded-full",
+        "pointer-events-auto fixed inset-x-3 top-3 z-40 mx-auto max-w-6xl rounded-full transition-all duration-500 md:inset-x-6",
         isScrolled
-          ? "bg-base/70 backdrop-blur-xl border border-border-default/50 shadow-sm py-2 px-6"
-          : "bg-transparent py-4 px-6 border border-transparent"
+          ? "border border-accent/25 bg-base/70 px-4 py-2 shadow-[0_0_40px_color-mix(in_srgb,var(--color-accent)_12%,transparent)] backdrop-blur-2xl md:px-6"
+          : "border border-transparent bg-transparent px-4 py-3 md:px-6"
       )}
     >
-      <div className="flex items-center justify-between w-full">
-        {/* Logo */}
+      <div className="flex w-full items-center justify-between">
         <Link
           href="/"
-          className="group flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
+          className="group flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <BrandLogo priority size="md" className="transition-transform duration-300 group-hover:scale-[1.02]" />
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
-          <ul className="flex items-center gap-6">
+        <nav className="hidden items-center gap-6 lg:flex">
+          <ul className="flex items-center gap-1">
             {NAV_LINKS.map((link) => {
               const isActive = isLinkActive(link.href);
               return (
@@ -97,15 +87,15 @@ export function Navbar() {
                   <Link
                     href={link.href}
                     className={cn(
-                      "text-sm font-medium transition-colors hover:text-accent relative py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md",
-                      isActive ? "text-accent" : "text-secondary"
+                      "relative rounded-full px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                      isActive ? "text-accent" : "text-secondary hover:text-primary"
                     )}
                   >
                     {link.name}
                     {isActive && (
                       <motion.div
                         layoutId="navbar-indicator"
-                        className="absolute -bottom-[2px] left-0 right-0 h-0.5 bg-accent rounded-full"
+                        className="absolute inset-x-2 -bottom-0.5 h-px bg-accent"
                         transition={{ type: "spring", stiffness: 350, damping: 30 }}
                       />
                     )}
@@ -115,60 +105,59 @@ export function Navbar() {
             })}
           </ul>
 
-          <div className="flex items-center gap-4 border-l border-border-default pl-4">
+          <div className="flex items-center gap-3 border-l border-border-default pl-4">
             <ThemeToggle />
             <Link href="https://github.com/engrmaziz" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <Button variant="ghost" size="icon" className="rounded-full text-secondary hover:text-primary">
-                <Code2 className="w-4 h-4" />
+                <Code2 className="h-4 w-4" />
               </Button>
             </Link>
             <Button
               variant="outline"
               size="sm"
-              className="hidden lg:flex gap-2 font-mono text-xs"
+              className="hidden gap-2 font-mono text-xs xl:flex"
               onClick={openResume}
               aria-label="Resume"
             >
-              <FileText className="w-3.5 h-3.5" />
-              RESUME
+              <FileText className="h-3.5 w-3.5" />
+              Resume
             </Button>
-            <Link href="/hire" aria-label="Hire">
-              <Button size="sm" className="gap-2 group">
-                Hire
-                <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-              </Button>
-            </Link>
+            <Magnetic>
+              <Link href="/hire" aria-label="Hire">
+                <Button size="sm" className="gap-2">
+                  Hire
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </Magnetic>
           </div>
         </nav>
 
-        {/* Mobile Menu Toggle */}
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="flex items-center gap-3 lg:hidden">
           <ThemeToggle />
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 -mr-2 text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
+            className="min-h-11 min-w-11 rounded-md p-2 text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-expanded={isOpen}
             aria-label="Toggle navigation menu"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
 
-
-      {/* Mobile Navigation Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden fixed inset-x-4 top-[5rem] bottom-4 bg-base/90 backdrop-blur-2xl border border-border-default rounded-3xl overflow-hidden flex flex-col shadow-2xl z-[90]"
+            className="fixed inset-x-3 bottom-4 top-[4.75rem] z-[90] flex flex-col overflow-hidden rounded-3xl border border-accent/25 bg-base/90 shadow-2xl backdrop-blur-2xl lg:hidden"
           >
-            <div className="flex flex-col px-6 py-8 gap-6 h-full overflow-y-auto">
-              <nav className="flex flex-col gap-4">
+            <div className="flex h-full flex-col gap-6 overflow-y-auto px-6 py-8">
+              <nav className="flex flex-col gap-2">
                 {NAV_LINKS.map((link) => {
                   const isActive = isLinkActive(link.href);
                   return (
@@ -177,7 +166,7 @@ export function Navbar() {
                       href={link.href}
                       onClick={() => setIsOpen(false)}
                       className={cn(
-                        "text-2xl font-bold transition-colors py-2 border-b border-border-default/50",
+                        "border-b border-border-default/50 py-3 font-display text-3xl font-bold transition-colors",
                         isActive ? "text-accent" : "text-primary hover:text-accent"
                       )}
                     >
@@ -186,26 +175,16 @@ export function Navbar() {
                   );
                 })}
               </nav>
-
-              <div className="flex flex-col gap-4 mt-8">
-                <Button
-                  variant="outline"
-                  className="w-full justify-between font-mono text-sm"
-                  onClick={openResume}
-                  aria-label="View Resume"
-                >
-                  VIEW RESUME
-                  <FileText className="w-4 h-4" />
+              <div className="mt-4 flex flex-col gap-4">
+                <Button variant="outline" className="w-full justify-between font-mono text-sm" onClick={openResume} aria-label="View Resume">
+                  View resume
+                  <FileText className="h-4 w-4" />
                 </Button>
                 <Link href="/hire" className="w-full">
                   <Button className="w-full justify-between">
-                    HIRE ME
-                    <ArrowRight className="w-4 h-4" />
+                    Hire me
+                    <ArrowRight className="h-4 w-4" />
                   </Button>
-                </Link>
-                <Link href="https://github.com/engrmaziz" target="_blank" rel="noopener noreferrer" className="w-full mt-4 flex items-center justify-center gap-2 text-secondary hover:text-primary transition-colors py-2">
-                  <Code2 className="w-5 h-5" />
-                  <span className="font-medium">GitHub Profile</span>
                 </Link>
               </div>
             </div>

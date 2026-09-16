@@ -22,7 +22,7 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
     return (
       <Component
         ref={ref}
-        className={cn("text-primary", sizes[level], className)}
+        className={cn("font-display text-primary", sizes[level], className)}
         {...props}
       >
         {children}

@@ -42,8 +42,11 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogData[] }) {
       <Section className="pt-24 pb-12 bg-base border-b border-border-default">
         <Container>
           <div className="max-w-4xl">
-            <Badge variant="outline" className="mb-4">Knowledge Center</Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight">
+            <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+              <span className="h-px w-6 bg-accent/70" aria-hidden />
+              Knowledge Center
+            </p>
+            <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary md:text-6xl">
               Engineering <br/> Insights & Architecture
             </h1>
             <p className="text-xl text-secondary leading-relaxed max-w-3xl">

@@ -6,6 +6,7 @@ description: Part-time volunteer instructorship teaching applied AI, LLMs, RAG, 
 aliases: [Bano Qabil, Alkhidmat teaching, Applied AI trainer, AI instructor]
 tags: [experience, teaching, applied ai, rag, llms, volunteering]
 keywords: [Bano Qabil, Alkhidmat Foundation, Applied AI trainer, instructorship, RAG, prompt engineering, MLOps]
+rag_priority: 10
 created: 2026-09-16
 updated: 2026-09-16
 version: 1.0.0
@@ -20,9 +21,7 @@ related_services: [Enterprise AI Solutions (LLMs, Agents, RAG)]
 # Trainer, Applied Artificial Intelligence
 
 ## Overview
-Part-time volunteer instructorship delivering hands-on applied artificial intelligence, machine learning, deep learning, and generative AI training to learners with little or no technical background. The program is Bano Qabil Pakistan, an Alkhidmat Foundation initiative.
-
-This is concurrent with the full-time Senior Applied AI/ML Engineer role at Cygnus Technologies. It is teaching and mentoring, not a replacement employer.
+August 2026 – Present, part-time volunteer. Musharraf is Trainer, Applied Artificial Intelligence at Bano Qabil Pakistan, an Alkhidmat Foundation initiative. He teaches Python, LLMs, prompt engineering, RAG, agents, embeddings, vector databases, and MLOps to learners without a CS background. This runs alongside the full-time Cygnus role and is teaching, not a replacement employer.
 
 ## Organization
 **Bano Qabil Pakistan (Alkhidmat Foundation initiative)**

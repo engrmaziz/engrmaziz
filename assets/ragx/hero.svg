@@ -83,9 +83,9 @@
   </g>
 
   <!-- identity -->
-  <g font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <g class="serif" font-family="'Book Antiqua', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif">
     <text x="340" y="118" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="12" letter-spacing="3.2">SENIOR APPLIED AI ENGINEER  |  PEC REGISTERED</text>
-    <text x="340" y="168" fill="#E8F4FF" font-size="42" font-weight="700" letter-spacing="2.2">MUSHARRAF AZIZ</text>
+    <text x="340" y="168" fill="#E8F4FF" font-size="42" font-weight="700" letter-spacing="1.4">MUSHARRAF AZIZ</text>
     <text x="340" y="198" fill="#00D4FF" font-family="Consolas, 'Courier New', monospace" font-size="14" letter-spacing="2">DETERMINISTIC LLM SYSTEMS  /  ENTERPRISE RAG  /  VOICE AI</text>
     <text x="340" y="226" fill="#8BA0B5" font-size="13">Lahore, Pakistan  |  maziz.me  |  Open to AI/ML roles and enterprise consulting</text>
   </g>

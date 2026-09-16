@@ -111,7 +111,7 @@ export function BlogDetailLayout({ post }: { post: BlogData }) {
               )}
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-8 leading-tight">
+            <h1 className="mb-8 font-display text-4xl font-bold leading-tight text-primary md:text-5xl lg:text-6xl">
               {post.title}
             </h1>
             

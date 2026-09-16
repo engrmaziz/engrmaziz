@@ -6,6 +6,7 @@ description: Detailed breakdown of the technical leadership role managing ISP op
 aliases: [Transworld Role, TAC Lead, ISP Operations Lead]
 tags: [experience, telecom, isp, technical support, leadership]
 keywords: [TAC Team Lead, ISP Operations, 99.95% uptime, SLA resolution]
+rag_priority: 3
 created: 2026-07-08
 updated: 2026-07-08
 version: 1.0.0
@@ -20,7 +21,7 @@ related_services: [Technical Consulting & Architecture Review]
 # Team Lead, Technical Assistance Center
 
 ## Overview
-A high-pressure operational leadership role at a major Internet Service Provider (ISP). This position required managing large-scale network health, enforcing strict Service Level Agreements (SLAs), and leading a large technical support team to ensure uninterrupted connectivity for tens of thousands of users.
+March 2022 – November 2022. Earlier TAC team lead at Transworld Home (ISP): SLAs, network health, and a 14-person support team across 50,000+ connections. This is operations background, not the reason to hire him for call agents, chatbots, or RAG. Current work is Cygnus Technologies and production AI shipped at Allama Iqbal Hospital.
 
 ## Company
 **Transworld Home (ISP)**

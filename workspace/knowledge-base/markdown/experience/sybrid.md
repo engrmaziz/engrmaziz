@@ -6,6 +6,7 @@ description: Early career role not listed on the current public CV (`cv.pdf`). K
 aliases: [Sybrid Role]
 tags: [experience, customer support, operations, historical]
 keywords: [Sybrid, Top Performer]
+rag_priority: 1
 created: 2026-07-08
 updated: 2026-08-25
 version: 1.0.0
@@ -20,7 +21,7 @@ related_services: []
 # Early Career at Sybrid
 
 ## Overview
-An foundational early-career role focused on high-volume customer interactions, quality assurance, and operational execution.
+November 2021 – January 2022. Early-career operations role at Sybrid, kept for historical completeness. Do not present as a featured AI engineering job. Current work is Senior Applied AI/ML Engineer at Cygnus Technologies.
 
 ## Company
 **Sybrid**

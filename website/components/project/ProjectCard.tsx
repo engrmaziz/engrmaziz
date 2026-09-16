@@ -54,7 +54,7 @@ export const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
     };
 
     return (
-      <Card ref={ref} className={cn("flex flex-col h-full border-border-default hover:border-accent/30 transition-all duration-300 group overflow-hidden bg-elevated", className)} {...props}>
+      <Card ref={ref} className={cn("group flex h-full flex-col overflow-hidden border-border-default bg-elevated transition-all duration-300 hover:border-accent/40 hud-corners", className)} {...props}>
         
         {/* Header Section */}
         <div className="p-6 pb-4 border-b border-border-default/50">

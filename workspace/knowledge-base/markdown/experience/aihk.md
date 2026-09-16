@@ -6,6 +6,7 @@ description: Detailed breakdown of the AI engineering and operations role at All
 aliases: [AIHK Role, Hospital AI Engineer]
 tags: [experience, healthcare, ai engineer, rag, llm]
 keywords: [production RAG, MS Presidio, zero hallucinations, voice agents, WhatsApp, Twilio]
+rag_priority: 11
 created: 2026-07-08
 updated: 2026-09-16
 version: 1.0.0
@@ -20,7 +21,7 @@ related_services: [Enterprise AI Solutions (LLMs, Agents, RAG)]
 # AI Engineer & Operations Manager
 
 ## Overview
-A dual-hat leadership and deep technical role shipping production AI agents into live operations: voice and WhatsApp channels, RAG over operational knowledge, tool-calling into internal systems, and evals before generation. Fault tolerance and data privacy were non-negotiable. The engagement ended in July 2026 when Musharraf moved to Cygnus Technologies.
+August 2024 – July 2026. Musharraf was AI Engineer and Operations Manager at Allama Iqbal Hospital Kasur (AIHK). He shipped production voice and WhatsApp RAG agents on Groq Llama 3.3 70B (Twilio, LangChain, n8n, MCP, Presidio) handling 1,000+ daily interactions. The engagement ended in July 2026 when he moved to Cygnus Technologies. This is the production AI proof behind call agents, chatbots, and RAG work — not a clinical-only hospital story.
 
 ## Company
 **Allama Iqbal Hospital Kasur (AIHK)**

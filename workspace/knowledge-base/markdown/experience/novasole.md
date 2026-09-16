@@ -6,6 +6,7 @@ description: Detailed breakdown of the automation engineering and IT management 
 aliases: [NovaSole Role, E-Commerce Automation Engineer]
 tags: [experience, e-commerce, automation, data pipelines, it manager]
 keywords: [E-commerce automation, REST APIs, webhooks, data pipelines, high traffic]
+rag_priority: 8
 created: 2026-07-08
 updated: 2026-08-25
 version: 1.0.0
@@ -20,7 +21,7 @@ related_services: [Full-Stack Software Engineering (Web & SaaS)]
 # Automation Engineer & IT Manager
 
 ## Overview
-An automation and IT management role focused on connecting a high-traffic e-commerce platform to payment processors and inventory systems. The work centred on REST APIs, webhook-based triggers, data pipelines, and eliminating manual daily reconciliation.
+December 2023 – August 2024. Musharraf was Automation Engineer and IT Manager at NovaSole Pakistan. He connected a high-traffic e-commerce platform (500,000+ monthly visitors) to payment processors and inventory systems with REST APIs, webhooks, and data pipelines. This is the software/backend scale proof before the AIHK production agents and the current Cygnus role.
 
 ## Company
 **NovaSole Pakistan**

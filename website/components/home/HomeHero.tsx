@@ -3,64 +3,76 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Code2, ArrowRight, FileText } from "lucide-react";
+import { ArrowRight, FileText, Code2 } from "lucide-react";
 import { HeroContainer } from "@/components/layout/HeroContainer";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { GlassPanel } from "@/components/ui/GlassPanel";
 import { DirectAnswer } from "@/components/seo/DirectAnswer";
+import { Magnetic } from "@/components/fx/Magnetic";
+import { HudFrame } from "@/components/fx/HudFrame";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
+const LINES = [
+  { label: "orchestrator", value: "LangGraph + Groq", ok: "READY" },
+  { label: "retrieval", value: "hybrid + pgvector", ok: "24ms" },
+  { label: "voice", value: "barge-in streaming", ok: "OK" },
+  { label: "markets", value: "CA · FL · remote", ok: "LIVE" },
+];
 
 export function HomeHero() {
   return (
-    <HeroContainer pattern="grid">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <motion.div 
-          className="lg:col-span-7 flex flex-col gap-6"
+    <HeroContainer pattern="dots">
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+        <motion.div
+          className="flex flex-col gap-6 lg:col-span-7"
           initial="hidden"
           animate="visible"
-          variants={staggerContainer}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.08 } },
+          }}
         >
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-3 mb-2">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-elevated border border-border-default rounded-full w-fit shadow-sm">
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0 } }}
+            className="flex flex-wrap items-center gap-3"
+          >
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-accent/30 bg-elevated/70 px-3 py-1.5 shadow-sm backdrop-blur-md">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
               </span>
-              <span className="text-xs font-medium text-primary">Open to freelance & full-time</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">
+                Open to freelance & full-time
+              </span>
             </div>
-            <Badge variant="outline" className="font-sans">Senior AI Engineer</Badge>
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">Senior AI Engineer</span>
           </motion.div>
-          
-          <motion.h1 variants={fadeUp} className="text-4xl lg:text-6xl font-bold tracking-tight text-primary leading-[1.12]">
+
+          <motion.h1
+            variants={{ hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0 } }}
+            className="font-display text-4xl font-bold leading-[1.08] tracking-tight text-primary lg:text-6xl"
+          >
             Hire a senior AI engineer for custom call agents, chatbots, and RAG.
           </motion.h1>
-          
-          <motion.div variants={fadeUp}>
+
+          <motion.div variants={{ hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0 } }}>
             <DirectAnswer title="Direct answer">
-              Musharraf Aziz is a senior AI engineer available for remote freelance projects and full-time roles. He builds custom AI call agents, custom AI chatbots, RAG agents, and workflow automation for California and Florida companies.
+              Musharraf Aziz is a senior AI engineer available for remote freelance projects and full-time roles. He
+              builds custom AI call agents, custom AI chatbots, RAG agents, and workflow automation for California and
+              Florida companies.
             </DirectAnswer>
           </motion.div>
-          
-          <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-4 mt-4">
-            <Link href="/contact?intent=freelance">
-              <Button size="lg" className="gap-2 group">
-                Hire for a project
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
+
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0 } }}
+            className="mt-2 flex flex-wrap items-center gap-4"
+          >
+            <Magnetic>
+              <Link href="/contact?intent=freelance">
+                <Button size="lg" className="gap-2">
+                  Hire for a project
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </Magnetic>
             <Link href="/hire">
               <Button variant="secondary" size="lg">
                 Freelance or full-time
@@ -68,67 +80,78 @@ export function HomeHero() {
             </Link>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="flex items-center gap-4 mt-6 pt-6 border-t border-border-default">
-            <button 
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0 } }}
+            className="mt-4 flex flex-wrap items-center gap-4 border-t border-border-default pt-6"
+          >
+            <button
               onClick={async () => {
                 try {
-                  const res = await fetch('/api/resume');
+                  const res = await fetch("/api/resume");
                   if (!res.ok) throw new Error();
                   const data = await res.json();
                   const url = data?.url || data?.data?.url;
-                  if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                  if (url) window.open(url, "_blank", "noopener,noreferrer");
                   else throw new Error();
                 } catch {
-                  window.open('/resume.pdf', '_blank', 'noopener,noreferrer');
+                  window.open("/resume.pdf", "_blank", "noopener,noreferrer");
                 }
               }}
-              className="flex items-center justify-center gap-2 px-8 py-4 bg-elevated/80 backdrop-blur-sm border border-border-default hover:border-accent/40 rounded-xl font-bold text-primary hover:text-accent transition-all hover:-translate-y-1 group"
+              className="group inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-border-default bg-elevated/80 px-6 py-3 font-semibold text-primary backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:text-accent"
             >
-              <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <FileText className="h-4 w-4 transition-transform group-hover:scale-110" />
               Download Resume
             </button>
             <Link href="https://github.com/engrmaziz" target="_blank" rel="noopener noreferrer">
               <Button variant="ghost" size="sm" className="gap-2 text-secondary hover:text-primary">
-                <Code2 className="w-4 h-4" /> GitHub
+                <Code2 className="h-4 w-4" /> GitHub
               </Button>
             </Link>
           </motion.div>
         </motion.div>
 
-        <motion.div 
-          className="lg:col-span-5 relative"
-          initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+        <motion.div
+          className="relative lg:col-span-5"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
         >
-          <GlassPanel withLiquidEffect className="p-8 border border-border-default shadow-2xl relative z-10 bg-base/40 backdrop-blur-xl">
-            <div className="flex items-center gap-3 mb-6 pb-6 border-b border-border-default/50">
-              <div className="h-3 w-3 rounded-full bg-red-500/80"></div>
-              <div className="h-3 w-3 rounded-full bg-yellow-500/80"></div>
-              <div className="h-3 w-3 rounded-full bg-green-500/80"></div>
-              <span className="ml-2 font-mono text-xs text-secondary">system_health.log</span>
+          <HudFrame label="ragx.telemetry" className="overflow-hidden p-6 md:p-8">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px overflow-hidden">
+              <div className="h-12 w-full bg-gradient-to-b from-accent/40 to-transparent motion-safe:animate-hud-scan" />
             </div>
-            <div className="font-mono text-sm space-y-4">
-              <div className="flex justify-between items-center text-secondary">
-                <span>&gt; [SYSTEM] Initializing LLM Orchestrator...</span>
-                <span className="text-green-500">OK</span>
-              </div>
-              <div className="flex justify-between items-center text-secondary">
-                <span>&gt; [RAG] Connecting Vector DB (Pinecone)...</span>
-                <span className="text-green-500">24ms</span>
-              </div>
-              <div className="flex justify-between items-center text-secondary">
-                <span>&gt; [API] WebSocket Gateway...</span>
-                <span className="text-green-500">10k C/s</span>
-              </div>
-              <div className="pt-4 border-t border-border-default/30 flex items-center justify-between">
-                <span className="text-primary font-bold">SYSTEM STATUS</span>
-                <Badge variant="accent">ONLINE</Badge>
-              </div>
+            <div className="mb-6 flex items-center gap-3 border-b border-border-default/60 pb-5">
+              <div className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+              <div className="h-2.5 w-2.5 rounded-full bg-gold/80" />
+              <div className="h-2.5 w-2.5 rounded-full bg-accent/80" />
+              <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.18em] text-secondary">
+                system_health.log
+              </span>
             </div>
-          </GlassPanel>
-          {/* Decorative background glow */}
-          <div className="absolute -inset-4 bg-gradient-to-r from-accent/20 to-transparent blur-2xl -z-10 rounded-full opacity-50 pointer-events-none" />
+            <div className="space-y-4 font-mono text-sm">
+              {LINES.map((row) => (
+                <div key={row.label} className="flex items-center justify-between gap-4 text-secondary">
+                  <span>
+                    <span className="text-accent">&gt;</span> {row.label}
+                    <span className="text-primary/70"> · {row.value}</span>
+                  </span>
+                  <span className="text-accent">{row.ok}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 grid grid-cols-3 gap-3 border-t border-border-default/60 pt-6">
+              {[
+                ["TTFT", "<500ms"],
+                ["Voice", "sub-400"],
+                ["RAG", "cited"],
+              ].map(([k, v]) => (
+                <div key={k} className="rounded-xl border border-border-default bg-base/50 px-3 py-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-secondary">{k}</p>
+                  <p className="mt-1 font-display text-lg text-primary">{v}</p>
+                </div>
+              ))}
+            </div>
+          </HudFrame>
         </motion.div>
       </div>
     </HeroContainer>

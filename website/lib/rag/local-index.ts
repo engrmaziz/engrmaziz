@@ -1,19 +1,29 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { classifyRagIntent } from './identity';
+import {
+  inferRagPriority,
+  isSkipKnowledgeFile,
+  sliceAtBoundary,
+  splitAnswerSections,
+  stripForRetrieval,
+} from './knowledge-clean';
 import { RetrievedChunk } from './retriever';
 
 type LocalDoc = {
   id: string;
   title: string;
+  heading: string;
   category: string;
   relPath: string;
   text: string;
   titleLower: string;
   textLower: string;
+  priority: number;
 };
 
-const SKIP_FILES = /(faq|glossary|rag-index|knowledgebase)\.md$/i;
+const EARLY_OPS = /ihsan-solar|transworld|sybrid/;
 
 class LocalKnowledgeIndex {
   private docs: LocalDoc[] = [];
@@ -26,9 +36,10 @@ class LocalKnowledgeIndex {
     this.loaded = true;
   }
 
-  search(query: string, limit = 4): RetrievedChunk[] {
+  search(query: string, limit = 6): RetrievedChunk[] {
     this.ensureLoaded();
-    const STOP = new Set(['the','and','for','with','that','this','from','your','about','what','how','does','have','been','into','their','you']);
+    const STOP = new Set(['the','and','for','with','that','this','from','your','about','what','how','does','have','been','into','their','you','are','was','can','his','her']);
+    const intent = classifyRagIntent(query);
     const terms = query
       .toLowerCase()
       .replace(/[^\w\s-]/g, ' ')
@@ -38,28 +49,64 @@ class LocalKnowledgeIndex {
     if (terms.length === 0) return [];
 
     const scored = this.docs.map((doc) => {
-      let score = 0;
+      let score = doc.priority * 0.35;
       for (const term of terms) {
+        if (intent === 'services' && term === 'services') {
+          if (doc.relPath.startsWith('services/')) score += 1;
+          continue;
+        }
         if (doc.titleLower === term) score += 8;
         else if (doc.titleLower.includes(term)) score += 5;
+        if (doc.heading.toLowerCase().includes(term)) score += 3;
         if (doc.relPath.toLowerCase().includes(term)) score += 4;
         if (doc.textLower.includes(term)) score += 1;
       }
-      if (SKIP_FILES.test(doc.relPath) && !/faq|glossary/.test(query.toLowerCase())) {
-        score -= 6;
+
+      if (intent === 'experience') {
+        if (doc.relPath.startsWith('experience/') || doc.relPath === 'timeline.md') score += 5;
+        if (/career brief|overview|responsibilities|recruiter highlights/i.test(doc.heading)) score += 4;
+        if (EARLY_OPS.test(doc.relPath) && !EARLY_OPS.test(query.toLowerCase())) score -= 12;
       }
+
+      if (intent === 'services') {
+        if (doc.relPath.startsWith('services/') && !/\/index\.md$/.test(doc.relPath)) score += 5;
+        if (/^services\/ai-agents\//.test(doc.relPath) || /rag-development|llm-orchestration/.test(doc.relPath)) score += 6;
+        if (/ai-call-agents|\/chatbots\.md|rag-development|voice-agents|whatsapp/.test(doc.relPath)) score += 3;
+        if (/executive summary|engineering solution|our solution|business problems?/i.test(doc.heading)) score += 4;
+      }
+
+      if (intent === 'identity' || intent === 'hire') {
+        if (doc.relPath === 'timeline.md' || /experience\/(cygnus|aihk|bano-qabil)\.md/.test(doc.relPath)) score += 4;
+      }
+
+      if (isSkipKnowledgeFile(doc.relPath) && !/faq|glossary/.test(query.toLowerCase())) {
+        score -= 8;
+      }
+
       return { doc, score };
-    }).filter((row) => row.score > 0);
+    }).filter((row) => row.score > 1.5);
 
     scored.sort((a, b) => b.score - a.score);
 
-    return scored.slice(0, limit).map((row, index) => ({
+    const seenFiles = new Map<string, number>();
+    const picked: typeof scored = [];
+    const perFileCap = intent === 'experience' || intent === 'identity' ? 1 : 2;
+    for (const row of scored) {
+      const fileCount = seenFiles.get(row.doc.relPath) || 0;
+      if (fileCount >= perFileCap) continue;
+      seenFiles.set(row.doc.relPath, fileCount + 1);
+      picked.push(row);
+      if (picked.length >= limit) break;
+    }
+
+    return picked.map((row, index) => ({
       chunkId: row.doc.id,
-      documentId: row.doc.id,
-      chunkText: this.excerpt(row.doc, terms),
+      documentId: row.doc.relPath,
+      chunkText: sliceAtBoundary(row.doc.text, 900),
       chunkNumber: 0,
       metadata: {
         title: row.doc.title,
+        heading: row.doc.heading,
         url: this.toUrl(row.doc.relPath),
         category: row.doc.category
       },
@@ -67,19 +114,11 @@ class LocalKnowledgeIndex {
     }));
   }
 
-  private excerpt(doc: LocalDoc, terms: string[]): string {
-    const clean = doc.text.replace(/\s+/g, ' ').trim();
-    const hit = terms.find((term) => doc.textLower.includes(term) && !doc.titleLower.includes(term));
-    if (!hit) return clean.slice(0, 700);
-    const idx = doc.textLower.indexOf(hit);
-    const start = Math.max(0, idx - 80);
-    return clean.slice(start, start + 700);
-  }
-
   private toUrl(relPath: string): string {
     const slug = relPath.replace(/\\/g, '/').replace(/\.md$/, '').replace(/\/index$/, '');
     if (slug.startsWith('services/')) return `/${slug}`;
     if (slug.startsWith('projects/')) return `/projects/${slug.slice('projects/'.length)}`;
+    if (slug.startsWith('experience/') || slug === 'timeline') return '/about';
     return `/${slug}`;
   }
 
@@ -97,16 +136,29 @@ class LocalKnowledgeIndex {
       const { data, content } = matter(raw);
       const relPath = path.relative(this.baseDir, full).replace(/\\/g, '/');
       const title = String(data.title || path.basename(file, '.md'));
-      const text = `${title}\n${data.description || ''}\n${content}`.replace(/```[\s\S]*?```/g, ' ');
-      acc.push({
-        id: relPath,
-        title,
-        category: String(data.category || 'general'),
-        relPath,
-        text,
-        titleLower: title.toLowerCase(),
-        textLower: text.toLowerCase()
-      });
+      const cleaned = stripForRetrieval(content);
+      const sections = splitAnswerSections(cleaned);
+      const explicit = typeof data.rag_priority === 'number' ? data.rag_priority : undefined;
+      const category = String(data.category || 'general');
+
+      const rows = sections.length
+        ? sections
+        : [{ heading: 'Overview', body: `${title}\n${data.description || ''}` }];
+
+      for (const section of rows) {
+        const text = section.body.trim();
+        acc.push({
+          id: `${relPath}#${section.heading.toLowerCase().replace(/[^\w]+/g, '-')}`,
+          title,
+          heading: section.heading,
+          category,
+          relPath,
+          text,
+          titleLower: `${title} ${section.heading}`.toLowerCase(),
+          textLower: text.toLowerCase(),
+          priority: inferRagPriority(relPath, section.heading, explicit)
+        });
+      }
     }
     return acc;
   }

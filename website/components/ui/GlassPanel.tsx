@@ -11,7 +11,7 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(
       <div
         ref={ref}
         className={cn(
-          "relative overflow-hidden rounded-lg glass-panel",
+          "relative overflow-hidden rounded-2xl glass-panel hud-corners",
           className
         )}
         {...props}

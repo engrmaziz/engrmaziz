@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight, Briefcase, Building2, CheckCircle2 } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { DirectAnswer } from "@/components/seo/DirectAnswer";
 import { Accordion } from "@/components/ui/Accordion";
@@ -91,12 +90,13 @@ export default function HirePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <Section className="pt-32 pb-12 bg-base border-b border-border-default">
+      <Section className="border-b border-border-default bg-base pb-12 pt-32">
         <Container>
-          <Badge variant="outline" className="mb-4">
+          <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+            <span className="h-px w-6 bg-accent/70" aria-hidden />
             Freelance · Contract · Full-time
-          </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight max-w-4xl">
+          </p>
+          <h1 className="mb-6 max-w-4xl font-display text-4xl font-bold leading-tight text-primary md:text-6xl">
             Hire a senior AI engineer for custom call agents, chatbots, RAG, and automation
           </h1>
           <DirectAnswer title="For founders and hiring managers">
@@ -121,7 +121,7 @@ export default function HirePage() {
 
       <Section className="py-16 bg-elevated border-b border-border-default">
         <Container className="grid lg:grid-cols-2 gap-10">
-          <div className="p-8 border border-border-default rounded-2xl bg-base">
+          <div className="rounded-2xl border border-border-default bg-base p-8 hud-corners">
             <Briefcase className="w-8 h-8 text-accent mb-4" />
             <h2 className="text-3xl font-bold text-primary mb-4">Freelance and contract</h2>
             <p className="text-secondary leading-relaxed mb-4">
@@ -147,7 +147,7 @@ export default function HirePage() {
               Send a project brief →
             </Link>
           </div>
-          <div id="full-time" className="p-8 border border-border-default rounded-2xl bg-base scroll-mt-32">
+          <div id="full-time" className="scroll-mt-32 rounded-2xl border border-border-default bg-base p-8 hud-corners">
             <Building2 className="w-8 h-8 text-accent mb-4" />
             <h2 className="text-3xl font-bold text-primary mb-4">Full-time hiring</h2>
             <p className="text-secondary leading-relaxed mb-4">

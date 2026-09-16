@@ -159,7 +159,7 @@ export function ContactForm() {
       <button 
         type="submit" 
         disabled={isSubmitting}
-        className="w-full md:w-auto px-8 py-3.5 bg-primary text-[color:var(--color-bg-base)] font-bold rounded-lg hover:bg-accent transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full md:w-auto px-8 py-3.5 bg-gold text-[color:var(--color-bg-base)] font-bold rounded-full hover:bg-gold-hover transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-11"
       >
         {isSubmitting ? (
           <>

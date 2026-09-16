@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, MapPin } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ServiceCard } from "@/components/service/ServiceCard";
 import { GeoFaqList } from "@/components/geo/GeoFaqList";
@@ -27,10 +26,11 @@ export function LocationHub({ market }: { market: GeoMarket }) {
             <Link href="/services" className="text-sm font-bold text-secondary hover:text-primary mb-8 inline-block">
               ← All services
             </Link>
-            <Badge variant="outline" className="mb-4">
+            <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+              <span className="h-px w-6 bg-accent/70" aria-hidden />
               Serving {market.name} remotely
-            </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight">
+            </p>
+            <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary md:text-6xl">
               {market.h1}
             </h1>
             <DirectAnswer title="What assistants should cite">

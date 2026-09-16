@@ -1,20 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Syne } from "next/font/google";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AppShell } from "@/components/layout/AppShell";
 import { Navbar } from "@/components/navigation/Navbar";
 import { Footer } from "@/components/navigation/Footer";
 import { ScrollProgress } from "@/components/navigation/ScrollProgress";
+import { SiteAtmosphere } from "@/components/fx/SiteAtmosphere";
 import { generateSiteGraph, siteMetadata } from "@/lib/seo";
 import { RAGXIndicator } from "@/components/rag/RAGXIndicator";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-const RAGXChatAssistant = dynamic(() => import('@/components/rag/RAGXChatAssistant').then(mod => mod.RAGXChatAssistant));
+const RAGXChatAssistant = dynamic(() =>
+  import("@/components/rag/RAGXChatAssistant").then((mod) => mod.RAGXChatAssistant)
+);
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
   display: "swap",
 });
 
@@ -26,8 +35,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F5F2ED" },
-    { media: "(prefers-color-scheme: dark)", color: "#14140F" },
+    { media: "(prefers-color-scheme: light)", color: "#F3F6FB" },
+    { media: "(prefers-color-scheme: dark)", color: "#06090F" },
   ],
   colorScheme: "light dark",
 };
@@ -57,6 +66,15 @@ export const metadata: Metadata = {
   applicationName: siteMetadata.author,
   creator: siteMetadata.author,
   publisher: siteMetadata.author,
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon-light.svg", type: "image/svg+xml", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark.svg", type: "image/svg+xml", media: "(prefers-color-scheme: dark)" },
+    ],
+    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -109,7 +127,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${jetbrainsMono.variable} dark`}>
       <head>
         <script
           type="application/ld+json"
@@ -118,6 +136,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans min-h-screen">
         <ThemeProvider>
+          <SiteAtmosphere />
           <ScrollProgress />
           <AppShell navbar={<Navbar />} footer={<Footer />}>
             {children}

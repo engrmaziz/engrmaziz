@@ -18,9 +18,12 @@ const config: Config = {
         "accent-hover": "var(--color-accent-hover)",
         "border-default": "var(--color-border-default)",
         "border-elevated": "var(--color-border-elevated)",
+        gold: "var(--color-gold)",
+        "gold-hover": "var(--color-gold-hover)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
+        display: ["var(--font-syne)", "var(--font-inter)", "sans-serif"],
         mono: ["var(--font-jetbrains)", "monospace"],
       },
       transitionTimingFunction: {
@@ -40,10 +43,20 @@ const config: Config = {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(0%)" },
         },
+        "hud-scan": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(220%)" },
+        },
+        shine: {
+          "0%": { transform: "translateX(-120%) skewX(-16deg)" },
+          "100%": { transform: "translateX(220%) skewX(-16deg)" },
+        },
       },
       animation: {
-        marquee: "marquee 80s linear infinite",
-        "marquee-reverse": "marquee-reverse 80s linear infinite",
+        marquee: "marquee 48s linear infinite",
+        "marquee-reverse": "marquee-reverse 48s linear infinite",
+        "hud-scan": "hud-scan 4.5s linear infinite",
+        shine: "shine 1.8s ease-in-out infinite",
       },
     },
   },

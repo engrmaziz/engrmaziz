@@ -2,51 +2,41 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { ResumeDownload } from "@/components/ui/ResumeDownload";
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
-};
+import { Magnetic } from "@/components/fx/Magnetic";
+import { Reveal } from "@/components/fx/Reveal";
 
 export function ContactCTA() {
   return (
     <Section className="bg-base pb-32">
       <Container>
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          className="bg-elevated border border-border-default rounded-3xl p-10 md:p-20 relative overflow-hidden shadow-lg"
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent pointer-events-none" />
-          <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center text-center gap-6">
-            <h2 className="text-4xl md:text-5xl font-bold text-primary leading-tight">
-              Ready to build something that works in production?
-            </h2>
-            <p className="text-lg text-secondary leading-relaxed max-w-2xl mx-auto">
-              Whether you need a production RAG system, a scalable SaaS backend, a real-time voice AI pipeline, or a technical architecture review — the conversation starts here.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
-              <ResumeDownload />
-              <Link href="/contact">
-                <Button
-                  size="lg"
-                  variant="primary"
-                  className="px-8 font-bold gap-2"
-                >
-                  Start a Conversation <MessageCircle className="w-4 h-4" />
-                </Button>
-              </Link>
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl border border-accent/25 bg-elevated p-10 shadow-lg md:p-20 hud-corners">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent" />
+            <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
+              <h2 className="font-display text-4xl font-bold leading-tight text-primary md:text-5xl">
+                Ready to build something that works in production?
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg leading-relaxed text-secondary">
+                Whether you need a production RAG system, a scalable SaaS backend, a real-time voice AI pipeline, or a technical architecture review — the conversation starts here.
+              </p>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+                <ResumeDownload />
+                <Magnetic>
+                  <Link href="/contact">
+                    <Button size="lg" className="gap-2 px-8 font-bold">
+                      Start a Conversation <MessageCircle className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </Magnetic>
+              </div>
             </div>
           </div>
-        </motion.div>
+        </Reveal>
       </Container>
     </Section>
   );

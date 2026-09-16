@@ -32,11 +32,12 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
         {...props}
       >
         {eyebrow && (
-          <span className="text-sm font-mono font-medium text-accent uppercase tracking-widest">
+          <span className="inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.28em] text-accent">
+            <span className="h-px w-6 bg-accent/70" aria-hidden />
             {eyebrow}
           </span>
         )}
-        <Heading level={1} className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+        <Heading level={1} className="font-display text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
           {title}
         </Heading>
         {description && (

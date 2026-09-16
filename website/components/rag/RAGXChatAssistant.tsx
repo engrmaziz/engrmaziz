@@ -117,6 +117,7 @@ export function RAGXChatAssistant() {
   const [history, setHistory] = useState<any[]>([]);
   const [mounted, setMounted] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [exportMenuPos, setExportMenuPos] = useState<{ top: number; left: number } | null>(null);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [isEndingSession, setIsEndingSession] = useState(false);
   const [sessionSummary, setSessionSummary] = useState<string | null>(null);
@@ -124,7 +125,8 @@ export function RAGXChatAssistant() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const exportMenuRef = useRef<HTMLDivElement>(null);
+  const exportButtonRef = useRef<HTMLButtonElement>(null);
+  const exportMenuPanelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -160,16 +162,35 @@ export function RAGXChatAssistant() {
   }, [isOpen, messages, isIdentified]);
 
   useEffect(() => {
+    if (!isOpen) setShowExportMenu(false);
     const h = (e: KeyboardEvent) => { if (e.key === "Escape" && isOpen) setIsOpen(false); };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
   }, [isOpen]);
 
   useEffect(() => {
-    const h = (e: MouseEvent) => { if (exportMenuRef.current && !exportMenuRef.current.contains(e.target as Node)) setShowExportMenu(false); };
+    const h = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (exportButtonRef.current?.contains(target) || exportMenuPanelRef.current?.contains(target)) return;
+      setShowExportMenu(false);
+    };
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
   }, []);
+
+  const toggleExportMenu = () => {
+    const btn = exportButtonRef.current;
+    if (!btn) {
+      setShowExportMenu((open) => !open);
+      return;
+    }
+    const rect = btn.getBoundingClientRect();
+    const width = 200;
+    const left = Math.max(8, Math.min(rect.right - width, window.innerWidth - width - 8));
+    const top = Math.min(rect.bottom + 8, window.innerHeight - 132);
+    setExportMenuPos({ top, left });
+    setShowExportMenu((open) => !open);
+  };
 
   const welcome = (name: string) => ({
     id: generateUUID(), role: "assistant" as const, timestamp: new Date().toISOString(),
@@ -360,7 +381,7 @@ export function RAGXChatAssistant() {
                 className="fixed bottom-0 right-0 sm:bottom-24 sm:right-6 z-[101] flex flex-col overflow-hidden pointer-events-auto w-full h-[100dvh] sm:w-[440px] sm:h-[680px] sm:max-h-[calc(100vh-120px)] sm:rounded-2xl bg-[#050a14] border border-[#00D4FF]/35 shadow-[0_0_40px_rgba(0,212,255,0.12)]"
               >
                 {/* Header */}
-                <div className="relative flex items-center justify-between p-4 border-b border-[#00D4FF]/20 bg-[#07111f] shrink-0 overflow-hidden">
+                <div className="relative flex items-center justify-between p-4 border-b border-[#00D4FF]/20 bg-[#07111f] shrink-0 overflow-visible">
                   <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#7DF9FF] to-transparent animate-pulse" />
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
@@ -377,17 +398,17 @@ export function RAGXChatAssistant() {
                   <div className="flex items-center gap-1 shrink-0 ml-2">
                     <button onClick={() => setShowHistory(!showHistory)} className={`p-2 rounded-full transition-colors ${showHistory ? "text-[#7DF9FF] bg-[#00D4FF]/10" : "text-[#8BA0B5] hover:text-[#7DF9FF] hover:bg-[#00D4FF]/10"}`} aria-label="History" title="History"><MessageSquare className="w-4 h-4" /></button>
                     {isIdentified && messages.filter(m => m.role !== "system").length > 1 && (
-                      <div className="relative" ref={exportMenuRef}>
-                        <button onClick={() => setShowExportMenu(!showExportMenu)} className="p-2 rounded-full text-[#8BA0B5] hover:text-[#7DF9FF] hover:bg-[#00D4FF]/10 transition-colors" aria-label="Export" title="Export"><Download className="w-4 h-4" /></button>
-                        <AnimatePresence>
-                          {showExportMenu && (
-                            <motion.div initial={{ opacity: 0, y: -8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.95 }} className="absolute right-0 top-10 bg-[#07111f] border border-[#00D4FF]/25 rounded-xl shadow-xl z-50 overflow-hidden min-w-[150px]">
-                              <button onClick={exportMarkdown} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#E8F4FF] hover:bg-[#00D4FF]/10 transition-colors"><Download className="w-3.5 h-3.5 text-[#7DF9FF]" />Markdown (.md)</button>
-                              <button onClick={exportPDF} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#E8F4FF] hover:bg-[#00D4FF]/10 transition-colors"><Download className="w-3.5 h-3.5 text-[#7DF9FF]" />PDF</button>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
+                      <button
+                        ref={exportButtonRef}
+                        onClick={toggleExportMenu}
+                        className="cursor-pointer p-2 min-h-11 min-w-11 inline-flex items-center justify-center rounded-full text-[#8BA0B5] hover:text-[#7DF9FF] hover:bg-[#00D4FF]/10 transition-colors"
+                        aria-label="Export"
+                        aria-expanded={showExportMenu}
+                        aria-haspopup="menu"
+                        title="Export"
+                      >
+                        <Download className="w-4 h-4" />
+                      </button>
                     )}
                     {isIdentified && !sessionEnded && messages.filter(m => m.role === "user").length > 0 && (
                       <button onClick={() => setShowEndConfirm(true)} className="p-2 rounded-full text-[#8BA0B5] hover:text-orange-400 hover:bg-orange-500/10 transition-colors" aria-label="End session" title="End Session" disabled={isEndingSession}><LogOut className="w-4 h-4" /></button>
@@ -542,6 +563,39 @@ export function RAGXChatAssistant() {
               </motion.div>
             </div>
           )}
+        </AnimatePresence>,
+        document.body
+      )}
+      {mounted && showExportMenu && exportMenuPos && createPortal(
+        <AnimatePresence>
+          <motion.div
+            ref={exportMenuPanelRef}
+            role="menu"
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            style={{ position: "fixed", top: exportMenuPos.top, left: exportMenuPos.left, zIndex: 400 }}
+            className="w-[200px] rounded-xl border border-[#00D4FF]/35 bg-[#07111f] shadow-[0_12px_40px_rgba(0,0,0,0.45)] overflow-hidden"
+          >
+            <button
+              type="button"
+              role="menuitem"
+              onClick={exportMarkdown}
+              className="cursor-pointer w-full min-h-11 flex items-center gap-2.5 px-4 py-3 text-sm text-[#E8F4FF] hover:bg-[#00D4FF]/10 transition-colors"
+            >
+              <Download className="w-3.5 h-3.5 text-[#7DF9FF]" />
+              Markdown (.md)
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={exportPDF}
+              className="cursor-pointer w-full min-h-11 flex items-center gap-2.5 px-4 py-3 text-sm text-[#E8F4FF] hover:bg-[#00D4FF]/10 transition-colors"
+            >
+              <Download className="w-3.5 h-3.5 text-[#7DF9FF]" />
+              PDF
+            </button>
+          </motion.div>
         </AnimatePresence>,
         document.body
       )}

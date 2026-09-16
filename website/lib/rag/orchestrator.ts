@@ -10,7 +10,8 @@ import { systemConfig } from '../system/config';
 import { expandFollowUpQuery, isFollowUpQuery, isToolHarnessQuery } from './identity';
 import { withTimeout } from './timing';
 import { CitationFormatter } from './citation-formatter';
-import { buildExtractiveAnswer, isFastIntent } from './extractive';
+import { buildExtractiveAnswer, buildGroundedFallback } from './extractive';
+import { providerFactory } from '../providers/factory';
 import { recordTtft, getLastTtft } from './metrics';
 
 export interface RequestContext {
@@ -138,15 +139,12 @@ export class RAGOrchestrator {
     trace.startStage('Memory');
     trace.startStage('Retrieval');
     try {
-      const fastPath = isFastIntent(queryText);
       const needsHistory = Boolean(sessionId && isFollowUpQuery(queryText));
       const historyPromise = needsHistory
         ? withTimeout(ragMemory.loadRecentMessages(sessionId, 6), 120, [])
         : Promise.resolve([]);
 
-      const retrievalPromise = fastPath
-        ? Promise.resolve({ contextText: '', chunks: [], citations: [], cragEval: 'SKIPPED' })
-        : ragRetriever.retrieve(queryText, 4, 0.22, filters);
+      const retrievalPromise = ragRetriever.retrieve(queryText, 6, 0.22, filters);
 
       const [history, firstRetrieval] = await Promise.all([historyPromise, retrievalPromise]);
       ctx.memory.history = Array.isArray(history) ? history : [];
@@ -156,7 +154,7 @@ export class RAGOrchestrator {
 
       let retrievalResult = firstRetrieval;
       if (ctx.request.optimizedQuery !== queryText) {
-        retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 4, 0.22, filters);
+        retrievalResult = await ragRetriever.retrieve(ctx.request.optimizedQuery, 6, 0.22, filters);
       }
 
       ctx.retrieval.retrievedContext = retrievalResult.contextText;
@@ -188,8 +186,30 @@ export class RAGOrchestrator {
         const { agentRuntime } = await import('../agent/agent-runtime');
         await agentRuntime.execute(ctx);
       } else {
-        ctx.response.assistantResponse = buildExtractiveAnswer(queryText, ctx.retrieval.chunks || []);
-        (ctx as any)._lastLlmModel = isFastIntent(queryText) ? 'grounded-fast-path' : 'grounded-extractive';
+        try {
+          const aiClient = providerFactory.getChatProvider();
+          const generated = await withTimeout(
+            aiClient.generate({
+              messages: ctx.prompt.messages,
+              temperature: 0.15,
+              maxTokens: 700,
+              timeoutMs: 2400,
+            }),
+            2500,
+            null
+          );
+          const text = (generated?.content || '').trim();
+          if (text.length >= 40 && !/json-ld|hero section|related services/i.test(text)) {
+            ctx.response.assistantResponse = text;
+            (ctx as any)._lastLlmModel = generated?.model || 'groq';
+          } else {
+            ctx.response.assistantResponse = buildGroundedFallback(ctx.retrieval.chunks || [], queryText);
+            (ctx as any)._lastLlmModel = 'grounded-fallback';
+          }
+        } catch {
+          ctx.response.assistantResponse = buildGroundedFallback(ctx.retrieval.chunks || [], queryText);
+          (ctx as any)._lastLlmModel = 'grounded-fallback';
+        }
       }
 
       if (!ctx.response.assistantResponse || ctx.response.assistantResponse.length < 20) {

@@ -6,6 +6,7 @@ description: Current role designing and deploying end-to-end AI and machine lear
 aliases: [Cygnus Role, Current Role, Senior Applied AI Engineer]
 tags: [experience, applied ai, mlops, etl, rag, llm]
 keywords: [Senior Applied AI/ML Engineer, Cygnus Technologies, ETL pipelines, MLOps, LlamaIndex, LangChain]
+rag_priority: 12
 created: 2026-08-25
 updated: 2026-08-25
 version: 1.0.0
@@ -20,7 +21,7 @@ related_services: [Enterprise AI Solutions (LLMs, Agents, RAG)]
 # Senior Applied AI/ML Engineer
 
 ## Overview
-A senior applied AI role focused on designing and deploying end-to-end AI and machine learning solutions for large-scale data processing, analytics, and intelligent automation across business functions.
+July 2026 – Present. Musharraf Aziz is Senior Applied AI/ML Engineer at Cygnus Technologies in Lahore. He designs and deploys end-to-end AI and machine learning systems: scalable ETL, LangChain and LlamaIndex RAG applications, AWS MLOps, Microsoft Presidio PII redaction, and hallucination evaluation against golden datasets. This is the current full-time role and the primary applied AI hiring narrative.
 
 ## Company
 **Cygnus Technologies**

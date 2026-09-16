@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import matter from 'gray-matter';
 import * as crypto from 'crypto';
+import { stripForRetrieval } from './knowledge-clean';
 
 export interface ParsedDocument {
   title: string;
@@ -63,7 +64,7 @@ export class RAGParser {
       return {
         title,
         description,
-        content: cleanedContent,
+        content: stripForRetrieval(cleanedContent),
         checksum,
         metadata: parsedMeta,
         documentType: 'markdown'
