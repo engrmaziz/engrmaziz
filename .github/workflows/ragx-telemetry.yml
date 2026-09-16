@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/ragx-telemetry.yml"
+      - ".github/scripts/generate_github_cards.py"
 
 permissions:
   contents: write
@@ -23,7 +24,17 @@ jobs:
           outputs: |
             assets/ragx/contribution-snake.svg
             assets/ragx/contribution-snake-dark.svg?palette=github-dark
+      - name: Generate GitHub stats cards
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAGX_USER: ${{ github.repository_owner }}
+        run: python .github/scripts/generate_github_cards.py
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: refresh contribution telemetry"
-          file_pattern: assets/ragx/contribution-snake*.svg
+          commit_message: "chore: refresh GitHub telemetry cards"
+          file_pattern: |
+            assets/ragx/contribution-snake*.svg
+            assets/ragx/github-stats.svg
+            assets/ragx/top-langs.svg
+            assets/ragx/commit-graph.svg
+

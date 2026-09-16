@@ -108,11 +108,11 @@ graph TD
 
 <div align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=engrmaziz&show_icons=true&hide_border=true&hide_title=true&bg_color=050A14&title_color=00D4FF&icon_color=C9A227&text_color=C9D6E3&ring_color=00D4FF" alt="GitHub Stats" height="165" />
+<img src="./assets/ragx/github-stats.svg" alt="GitHub Stats" width="49%" />
 <img src="https://streak-stats.demolab.com?user=engrmaziz&hide_border=true&hide_total_contributions=false&background=050A14&ring=00D4FF&fire=C9A227&currStreakNum=7DF9FF&sideNums=C9D6E3&currStreakLabel=00D4FF&sideLabels=8BA0B5&dates=8BA0B5" alt="GitHub Streak" height="165" />
 
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=engrmaziz&layout=compact&hide_border=true&hide_title=true&bg_color=050A14&title_color=00D4FF&text_color=C9D6E3" alt="Top Languages" width="48%" />
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=engrmaziz&custom_title=COMMIT%20TELEMETRY&bg_color=050a14&color=8ba0b5&line=00d4ff&point=c9a227&area=true&hide_border=true&area_color=00d4ff&height=280" alt="Commit telemetry graph" width="100%" />
+<img src="./assets/ragx/top-langs.svg" alt="Top Languages" width="49%" />
+<img src="./assets/ragx/commit-graph.svg" alt="Commit telemetry graph" width="100%" />
 
 <img src="./assets/ragx/divider.svg" alt="" width="100%" />
 

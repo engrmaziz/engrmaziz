@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 495 255" width="495" height="255" role="img">
+  <title>GitHub Stats</title>
+  <rect width="495" height="255" fill="#050a14"/>
+  <rect x="10" y="10" width="475" height="235" fill="#07111f" stroke="#00D4FF" stroke-opacity="0.35"/>
+  <path d="M10 34 L10 10 L34 10" fill="none" stroke="#7DF9FF" stroke-width="2"/>
+  <path d="M461 10 L485 10 L485 34" fill="none" stroke="#7DF9FF" stroke-width="2"/>
+  <text x="28" y="36" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="11" letter-spacing="2.2">RAGX // GITHUB STATS</text>
+  <text x="467" y="36" text-anchor="end" fill="#3DFF9A" font-family="Consolas, 'Courier New', monospace" font-size="11" letter-spacing="1.6">ENGRMAZIZ</text>
+  <text x="28" y="70" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="12" letter-spacing="1.4">STARS</text>
+  <text x="467" y="70" text-anchor="end" fill="#7DF9FF" font-family="Consolas, 'Courier New', monospace" font-size="16">4</text>
+  <text x="28" y="98" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="12" letter-spacing="1.4">COMMITS / YR</text>
+  <text x="467" y="98" text-anchor="end" fill="#7DF9FF" font-family="Consolas, 'Courier New', monospace" font-size="16">587</text>
+  <text x="28" y="126" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="12" letter-spacing="1.4">CONTRIBUTIONS</text>
+  <text x="467" y="126" text-anchor="end" fill="#7DF9FF" font-family="Consolas, 'Courier New', monospace" font-size="16">753</text>
+  <text x="28" y="154" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="12" letter-spacing="1.4">REPOS</text>
+  <text x="467" y="154" text-anchor="end" fill="#7DF9FF" font-family="Consolas, 'Courier New', monospace" font-size="16">47</text>
+  <text x="28" y="182" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="12" letter-spacing="1.4">ISSUES</text>
+  <text x="467" y="182" text-anchor="end" fill="#7DF9FF" font-family="Consolas, 'Courier New', monospace" font-size="16">74</text>
+  <text x="28" y="210" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="12" letter-spacing="1.4">PULL REQUESTS</text>
+  <text x="467" y="210" text-anchor="end" fill="#7DF9FF" font-family="Consolas, 'Courier New', monospace" font-size="16">1</text>
+</svg>
