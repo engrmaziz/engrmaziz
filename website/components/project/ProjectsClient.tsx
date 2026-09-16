@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, Terminal, CheckCircle } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import type { ProjectData } from "@/lib/projects";

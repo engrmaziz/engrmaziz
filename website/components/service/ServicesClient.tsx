@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, ServerCog, CheckCircle } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ServiceCard } from "@/components/service/ServiceCard";
 import type { Pillar } from "@/lib/services";
