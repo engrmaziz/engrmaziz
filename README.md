@@ -1,40 +1,60 @@
 <div align="center">
 
-# Engr. Musharraf Aziz
+<img src="./assets/ragx/hero.svg" alt="RAGX heads-up display — Musharraf Aziz, Senior Applied AI Engineer" width="100%" />
 
-**Senior AI Engineer · Applied AI, LLM Systems · Registered Engineer (PEC)**
+[![typing](https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&weight=600&size=18&pause=900&color=00D4FF&center=true&vCenter=true&width=820&height=32&lines=RAGX+ONLINE;I+architect+deterministic+AI+systems.;Zero+hallucinations.+Sub-500ms+voice.;Enterprise+RAG.+HIPAA-principled+guardrails.)](https://maziz.me)
 
-Lahore, Pakistan · Open to AI/ML Roles & Enterprise Consulting
+<img src="./assets/ragx/telemetry.svg" alt="Production telemetry: zero hallucinations, sub-500ms voice, 1,000+ clinical interactions per day, 500K monthly commerce traffic" width="100%" />
 
-*I architect deterministic AI systems and high-throughput backend infrastructure.*
-*Zero hallucinations. Sub-second latency. Production-grade reliability.*
+<img src="./assets/ragx/mesh.svg" alt="Signal mesh across RAG, voice, guardrails, and MCP" width="100%" />
 
-</div>
+<img src="./assets/ragx/divider.svg" alt="" width="100%" />
 
-<div align="center">
+[![Python](https://img.shields.io/badge/Python-050A14?style=for-the-badge&logo=python&logoColor=00D4FF)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-050A14?style=for-the-badge&logo=fastapi&logoColor=00D4FF)](https://fastapi.tiangolo.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-050A14?style=for-the-badge&logo=nextdotjs&logoColor=E8F4FF)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-050A14?style=for-the-badge&logo=typescript&logoColor=00D4FF)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-050A14?style=for-the-badge&logo=postgresql&logoColor=00D4FF)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-050A14?style=for-the-badge&logo=docker&logoColor=00D4FF)](https://www.docker.com/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-050A14?style=for-the-badge&logoColor=C9A227)](https://www.langchain.com/langgraph)
+[![Groq](https://img.shields.io/badge/Groq-050A14?style=for-the-badge&logoColor=C9A227)](https://groq.com/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-050A14?style=for-the-badge&logo=openai&logoColor=E8F4FF)](https://openai.com/)
+[![RAG](https://img.shields.io/badge/Corrective_RAG-050A14?style=for-the-badge&logoColor=3DFF9A)](https://github.com/engrmaziz/Self-Healing-RAG-Pipeline)
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white)
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+[![Portfolio](https://img.shields.io/badge/open-maziz.me-050A14?style=for-the-badge&label=CMD&labelColor=00D4FF&color=050A14)](https://maziz.me)
+[![LinkedIn](https://img.shields.io/badge/open-linkedin-050A14?style=for-the-badge&label=CMD&labelColor=C9A227&color=050A14)](https://linkedin.com/in/musharrafazizq)
+[![Email](https://img.shields.io/badge/open-io%40maziz.me-050A14?style=for-the-badge&label=CMD&labelColor=3DFF9A&color=050A14)](mailto:io@maziz.me)
 
-![LangGraph](https://img.shields.io/badge/LangGraph-1C1C1C?style=for-the-badge)
-![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge)
-![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
-![Groq](https://img.shields.io/badge/Groq-F55036?style=for-the-badge)
-![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white)
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
-![RAG](https://img.shields.io/badge/RAG-4CAF50?style=for-the-badge)
-![AI Engineering](https://img.shields.io/badge/AI_Engineering-FF9800?style=for-the-badge)
-![Backend](https://img.shields.io/badge/Backend-607D8B?style=for-the-badge)
-![Open Source](https://img.shields.io/badge/Open_Source-3DA639?style=for-the-badge&logo=opensourceinitiative&logoColor=white)
+<img src="./assets/ragx/console.svg" alt="RAGX online — expand the consoles below" width="100%" />
 
 </div>
+
+<details>
+<summary><strong><code>▶ ragx --status</code></strong> · live systems check</summary>
+<br>
+
+```
+RAGX v3.1.0-prod
+────────────────────────────────────────────────────────
+identity ............. Engr. Musharraf Aziz (PEC)
+role ................. Senior Applied AI Engineer
+assistant ............ RAGX
+location ............. Lahore, Pakistan
+availability ......... AI/ML roles + enterprise consulting
+────────────────────────────────────────────────────────
+guardrails ........... Microsoft Presidio + spaCy NER
+retrieval ............ hybrid dense + BM25 (CRAG)
+voice.e2e ............ <500ms with barge-in
+hallucinations ....... 0 (graded before generation)
+clinical.load ........ 1,000+ interactions / day
+commerce.scale ....... 500,000+ monthly visitors
+────────────────────────────────────────────────────────
+STATUS ............... OPERATIONAL
+```
+
+<img src="./assets/ragx/boot.svg" alt="RAGX boot sequence" width="100%" />
+
+</details>
 
 ---
 
@@ -70,7 +90,7 @@ My work spans Applied AI, Healthcare AI, FinTech, E-Commerce, Telecommunications
 ---
 
 <details>
-<summary><strong>Tech Stack</strong></summary>
+<summary><strong><code>▶ sys.load --stack</code></strong> · deploy systems</summary>
 <br>
 
 | Category | Technologies |
@@ -115,6 +135,49 @@ graph TD
     Response --> Gateway
 ```
 
+<details>
+<summary><strong><code>▶ inspect --protocol voice</code></strong> · sub-500ms communication path</summary>
+<br>
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Telephony as Vapi.ai / Retell
+    participant Backend as Django Channels
+    participant Agent as LangGraph Agent
+    participant LLM as Groq LPU
+    participant TTS as Deepgram TTS
+
+    User->>Telephony: Audio Stream (WebSocket)
+    Telephony->>Backend: STT Transcript
+    Backend->>Agent: Process Intent
+    Agent->>LLM: Generate Response
+    LLM-->>TTS: Stream Tokens (chunk-by-chunk)
+    TTS-->>Telephony: Audio Stream
+    Telephony-->>User: Voice Response
+    Note over User,TTS: End-to-end latency under 500ms
+```
+
+</details>
+
+<details>
+<summary><strong><code>▶ inspect --pipeline crag</code></strong> · hallucination gate</summary>
+<br>
+
+```mermaid
+flowchart LR
+    Query["User Query"] --> Router["Intent Router"]
+    Router --> Retrieve["Vector Retrieval (Qdrant)"]
+    Retrieve --> Grade["Relevance Grading (Groq)"]
+    Grade -- "Relevant" --> Generate["Final Generation (GPT-4o)"]
+    Grade -- "Irrelevant" --> Rewrite["Query Rewriting"]
+    Rewrite --> WebSearch["Web Search (Tavily)"]
+    WebSearch --> Generate
+    Generate --> Output["Verified Output"]
+```
+
+</details>
+
 ---
 
 ## Featured Projects
@@ -140,20 +203,6 @@ graph TD
 **Stack:** Django, Django Channels, WebSockets, LangGraph, Groq LPU (Llama 3)
 **Impact:** Achieved sub-500ms end-to-end response latency with deterministic barge-in handling, enabling real-time interruption and live database queries during active calls.
 
-### Corrective RAG Pipeline Flow
-
-```mermaid
-flowchart LR
-    Query["User Query"] --> Router["Intent Router"]
-    Router --> Retrieve["Vector Retrieval (Qdrant)"]
-    Retrieve --> Grade["Relevance Grading (Groq)"]
-    Grade -- "Relevant" --> Generate["Final Generation (GPT-4o)"]
-    Grade -- "Irrelevant" --> Rewrite["Query Rewriting"]
-    Rewrite --> WebSearch["Web Search (Tavily)"]
-    WebSearch --> Generate
-    Generate --> Output["Verified Output"]
-```
-
 ### [AegisFlow](https://github.com/engrmaziz/AegisFlow)
 **Domain:** FinTech SaaS
 **Problem:** Financial institutions require sub-second dashboard latency while running heavy PyTorch inference for fraud detection without blocking API threads.
@@ -170,31 +219,8 @@ flowchart LR
 
 ---
 
-### Voice AI Communication Flow
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Telephony as Vapi.ai / Retell
-    participant Backend as Django Channels
-    participant Agent as LangGraph Agent
-    participant LLM as Groq LPU
-    participant TTS as Deepgram TTS
-
-    User->>Telephony: Audio Stream (WebSocket)
-    Telephony->>Backend: STT Transcript
-    Backend->>Agent: Process Intent
-    Agent->>LLM: Generate Response
-    LLM-->>TTS: Stream Tokens (chunk-by-chunk)
-    TTS-->>Telephony: Audio Stream
-    Telephony-->>User: Voice Response
-    Note over User,TTS: End-to-end latency under 500ms
-```
-
----
-
 <details>
-<summary><strong>Professional Experience</strong></summary>
+<summary><strong><code>▶ log.open --career</code></strong> · professional experience</summary>
 <br>
 
 ### Senior Applied AI/ML Engineer
@@ -242,7 +268,9 @@ Led a 14-person TAC team achieving 98% issue resolution within SLA across 50,000
 
 ---
 
-### Development Lifecycle
+<details>
+<summary><strong><code>▶ inspect --lifecycle</code></strong> · delivery state machine</summary>
+<br>
 
 ```mermaid
 stateDiagram-v2
@@ -254,6 +282,8 @@ stateDiagram-v2
     Deployment --> Monitoring : Production release
     Monitoring --> Research : Telemetry feedback
 ```
+
+</details>
 
 ---
 
@@ -284,16 +314,32 @@ Deepening enterprise RAG architectures with parent-child chunking strategies and
 
 ---
 
-## GitHub Statistics
+## Telemetry
 
 <div align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=engrmaziz&show_icons=true&theme=default&hide_border=true&title_color=1a1a1a&text_color=333333&icon_color=009688&bg_color=00000000" alt="GitHub Stats" width="48%" />
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=engrmaziz&theme=default&hide_border=true&ring=009688&fire=009688&currStreakLabel=1a1a1a&background=00000000" alt="GitHub Streak" width="48%" />
+<img src="https://github-readme-stats.vercel.app/api?username=engrmaziz&show_icons=true&hide_border=true&bg_color=050A14&title_color=00D4FF&icon_color=C9A227&text_color=C9D6E3" alt="GitHub Stats" width="48%" />
+<img src="https://github-readme-streak-stats.herokuapp.com/?user=engrmaziz&hide_border=true&background=050A14&ring=00D4FF&fire=C9A227&currStreakNum=7DF9FF&sideNums=C9D6E3&currStreakLabel=00D4FF&sideLabels=8BA0B5&dates=8BA0B5" alt="GitHub Streak" width="48%" />
 
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=engrmaziz&layout=compact&theme=default&hide_border=true&title_color=1a1a1a&text_color=333333&bg_color=00000000" alt="Top Languages" width="48%" />
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=engrmaziz&layout=compact&hide_border=true&bg_color=050A14&title_color=00D4FF&text_color=C9D6E3" alt="Top Languages" width="48%" />
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=engrmaziz&custom_title=COMMIT%20TELEMETRY&bg_color=050a14&color=8ba0b5&line=00d4ff&point=c9a227&area=true&hide_border=true&area_color=00d4ff" alt="Commit telemetry graph" width="100%" />
+
+<img src="./assets/ragx/divider.svg" alt="" width="100%" />
 
 </div>
+
+<details>
+<summary><strong><code>▶ telemetry --snake</code></strong> · contribution radar (generates after first Actions run)</summary>
+<br>
+
+<div align="center">
+
+<img src="./assets/ragx/contribution-snake-dark.svg" alt="Contribution snake telemetry" width="100%" />
+
+</div>
+
+</details>
 
 ---
 
@@ -307,7 +353,8 @@ Deepening enterprise RAG architectures with parent-child chunking strategies and
 | **Email** | [io@maziz.me](mailto:io@maziz.me) |
 
 <div align="center">
-<br>
+
+<img src="./assets/ragx/divider.svg" alt="" width="100%" />
 
 **Open to AI Engineering roles, Enterprise AI consulting, and architecture advisory engagements.**
 

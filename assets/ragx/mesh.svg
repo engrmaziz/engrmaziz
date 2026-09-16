@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 120" width="1100" height="120" role="img" aria-label="Neural telemetry mesh">
+  <rect width="1100" height="120" fill="#050a14"/>
+  <g fill="none" stroke="#00D4FF" stroke-opacity="0.28" stroke-width="1">
+    <path d="M40 60 C 180 20, 260 100, 400 60 S 620 10, 760 60 S 980 110, 1060 60"/>
+    <path d="M40 70 C 200 110, 300 20, 470 70 S 720 120, 900 55 S 1020 20, 1060 70"/>
+  </g>
+  <g fill="#7DF9FF">
+    <circle r="3.5" cx="40" cy="60">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="3.5" cx="400" cy="60"/>
+    <circle r="3.5" cx="760" cy="60"/>
+    <circle r="3.5" cx="1060" cy="60"/>
+    <circle r="3" cx="470" cy="70" fill="#C9A227"/>
+    <circle r="3" cx="900" cy="55" fill="#C9A227"/>
+  </g>
+  <circle r="5" fill="#7DF9FF">
+    <animateMotion dur="4.5s" repeatCount="indefinite" path="M40 60 C 180 20, 260 100, 400 60 S 620 10, 760 60 S 980 110, 1060 60"/>
+  </circle>
+  <circle r="4" fill="#C9A227">
+    <animateMotion dur="6s" repeatCount="indefinite" path="M40 70 C 200 110, 300 20, 470 70 S 720 120, 900 55 S 1020 20, 1060 70"/>
+  </circle>
+  <text x="40" y="18" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="10" letter-spacing="2.2">RAGX MESH  /  RAG  VOICE  GUARDRAILS  MCP</text>
+  <text x="1060" y="18" text-anchor="end" fill="#3DFF9A" font-family="Consolas, 'Courier New', monospace" font-size="10" letter-spacing="1.8">LINK STABLE</text>
+</svg>

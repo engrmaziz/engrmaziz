@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 96" width="1100" height="96" role="img" aria-label="Live system telemetry">
+  <defs>
+    <linearGradient id="tbg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#050a14"/>
+      <stop offset="50%" stop-color="#0a1628"/>
+      <stop offset="100%" stop-color="#050a14"/>
+    </linearGradient>
+  </defs>
+  <rect width="1100" height="96" fill="url(#tbg)"/>
+  <rect x="10" y="10" width="1080" height="76" fill="none" stroke="#00D4FF" stroke-opacity="0.3"/>
+
+  <g font-family="Consolas, 'Courier New', monospace" text-anchor="middle">
+    <g transform="translate(147,48)">
+      <text y="-14" fill="#8BA0B5" font-size="10" letter-spacing="2">HALLUCINATIONS</text>
+      <text y="16" fill="#7DF9FF" font-size="22">0</text>
+      <animate attributeName="opacity" values="0.75;1;0.75" dur="3s" repeatCount="indefinite"/>
+    </g>
+    <line x1="275" y1="24" x2="275" y2="72" stroke="#00D4FF" stroke-opacity="0.2"/>
+    <g transform="translate(412,48)">
+      <text y="-14" fill="#8BA0B5" font-size="10" letter-spacing="2">VOICE E2E</text>
+      <text y="16" fill="#7DF9FF" font-size="22">&lt;500ms</text>
+    </g>
+    <line x1="550" y1="24" x2="550" y2="72" stroke="#00D4FF" stroke-opacity="0.2"/>
+    <g transform="translate(687,48)">
+      <text y="-14" fill="#8BA0B5" font-size="10" letter-spacing="2">CLINICAL / DAY</text>
+      <text y="16" fill="#C9A227" font-size="22">1,000+</text>
+    </g>
+    <line x1="825" y1="24" x2="825" y2="72" stroke="#00D4FF" stroke-opacity="0.2"/>
+    <g transform="translate(952,48)">
+      <text y="-14" fill="#8BA0B5" font-size="10" letter-spacing="2">MONTHLY TRAFFIC</text>
+      <text y="16" fill="#7DF9FF" font-size="22">500K</text>
+    </g>
+  </g>
+</svg>
