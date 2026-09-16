@@ -18,7 +18,9 @@ Prior experience:
 - NovaSole (e-commerce scale, 500k+ monthly visitors), Ihsan Solar, Transworld Home (telecom)
 - Alkhidmat Foundation: District Coordinator (volunteer emergency response, COVID-19 and 2025 Pakistan floods)
 
-Education: B.S. (Hons.) Electrical Engineering, COMSATS University.`;
+Education: B.S. (Hons.) Electrical Engineering, COMSATS University.
+
+Resume: visitors download the current PDF at /Musharraf_Aziz_CV.pdf`;
 
 const SHORT_SERVICE_NAMES: Record<string, string> = {
   'ai-agents/ai-call-agents': 'Custom AI Call Agents',

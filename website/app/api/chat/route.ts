@@ -62,13 +62,13 @@ export async function POST(req: NextRequest) {
     // 2. Lightweight Intent Router
     const msgLower = data.message.toLowerCase().trim();
     const isGreeting = /^(hello|hi|hey|greetings|how are you|good morning|good afternoon|what's up)\b/.test(msgLower) && msgLower.length < 40;
-    const isResume = /\b(resume|cv|download cv)\b/.test(msgLower) && msgLower.length < 50;
+    const isResume = /\b((download|get|send|share).{0,24}\b(resume|cv)|(resume|cv).{0,16}\b(download|pdf|file|link))\b/i.test(msgLower) && msgLower.length < 80;
     const isContact = /\b(contact|email|reach out|get in touch)\b/.test(msgLower) && msgLower.length < 50;
 
     let intentResponse: string | null = null;
     
     if (isResume) {
-      intentResponse = "You can view or download Musharraf's resume here: [View Resume](/api/resume)";
+      intentResponse = "Download the current resume as [Musharraf_Aziz_CV.pdf](/Musharraf_Aziz_CV.pdf).";
     } else if (isContact) {
       intentResponse = "You can reach Musharraf directly at io@maziz.me, or use the [Contact Form](/contact) for project inquiries.";
     } else if (isGreeting) {

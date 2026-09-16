@@ -319,6 +319,8 @@ id_ed25519
 # PDFs (Enable if desired)
 ############################################################
 *.pdf
+!website/public/Musharraf_Aziz_CV.pdf
+!website/public/resume.pdf
 
 ############################################################
 # Office Documents (Enable if desired)

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Button } from "./Button";
 import { FileText, Download } from "lucide-react";
 import { Toast } from "./Toast";
+import { downloadResume } from "@/lib/download-resume";
 
 export function ResumeDownload() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,18 +17,8 @@ export function ResumeDownload() {
     setIsLoading(true);
     setToastOpen(false);
     try {
-      const res = await fetch('/api/resume');
-      if (!res.ok) throw new Error("Failed to fetch resume link");
-      const data = await res.json();
-      
-      const a = document.createElement("a");
-      a.href = data.url;
-      a.download = "Musharraf_Aziz_Resume.pdf";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      
-    } catch (err) {
+      downloadResume();
+    } catch {
       setToastOpen(true);
     } finally {
       setIsLoading(false);
@@ -42,26 +33,25 @@ export function ResumeDownload() {
         </div>
         <div className="flex-1 text-center sm:text-left">
           <h4 className="font-bold text-primary">Download Resume</h4>
-          <p className="text-sm text-secondary">PDF Format • Auto-syncs with latest version</p>
+          <p className="text-sm text-secondary">PDF · Musharraf Aziz · Applied AI/ML</p>
         </div>
-        <Button 
-          onClick={handleDownload} 
-          isLoading={isLoading} 
+        <Button
+          onClick={handleDownload}
+          isLoading={isLoading}
           leftIcon={!isLoading ? <Download className="w-4 h-4" /> : undefined}
           disabled={isLoading}
+          className="cursor-pointer"
         >
-          {isLoading ? "Generating..." : "Download PDF"}
+          {isLoading ? "Preparing..." : "Download PDF"}
         </Button>
       </div>
 
-      <Toast 
-        isOpen={toastOpen} 
-        onClose={() => setToastOpen(false)} 
-        message="Could not retrieve the latest resume. Please try again later." 
-        type="error" 
+      <Toast
+        isOpen={toastOpen}
+        onClose={() => setToastOpen(false)}
+        message="Could not retrieve the latest resume. Please try again later."
+        type="error"
       />
     </>
   );
 }
-
-

@@ -192,21 +192,23 @@ export class RAGOrchestrator {
             aiClient.generate({
               messages: ctx.prompt.messages,
               temperature: 0.15,
-              maxTokens: 700,
-              timeoutMs: 2400,
+              maxTokens: 800,
+              timeoutMs: 3500,
             }),
-            2500,
+            3800,
             null
           );
           const text = (generated?.content || '').trim();
-          if (text.length >= 40 && !/json-ld|hero section|related services/i.test(text)) {
+          const weak = text.length < 80 || /json-ld|hero section|related services|^\s*source code:/i.test(text);
+          if (!weak) {
             ctx.response.assistantResponse = text;
             (ctx as any)._lastLlmModel = generated?.model || 'groq';
           } else {
             ctx.response.assistantResponse = buildGroundedFallback(ctx.retrieval.chunks || [], queryText);
             (ctx as any)._lastLlmModel = 'grounded-fallback';
           }
-        } catch {
+        } catch (genErr: any) {
+          telemetryLogger.error('AGENT', 'Generation failed, using grounded fallback', genErr);
           ctx.response.assistantResponse = buildGroundedFallback(ctx.retrieval.chunks || [], queryText);
           (ctx as any)._lastLlmModel = 'grounded-fallback';
         }

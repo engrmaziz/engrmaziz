@@ -147,6 +147,8 @@ class LocalKnowledgeIndex {
 
       for (const section of rows) {
         const text = section.body.trim();
+        if (text.length < 80) continue;
+        if (/github\.com/i.test(text) && text.length < 240) continue;
         acc.push({
           id: `${relPath}#${section.heading.toLowerCase().replace(/[^\w]+/g, '-')}`,
           title,

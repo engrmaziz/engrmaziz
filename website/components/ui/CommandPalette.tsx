@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Search, Home, Info, Briefcase, Folder, FileText, Mail, Code, User, Database, Bot, Moon, Sun, Monitor } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { downloadResume, RESUME_PUBLIC_PATH } from "@/lib/download-resume";
 
 const ITEMS = [
   { id: 'nav-home', category: 'Navigation', title: 'Home', icon: Home, action: '/' },
@@ -17,7 +18,7 @@ const ITEMS = [
   { id: 'nav-blog', category: 'Navigation', title: 'Blog', icon: FileText, action: '/blog' },
   { id: 'nav-contact', category: 'Navigation', title: 'Contact', icon: Mail, action: '/contact' },
   
-  { id: 'res-resume', category: 'Resources', title: 'Resume', icon: FileText, action: '/resume.pdf' },
+  { id: 'res-resume', category: 'Resources', title: 'Resume', icon: FileText, action: RESUME_PUBLIC_PATH },
   { id: 'res-github', category: 'Resources', title: 'GitHub', icon: Code, action: 'https://github.com/engrmaziz' },
   { id: 'res-linkedin', category: 'Resources', title: 'LinkedIn', icon: User, action: 'https://www.linkedin.com/in/musharrafazizq/' },
   { id: 'res-email', category: 'Resources', title: 'Email', icon: Mail, action: 'mailto:io@maziz.me' },
@@ -82,17 +83,8 @@ export function CommandPalette() {
     setIsOpen(false);
     if (item.action.startsWith("theme-")) {
       setTheme(item.action.replace("theme-", ""));
-    } else if (item.action === "/resume.pdf") {
-      try {
-        const res = await fetch('/api/resume');
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        const url = data?.url || data?.data?.url;
-        if (url) window.open(url, '_blank', 'noopener,noreferrer');
-        else throw new Error();
-      } catch {
-        window.open('/resume.pdf', '_blank', 'noopener,noreferrer');
-      }
+    } else if (item.action === RESUME_PUBLIC_PATH) {
+      downloadResume();
     } else if (item.action.startsWith("http") || item.action.startsWith("mailto:")) {
       window.open(item.action, "_blank");
     } else {

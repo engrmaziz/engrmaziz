@@ -13,21 +13,10 @@ import { Button } from "@/components/ui/Button";
 import { useScroll } from "@/hooks/useScroll";
 import { BrandLogo } from "@/components/common/BrandLogo";
 import { Magnetic } from "@/components/fx/Magnetic";
+import { downloadResume } from "@/lib/download-resume";
 
-async function openResume() {
-  try {
-    const res = await fetch("/api/resume");
-    if (!res.ok) throw new Error("Failed to fetch resume URL");
-    const data = await res.json();
-    const url = data?.url || data?.data?.url;
-    if (url) {
-      window.open(url, "_blank", "noopener,noreferrer");
-    } else {
-      throw new Error("No URL returned");
-    }
-  } catch {
-    window.open("/resume.pdf", "_blank", "noopener,noreferrer");
-  }
+function openResume() {
+  downloadResume();
 }
 
 const NAV_LINKS = [
@@ -176,8 +165,8 @@ export function Navbar() {
                 })}
               </nav>
               <div className="mt-4 flex flex-col gap-4">
-                <Button variant="outline" className="w-full justify-between font-mono text-sm" onClick={openResume} aria-label="View Resume">
-                  View resume
+                <Button variant="outline" className="w-full justify-between font-mono text-sm cursor-pointer" onClick={openResume} aria-label="Download Resume">
+                  Download resume
                   <FileText className="h-4 w-4" />
                 </Button>
                 <Link href="/hire" className="w-full">

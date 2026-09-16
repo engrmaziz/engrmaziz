@@ -1,43 +1,27 @@
-import { NextResponse } from 'next/server';
-import { envServer } from '@/lib/config/env.server';
-import { env } from '@/lib/config/env';
+import { NextResponse } from "next/server";
+import { readFile } from "fs/promises";
+import path from "path";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
+
+const FILE_NAME = "Musharraf_Aziz_CV.pdf";
 
 export async function GET() {
   try {
-    const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL || '';
-    const serviceRoleKey = envServer.SUPABASE_SERVICE_ROLE_KEY || '';
+    const filePath = path.join(process.cwd(), "public", FILE_NAME);
+    const buf = await readFile(filePath);
 
-    if (!supabaseUrl || !serviceRoleKey) {
-      return NextResponse.json({ error: 'Storage configured incorrectly.' }, { status: 500 });
-    }
-
-    const signRes = await fetch(`${supabaseUrl}/storage/v1/object/sign/resumes/latest.pdf`, {
-      method: 'POST',
-      cache: 'no-store',
+    return new NextResponse(buf, {
+      status: 200,
       headers: {
-        'Authorization': `Bearer ${serviceRoleKey}`,
-        'apikey': serviceRoleKey,
-        'Content-Type': 'application/json'
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${FILE_NAME}"`,
+        "Content-Length": String(buf.byteLength),
+        "Cache-Control": "public, max-age=300",
       },
-      body: JSON.stringify({ expiresIn: 3600 })
-    });
-
-    if (!signRes.ok) {
-      console.error('[Resume API] Failed to sign URL:', await signRes.text());
-      throw new Error('Failed to generate signed URL');
-    }
-
-    const { signedURL } = await signRes.json();
-
-    return NextResponse.json({
-      url: `${supabaseUrl}/storage/v1${signedURL}`,
-      size: "2.4 MB",
-      updatedAt: new Date().toISOString().split('T')[0]
     });
   } catch (error) {
-    console.error('[Resume API]', error);
-    return NextResponse.json({ error: 'Failed to fetch resume' }, { status: 500 });
+    console.error("[Resume API]", error);
+    return NextResponse.json({ error: "Resume is unavailable." }, { status: 404 });
   }
 }

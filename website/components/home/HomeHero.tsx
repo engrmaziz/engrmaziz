@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { DirectAnswer } from "@/components/seo/DirectAnswer";
 import { Magnetic } from "@/components/fx/Magnetic";
 import { HudFrame } from "@/components/fx/HudFrame";
+import { downloadResume } from "@/lib/download-resume";
 
 const LINES = [
   { label: "orchestrator", value: "LangGraph + Groq", ok: "READY" },
@@ -85,18 +86,8 @@ export function HomeHero() {
             className="mt-4 flex flex-wrap items-center gap-4 border-t border-border-default pt-6"
           >
             <button
-              onClick={async () => {
-                try {
-                  const res = await fetch("/api/resume");
-                  if (!res.ok) throw new Error();
-                  const data = await res.json();
-                  const url = data?.url || data?.data?.url;
-                  if (url) window.open(url, "_blank", "noopener,noreferrer");
-                  else throw new Error();
-                } catch {
-                  window.open("/resume.pdf", "_blank", "noopener,noreferrer");
-                }
-              }}
+              type="button"
+              onClick={downloadResume}
               className="group inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-border-default bg-elevated/80 px-6 py-3 font-semibold text-primary backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:text-accent"
             >
               <FileText className="h-4 w-4 transition-transform group-hover:scale-110" />
