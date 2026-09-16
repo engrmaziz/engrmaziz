@@ -2,11 +2,11 @@
 import { ragRetriever } from '../rag/retriever';
 import { ragMemory } from '../rag/memory';
 import { promptBuilder } from '../rag/prompt-builder';
-import { expandFollowUpQuery, isFollowUpQuery } from '../rag/identity';
+import { expandFollowUpQuery } from '../rag/identity';
 import { withTimeout } from '../rag/timing';
 import { buildGroundedFallback } from '../rag/extractive';
 import { streamChatCompletion, synthesizeSpeech, transcribeAudio } from './groq-audio';
-import { pullCompleteSentences, spokenIntentReply, toSpokenText, VOICE_GREETING, VOICE_MISHEAR } from './spoken';
+import { lockVisitorAddress, pullCompleteSentences, spokenIntentReply, toSpokenText, VOICE_GREETING, VOICE_MISHEAR } from './spoken';
 
 export type VoiceEvent =
   | { type: 'transcript'; text: string; sttMs: number }
@@ -78,7 +78,7 @@ export async function runVoiceGreeting(emit: (event: VoiceEvent) => void, visito
   const started = Date.now();
   const name = visitor?.name?.split(' ')[0];
   const text = name
-    ? `Hello ${name}. This is RAGX, speaking for Musharraf Aziz. Ask about production voice agents, grounded RAG, or how to hire him.`
+    ? `Hello ${name}. I am RAGX, Musharraf Aziz's assistant. Tell me what you want him to ship.`
     : VOICE_GREETING;
   emit({ type: 'answer', text, ragMs: 0 });
   emit({ type: 'status', stage: 'tts' });
@@ -111,7 +111,7 @@ export async function runVoiceTurn(opts: {
 }) {
   const started = Date.now();
   const { emit } = opts;
-  const stt = await transcribeAudio(opts.audio, filenameFor(opts.mimeType));
+  const stt = await transcribeAudio(opts.audio, filenameFor(opts.mimeType), opts.visitorInfo.name);
   const transcript = stt.text.replace(/\s+/g, ' ').trim();
   emit({ type: 'transcript', text: transcript, sttMs: stt.ms });
 
@@ -170,9 +170,9 @@ export async function runVoiceTurn(opts: {
     return;
   }
 
-  const intent = spokenIntentReply(transcript);
+  const intent = spokenIntentReply(transcript, opts.visitorInfo.name);
   if (intent) {
-    spoken = intent;
+    spoken = lockVisitorAddress(intent, opts.visitorInfo.name);
     emit({ type: 'answer', text: spoken, ragMs: 0 });
     emit({ type: 'status', stage: 'tts' });
     speaker.speak(spoken);
@@ -182,8 +182,8 @@ export async function runVoiceTurn(opts: {
 
   emit({ type: 'status', stage: 'rag' });
   const ragStarted = Date.now();
-  const history = opts.conversationId && isFollowUpQuery(transcript)
-    ? await withTimeout(ragMemory.loadRecentMessages(opts.conversationId, 4), 120, [])
+  const history = opts.conversationId
+    ? await withTimeout(ragMemory.loadRecentMessages(opts.conversationId, 6), 150, [])
     : [];
   const optimized = expandFollowUpQuery(transcript, Array.isArray(history) ? history : []);
   const retrieval = await ragRetriever.retrieve(optimized, 5, 0.22, {});
@@ -211,7 +211,7 @@ export async function runVoiceTurn(opts: {
         const { ready, rest } = pullCompleteSentences(pending);
         pending = rest;
         for (const sentence of ready) {
-          const clean = toSpokenText(sentence);
+          const clean = lockVisitorAddress(sentence, opts.visitorInfo.name);
           if (clean.length < 8) continue;
           spokenParts.push(clean);
           spoken = spokenParts.join(' ');
@@ -222,12 +222,12 @@ export async function runVoiceTurn(opts: {
     });
     ragMs = Date.now() - ragStarted;
     modelUsed = streamed.model;
-    const remainder = toSpokenText(pending);
+    const remainder = lockVisitorAddress(pending, opts.visitorInfo.name);
     if (remainder.length >= 8) {
       spokenParts.push(remainder);
       speaker.speak(remainder);
     }
-    spoken = toSpokenText(spokenParts.join(' ') || streamed.content);
+    spoken = lockVisitorAddress(spokenParts.join(' ') || streamed.content, opts.visitorInfo.name);
   } catch {
     ragMs = Date.now() - ragStarted;
     modelUsed = 'grounded-fallback';
@@ -235,7 +235,7 @@ export async function runVoiceTurn(opts: {
   }
 
   if (!spoken || spoken.length < 24) {
-    spoken = toSpokenText(buildGroundedFallback(retrieval.chunks || [], transcript));
+    spoken = lockVisitorAddress(buildGroundedFallback(retrieval.chunks || [], transcript), opts.visitorInfo.name);
     emit({ type: 'answer', text: spoken, ragMs });
     if (speaker.state.index === 0) speaker.speak(spoken);
   } else {

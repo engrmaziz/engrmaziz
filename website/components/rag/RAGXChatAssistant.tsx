@@ -634,6 +634,7 @@ export function RAGXChatAssistant() {
                               liveTranscript={voice.liveTranscript}
                               timings={voice.timings}
                               supported={voice.supported}
+                              sessionLive={voice.sessionLive}
                               disabled={isLoading}
                               reducedMotion={reducedMotion}
                               onToggle={voice.toggle}
@@ -653,7 +654,7 @@ export function RAGXChatAssistant() {
                             </div>
                           )}
                           <div className="flex justify-between items-center mt-2 px-1">
-                            <span className="text-[10px] font-mono text-[#8BA0B5]">{mode === "voice" ? "Tap mic · interrupt anytime" : "Enter to send"}</span>
+                            <span className="text-[10px] font-mono text-[#8BA0B5]">{mode === "voice" ? "Live call · speak freely · tap to hang up" : "Enter to send"}</span>
                             <div className="flex items-center gap-1.5">
                               <span className={`w-1.5 h-1.5 rounded-full ${engineStatus?.status === "ONLINE" ? "bg-[#3DFF9A]" : "bg-red-500"} ${engineStatus?.status === "ONLINE" ? "animate-pulse" : ""}`}></span>
                               <span className="text-[10px] font-mono text-[#8BA0B5]">{engineStatus?.status === "ONLINE" ? "SYS.NOMINAL" : "OFFLINE"}</span>

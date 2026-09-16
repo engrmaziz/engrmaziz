@@ -19,13 +19,15 @@ const PATH_SPOKEN: Array<[RegExp, string]> = [
 ];
 
 export const VOICE_GREETING =
-  'Hello. This is RAGX, speaking for Musharraf Aziz. Ask about production voice agents, grounded RAG, or how to hire him.';
+  'Hello. I am RAGX, Musharraf Aziz\'s assistant. Tell me what you want him to ship.';
 
 export const VOICE_MISHEAR =
   'I did not catch that. Ask what Musharraf can ship, or how you would like to hire him.';
 
-export const STT_CONTEXT_PROMPT =
-  'RAGX conversation with a prospective client of Musharraf Aziz. Topics: custom AI call agents, RAG systems, chatbots, workflow automation, Groq, Cygnus, hire, Maziz.';
+export function sttContextPrompt(visitorName?: string): string {
+  const first = (visitorName || '').split(/\s+/)[0] || 'the visitor';
+  return `English. ${first} is talking to an assistant named RAGX about hiring an engineer. Names that may appear: ${first}, RAGX, Musharraf Aziz. Topics: voice agents, RAG, chatbots, automation, hire.`;
+}
 
 export function toSpokenText(raw: string): string {
   let text = String(raw || '');
@@ -83,20 +85,34 @@ export function pullCompleteSentences(buffer: string): { ready: string[]; rest: 
   return { ready, rest };
 }
 
-export function spokenIntentReply(query: string): string | null {
+export function spokenIntentReply(query: string, visitorName?: string): string | null {
   const msgLower = query.toLowerCase().trim();
   if (!msgLower) return null;
+  const first = (visitorName || '').split(/\s+/)[0] || '';
   const isGreeting = /^(hello|hi|hey|greetings|how are you|good morning|good afternoon|what's up|yo)\b/.test(msgLower) && msgLower.length < 40;
   const isResume = /\b((download|get|send|share).{0,24}\b(resume|cv)|(resume|cv).{0,16}\b(download|pdf|file|link))\b/i.test(msgLower) && msgLower.length < 80;
   const isContact = /\b(contact|email|reach out|get in touch)\b/.test(msgLower) && msgLower.length < 50;
   if (isResume) {
-    return 'You can download Musharraf Aziz CV from the site. If you want the work instead, tell me whether you need a voice agent, a RAG system, or a hire.';
+    return `${first ? `${first}, you` : 'You'} can download Musharraf Aziz CV from the site. If you want the work instead, tell me whether you need a voice agent, a RAG system, or a hire.`;
   }
   if (isContact) {
     return 'Reach Musharraf at io at maziz.me, or use the contact page. Tell me the channel you need — voice, chat, RAG, or automation — and I will point you to the right next step.';
   }
   if (isGreeting) {
-    return 'Hello. I am RAGX. Ask what Musharraf can ship, how the stack holds production, or how to hire him.';
+    return first
+      ? `Hello ${first}. I am RAGX, Musharraf Aziz's assistant. Ask what he can ship, or how you would hire him.`
+      : 'Hello. I am RAGX, Musharraf Aziz\'s assistant. Ask what he can ship, or how you would hire him.';
   }
   return null;
+}
+
+export function lockVisitorAddress(text: string, visitorName?: string): string {
+  const spoken = toSpokenText(text);
+  if (!spoken || !visitorName) return spoken;
+  const first = visitorName.split(/\s+/)[0] || visitorName;
+  if (/musharraf/i.test(visitorName)) return spoken;
+  return spoken
+    .replace(/\b(hello|hi|hey)\s+musharraf(?:\s+aziz)?\b/gi, `$1 ${first}`)
+    .replace(/\byou are musharraf(?:\s+aziz)?\b/gi, `you are ${first}`)
+    .replace(/\byour name is musharraf(?:\s+aziz)?\b/gi, `your name is ${first}`);
 }

@@ -19,7 +19,12 @@ export class PromptBuilder {
       .replace('{context}', ragContext || 'No additional source excerpts were retrieved.');
 
     if (visitorInfo) {
-      systemContent += `\n\nVisitor: ${visitorInfo.name} <${visitorInfo.email}>. Do not ask for name or email again.`;
+      const firstName = visitorInfo.name.split(/\s+/)[0] || visitorInfo.name;
+      if (options?.channel === 'voice') {
+        systemContent += `\n\nVisitor on this call: ${visitorInfo.name} <${visitorInfo.email}>. Address them as ${firstName}. They are a client or recruiter talking to RAGX. They are not Musharraf Aziz unless that is literally their name. Do not ask for name or email again.`;
+      } else {
+        systemContent += `\n\nVisitor: ${visitorInfo.name} <${visitorInfo.email}>. Do not ask for name or email again.`;
+      }
     }
 
     if (summary) {

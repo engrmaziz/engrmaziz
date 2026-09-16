@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { systemConfig } from '../system/config';
-import { STT_CONTEXT_PROMPT, chunkForTts, toSpokenText } from './spoken';
+import { chunkForTts, sttContextPrompt, toSpokenText } from './spoken';
 
 const GROQ_AUDIO_BASE = 'https://api.groq.com/openai/v1/audio';
 const GROQ_CHAT_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -27,7 +27,7 @@ function apiKey(): string {
 
 export type ChatMessage = { role: string; content: string };
 
-export async function transcribeAudio(file: Blob, filename: string): Promise<{ text: string; ms: number }> {
+export async function transcribeAudio(file: Blob, filename: string, visitorName?: string): Promise<{ text: string; ms: number }> {
   const started = Date.now();
   let lastError = 'Transcription failed.';
   for (const model of STT_MODELS) {
@@ -37,7 +37,7 @@ export async function transcribeAudio(file: Blob, filename: string): Promise<{ t
     form.append('language', 'en');
     form.append('temperature', '0');
     form.append('response_format', 'verbose_json');
-    form.append('prompt', STT_CONTEXT_PROMPT);
+    form.append('prompt', sttContextPrompt(visitorName));
 
     const response = await fetch(`${GROQ_AUDIO_BASE}/transcriptions`, {
       method: 'POST',

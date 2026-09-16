@@ -23,6 +23,15 @@ type EventPayload =
   | { type: "done"; timings: VoiceTimings; modelUsed: string; voice: string }
   | { type: "error"; message: string };
 
+const LISTEN_RMS = 0.038;
+const MIN_SPEECH_MS = 340;
+const SILENCE_MS = 720;
+const MAX_UTTERANCE_MS = 14000;
+const BARGE_RMS = 0.12;
+const BARGE_HOLD_MS = 260;
+const PLAYBACK_GUARD_MS = 450;
+const POST_SPEAK_GAP_MS = 380;
+
 function pickBrowserVoice(): SpeechSynthesisVoice | null {
   if (typeof window === "undefined" || !window.speechSynthesis) return null;
   const voices = window.speechSynthesis.getVoices();
@@ -99,21 +108,28 @@ export function useRagxVoice(opts: {
   const [liveTranscript, setLiveTranscript] = useState("");
   const [timings, setTimings] = useState<VoiceTimings | null>(null);
   const [supported, setSupported] = useState(true);
+  const [sessionLive, setSessionLive] = useState(false);
 
   const statusRef = useRef<VoiceStatus>("idle");
+  const sessionLiveRef = useRef(false);
   const streamRef = useRef<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const rafRef = useRef<number>(0);
   const speechStartedAt = useRef(0);
   const lastLoudAt = useRef(0);
+  const bargeStartedAt = useRef(0);
+  const playbackGuardUntil = useRef(0);
+  const listenGuardUntil = useRef(0);
   const playQueueRef = useRef<HTMLAudioElement[]>([]);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
-  const greetedRef = useRef(false);
   const sendingRef = useRef(false);
+  const turnIdRef = useRef(0);
+  const mimeRef = useRef("");
   const optsRef = useRef(opts);
   optsRef.current = opts;
 
@@ -136,6 +152,55 @@ export function useRagxVoice(opts: {
     if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
   }, []);
 
+  const stopRecorder = useCallback(() => {
+    const recorder = recorderRef.current;
+    recorderRef.current = null;
+    if (recorder && recorder.state === "recording") {
+      try {
+        recorder.stop();
+      } catch {
+        // already stopped
+      }
+    }
+  }, []);
+
+  const releaseCall = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = 0;
+    stopRecorder();
+    sourceRef.current?.disconnect();
+    sourceRef.current = null;
+    analyserRef.current = null;
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    chunksRef.current = [];
+    speechStartedAt.current = 0;
+    lastLoudAt.current = 0;
+    bargeStartedAt.current = 0;
+    setLevel(0);
+  }, [stopRecorder]);
+
+  const playbackBusy = () =>
+    Boolean(currentAudioRef.current || playQueueRef.current.length || (typeof window !== "undefined" && window.speechSynthesis?.speaking));
+
+  const resumeListenRef = useRef<() => void>(() => undefined);
+  const captureTurnRef = useRef<() => void>(() => undefined);
+  const maybeResumeRef = useRef<() => void>(() => undefined);
+
+  const maybeResumeListen = useCallback(() => {
+    window.setTimeout(() => {
+      if (!sessionLiveRef.current) return;
+      if (sendingRef.current) return;
+      if (playbackBusy()) return;
+      const phase = statusRef.current;
+      if (phase === "listening" || phase === "arming") return;
+      listenGuardUntil.current = performance.now() + 420;
+      resumeListenRef.current();
+    }, POST_SPEAK_GAP_MS);
+  }, []);
+
+  maybeResumeRef.current = maybeResumeListen;
+
   const enqueueAudio = useCallback((mime: string, b64: string) => {
     const bytes = decodeBase64(b64);
     const copy = new Uint8Array(bytes.byteLength);
@@ -149,45 +214,48 @@ export function useRagxVoice(opts: {
       const next = playQueueRef.current[0];
       if (next) {
         currentAudioRef.current = next;
+        playbackGuardUntil.current = performance.now() + PLAYBACK_GUARD_MS;
         void next.play();
       } else {
         currentAudioRef.current = null;
-        if (statusRef.current === "speaking") setPhase("idle");
+        maybeResumeRef.current();
       }
     };
     audio.onerror = () => {
       URL.revokeObjectURL(url);
       playQueueRef.current = playQueueRef.current.filter((item) => item !== audio);
+      if (!playQueueRef.current.length) {
+        currentAudioRef.current = null;
+        maybeResumeRef.current();
+      }
     };
     playQueueRef.current.push(audio);
     if (!currentAudioRef.current) {
       currentAudioRef.current = audio;
       setPhase("speaking");
-      void audio.play().catch(() => setPhase("idle"));
+      playbackGuardUntil.current = performance.now() + PLAYBACK_GUARD_MS;
+      void audio.play().catch(() => maybeResumeRef.current());
     }
   }, []);
 
-  const teardownMic = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    recorderRef.current?.stream.getTracks().forEach((track) => track.stop());
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    recorderRef.current = null;
-    streamRef.current = null;
-    analyserRef.current = null;
-    setLevel(0);
-  }, []);
-
-  const parseSse = async (response: Response) => {
+  const parseSse = async (response: Response, turnId: number) => {
     if (!response.body) throw new Error("Voice stream was empty.");
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = "";
     let answer = "";
-    let transcript = "";
     let doneTimings: VoiceTimings | undefined;
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
+      if (turnId !== turnIdRef.current) {
+        try {
+          await reader.cancel();
+        } catch {
+          // ignore
+        }
+        return { stale: true, answer: "", timings: undefined };
+      }
       buffer += decoder.decode(value, { stream: true });
       const parts = buffer.split("\n\n");
       buffer = parts.pop() || "";
@@ -200,8 +268,8 @@ export function useRagxVoice(opts: {
         } catch {
           continue;
         }
+        if (turnId !== turnIdRef.current) return { stale: true, answer: "", timings: undefined };
         if (event.type === "transcript") {
-          transcript = event.text;
           setLiveTranscript(event.text);
           if (event.text) optsRef.current.onUserUtterance(event.text);
           setPhase("thinking");
@@ -213,9 +281,8 @@ export function useRagxVoice(opts: {
           enqueueAudio(event.mime, event.b64);
         } else if (event.type === "tts_fallback") {
           setPhase("speaking");
-          void speakBrowser(event.text, () => {
-            if (statusRef.current === "speaking") setPhase("idle");
-          });
+          playbackGuardUntil.current = performance.now() + PLAYBACK_GUARD_MS;
+          void speakBrowser(event.text, () => maybeResumeRef.current());
         } else if (event.type === "done") {
           doneTimings = event.timings;
           setTimings(event.timings);
@@ -225,7 +292,7 @@ export function useRagxVoice(opts: {
         }
       }
     }
-    return { answer, transcript, timings: doneTimings };
+    return { stale: false, answer, timings: doneTimings };
   };
 
   const sendClip = useCallback(async (blob: Blob, mimeType: string, greeting = false) => {
@@ -238,6 +305,7 @@ export function useRagxVoice(opts: {
     abortRef.current?.abort();
     const abort = new AbortController();
     abortRef.current = abort;
+    const turnId = ++turnIdRef.current;
     setPhase(greeting ? "speaking" : "transcribing");
     const form = new FormData();
     form.append("conversationId", conversationId);
@@ -247,36 +315,77 @@ export function useRagxVoice(opts: {
       form.append("audio", blob, mimeType.includes("mp4") ? "turn.m4a" : "turn.webm");
       form.append("mimeType", mimeType);
     }
-    const response = await fetch("/api/voice", { method: "POST", body: form, signal: abort.signal });
-    if (!response.ok) {
-      let message = "Voice request failed.";
-      try {
-        const data = await response.json();
-        message = data?.error?.message || data?.error || message;
-      } catch {
-        message = await response.text();
+    try {
+      const response = await fetch("/api/voice", { method: "POST", body: form, signal: abort.signal });
+      if (!response.ok) {
+        let message = "Voice request failed.";
+        try {
+          const data = await response.json();
+          message = data?.error?.message || data?.error || message;
+        } catch {
+          message = await response.text();
+        }
+        throw new Error(typeof message === "string" ? message : "Voice request failed.");
       }
-      throw new Error(typeof message === "string" ? message : "Voice request failed.");
+      const result = await parseSse(response, turnId);
+      if (result.stale) return;
+      if (!playbackBusy() && statusRef.current !== "speaking") maybeResumeRef.current();
+    } catch (err: any) {
+      if (err?.name === "AbortError" || turnId !== turnIdRef.current) return;
+      throw err;
     }
-    await parseSse(response);
   }, [enqueueAudio]);
 
-  const stopAndSend = useCallback(async () => {
+  const armRecorder = useCallback(() => {
+    const stream = streamRef.current;
+    const mime = mimeRef.current || pickMime();
+    if (!stream || !mime) return;
+    stopRecorder();
+    chunksRef.current = [];
+    speechStartedAt.current = 0;
+    lastLoudAt.current = 0;
+    bargeStartedAt.current = 0;
+    const recorder = new MediaRecorder(stream, { mimeType: mime });
+    recorderRef.current = recorder;
+    recorder.ondataavailable = (event) => {
+      if (event.data.size) chunksRef.current.push(event.data);
+    };
+    recorder.start(200);
+    setPhase("listening");
+    setError(null);
+  }, [stopRecorder]);
+
+  resumeListenRef.current = () => {
+    if (!sessionLiveRef.current || !streamRef.current) return;
+    if (recorderRef.current?.state === "recording") {
+      setPhase("listening");
+      return;
+    }
+    armRecorder();
+  };
+
+  const captureTurn = useCallback(async () => {
+    if (!sessionLiveRef.current || sendingRef.current) return;
     const recorder = recorderRef.current;
-    if (!recorder || sendingRef.current) return;
+    if (!recorder) {
+      armRecorder();
+      return;
+    }
+    if (!speechStartedAt.current) {
+      chunksRef.current = [];
+      return;
+    }
     sendingRef.current = true;
-    const mime = recorder.mimeType || pickMime();
+    const mime = recorder.mimeType || mimeRef.current || pickMime();
     const finished = new Promise<Blob>((resolve) => {
       recorder.onstop = () => resolve(new Blob(chunksRef.current, { type: mime }));
     });
-    if (recorder.state === "recording") recorder.stop();
-    teardownMic();
+    stopRecorder();
     const blob = await finished;
     chunksRef.current = [];
     try {
-      if (!speechStartedAt.current || blob.size < 400) {
-        setError("I did not hear speech. Tap the mic and talk.");
-        setPhase("idle");
+      if (blob.size < 400) {
+        armRecorder();
         return;
       }
       await sendClip(blob, mime);
@@ -284,47 +393,84 @@ export function useRagxVoice(opts: {
       if (err?.name === "AbortError") return;
       setError(err?.message || "Voice turn failed.");
       setPhase("error");
+      if (sessionLiveRef.current) armRecorder();
     } finally {
       sendingRef.current = false;
     }
-  }, [sendClip, teardownMic]);
+  }, [armRecorder, sendClip, stopRecorder]);
+
+  captureTurnRef.current = () => {
+    void captureTurn();
+  };
+
+  const interruptAndListen = useCallback(() => {
+    turnIdRef.current += 1;
+    abortRef.current?.abort();
+    stopPlayback();
+    sendingRef.current = false;
+    if (recorderRef.current?.state === "recording") return;
+    speechStartedAt.current = performance.now();
+    lastLoudAt.current = performance.now();
+    armRecorder();
+  }, [armRecorder, stopPlayback]);
 
   const watchVad = useCallback(() => {
-    const analyser = analyserRef.current;
-    if (!analyser) return;
-    const data = new Uint8Array(analyser.fftSize);
     const loop = () => {
+      rafRef.current = requestAnimationFrame(loop);
+      const analyser = analyserRef.current;
+      if (!analyser || !sessionLiveRef.current) return;
+      const data = new Uint8Array(analyser.fftSize);
       analyser.getByteTimeDomainData(data);
       const rms = rmsFromTimeDomain(data);
       setLevel(Math.min(1, rms * 6));
       const now = performance.now();
-      const speaking = rms > 0.035;
-      if (speaking) {
-        if (!speechStartedAt.current) speechStartedAt.current = now;
-        lastLoudAt.current = now;
-      }
-      const heard = speechStartedAt.current > 0;
-      const held = heard && now - speechStartedAt.current > 280;
-      const silent = heard && now - lastLoudAt.current > 480;
-      const tooLong = heard && now - speechStartedAt.current > 8000;
-      if (statusRef.current === "listening" && ((held && silent) || tooLong)) {
-        void stopAndSend();
+      const phase = statusRef.current;
+      const loud = rms > LISTEN_RMS;
+
+      if (phase === "listening") {
+        if (now < listenGuardUntil.current) return;
+        if (loud) {
+          if (!speechStartedAt.current) speechStartedAt.current = now;
+          lastLoudAt.current = now;
+        }
+        const heard = speechStartedAt.current > 0;
+        const held = heard && now - speechStartedAt.current > MIN_SPEECH_MS;
+        const silent = heard && now - lastLoudAt.current > SILENCE_MS;
+        const tooLong = heard && now - speechStartedAt.current > MAX_UTTERANCE_MS;
+        if ((held && silent) || tooLong) captureTurnRef.current();
         return;
       }
-      if (statusRef.current === "speaking" && speaking && rms > 0.08 && now - lastLoudAt.current < 80) {
-        stopPlayback();
-      }
-      rafRef.current = requestAnimationFrame(loop);
-    };
-    rafRef.current = requestAnimationFrame(loop);
-  }, [stopAndSend, stopPlayback]);
 
-  const startListening = useCallback(async () => {
+      if ((phase === "speaking" || phase === "thinking") && now > playbackGuardUntil.current) {
+        if (rms > BARGE_RMS) {
+          if (!bargeStartedAt.current) bargeStartedAt.current = now;
+          if (now - bargeStartedAt.current > BARGE_HOLD_MS) interruptAndListen();
+        } else {
+          bargeStartedAt.current = 0;
+        }
+      }
+    };
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(loop);
+  }, [interruptAndListen]);
+
+  const endSession = useCallback(() => {
+    sessionLiveRef.current = false;
+    setSessionLive(false);
+    turnIdRef.current += 1;
+    abortRef.current?.abort();
+    stopPlayback();
+    sendingRef.current = false;
+    releaseCall();
+    setLiveTranscript("");
+    setPhase("idle");
+  }, [releaseCall, stopPlayback]);
+
+  const startSession = useCallback(async () => {
     if (optsRef.current.sessionEnded) return;
     setError(null);
     setLiveTranscript("");
     stopPlayback();
-    abortRef.current?.abort();
     setPhase("arming");
     try {
       const mime = pickMime();
@@ -332,6 +478,7 @@ export function useRagxVoice(opts: {
         setSupported(false);
         throw new Error("This browser cannot record audio. Use Chrome or Safari.");
       }
+      mimeRef.current = mime;
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
       });
@@ -340,71 +487,53 @@ export function useRagxVoice(opts: {
       audioCtxRef.current = ctx;
       if (ctx.state === "suspended") await ctx.resume();
       const source = ctx.createMediaStreamSource(stream);
+      sourceRef.current = source;
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 1024;
       source.connect(analyser);
       analyserRef.current = analyser;
-      chunksRef.current = [];
-      speechStartedAt.current = 0;
-      lastLoudAt.current = 0;
-      const recorder = new MediaRecorder(stream, { mimeType: mime });
-      recorderRef.current = recorder;
-      recorder.ondataavailable = (event) => {
-        if (event.data.size) chunksRef.current.push(event.data);
-      };
-      recorder.start(200);
-      setPhase("listening");
+      sessionLiveRef.current = true;
+      setSessionLive(true);
       watchVad();
+      sendingRef.current = true;
+      try {
+        await sendClip(new Blob(), mime, true);
+      } finally {
+        sendingRef.current = false;
+      }
     } catch (err: any) {
-      teardownMic();
+      sessionLiveRef.current = false;
+      setSessionLive(false);
+      releaseCall();
       setError(err?.message || "Microphone permission is required.");
       setPhase("error");
     }
-  }, [stopPlayback, teardownMic, watchVad]);
+  }, [releaseCall, sendClip, stopPlayback, watchVad]);
 
   const toggle = useCallback(() => {
-    if (statusRef.current === "listening") {
-      void stopAndSend();
+    if (sessionLiveRef.current) {
+      endSession();
       return;
     }
-    if (statusRef.current === "speaking" || statusRef.current === "thinking" || statusRef.current === "transcribing") {
-      stopPlayback();
-      abortRef.current?.abort();
-      void startListening();
-      return;
-    }
-    void startListening();
-  }, [startListening, stopAndSend, stopPlayback]);
+    void startSession();
+  }, [endSession, startSession]);
 
   useEffect(() => {
     setSupported(typeof window !== "undefined" && !!navigator.mediaDevices && typeof MediaRecorder !== "undefined");
   }, []);
 
   useEffect(() => {
-    if (!opts.enabled || !opts.identified || opts.sessionEnded || !opts.visitorInfo) return;
-    if (greetedRef.current) return;
-    greetedRef.current = true;
-    void sendClip(new Blob(), "audio/webm", true).catch((err: any) => {
-      if (err?.name === "AbortError") return;
-      setError(err?.message || "Could not start voice.");
-      setPhase("error");
-    });
-  }, [opts.enabled, opts.identified, opts.sessionEnded, opts.visitorInfo, sendClip]);
-
-  useEffect(() => {
-    if (opts.enabled) return;
-    stopPlayback();
-    abortRef.current?.abort();
-    teardownMic();
-    setPhase("idle");
-  }, [opts.enabled, stopPlayback, teardownMic]);
+    if (opts.enabled && !opts.sessionEnded) return;
+    if (sessionLiveRef.current) endSession();
+  }, [opts.enabled, opts.sessionEnded, endSession]);
 
   useEffect(() => () => {
-    stopPlayback();
+    sessionLiveRef.current = false;
     abortRef.current?.abort();
-    teardownMic();
+    stopPlayback();
+    releaseCall();
     audioCtxRef.current?.close().catch(() => undefined);
-  }, [stopPlayback, teardownMic]);
+  }, [releaseCall, stopPlayback]);
 
   return {
     status,
@@ -413,8 +542,7 @@ export function useRagxVoice(opts: {
     liveTranscript,
     timings,
     supported,
+    sessionLive,
     toggle,
-    startListening,
-    stopAndSend,
   };
 }
