@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export type VoiceStatus = "idle" | "arming" | "listening" | "transcribing" | "thinking" | "speaking" | "error";
 
+export const VOICE_SPECTRUM_BINS = 64;
+
 export type VoiceTimings = {
   sttMs: number;
   ragMs: number;
@@ -76,6 +78,33 @@ function pickMime(): string {
   return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || "";
 }
 
+function downsampleSpectrum(src: Uint8Array, dest: Float32Array) {
+  const n = dest.length;
+  const usable = Math.max(8, Math.floor(src.length * 0.42));
+  for (let i = 0; i < n; i++) {
+    const start = Math.floor((i / n) * usable);
+    const end = Math.max(start + 1, Math.floor(((i + 1) / n) * usable));
+    let sum = 0;
+    for (let j = start; j < end; j++) sum += src[j] ?? 0;
+    dest[i] = sum / ((end - start) * 255);
+  }
+}
+
+function synthSpeechSpectrum(dest: Float32Array, t: number, energy: number) {
+  for (let i = 0; i < dest.length; i++) {
+    const fall = 1 - (i / dest.length) * 0.4;
+    const env = 0.4 + 0.6 * Math.abs(Math.sin(t * 6.4 + i * 0.31));
+    const syll = Math.max(0, Math.sin(t * 8.1) * 0.72 + Math.sin(t * 3.05 + 0.5) * 0.4);
+    dest[i] = Math.min(1, energy * env * (0.22 + syll * 0.88) * fall);
+  }
+}
+
+function synthIdleSpectrum(dest: Float32Array, t: number, energy: number) {
+  for (let i = 0; i < dest.length; i++) {
+    dest[i] = energy * (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.4 + i * 0.22)));
+  }
+}
+
 function rmsFromTimeDomain(data: Uint8Array): number {
   let sum = 0;
   for (let i = 0; i < data.length; i++) {
@@ -118,6 +147,11 @@ export function useRagxVoice(opts: {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
+  const spectrumRef = useRef(new Float32Array(VOICE_SPECTRUM_BINS));
+  const levelRef = useRef(0);
+  const micTimeRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
+  const micFreqRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
+  const lastLevelUi = useRef(0);
   const rafRef = useRef<number>(0);
   const speechStartedAt = useRef(0);
   const lastLoudAt = useRef(0);
@@ -177,6 +211,8 @@ export function useRagxVoice(opts: {
     speechStartedAt.current = 0;
     lastLoudAt.current = 0;
     bargeStartedAt.current = 0;
+    spectrumRef.current.fill(0);
+    levelRef.current = 0;
     setLevel(0);
   }, [stopRecorder]);
 
@@ -431,12 +467,34 @@ export function useRagxVoice(opts: {
       rafRef.current = requestAnimationFrame(loop);
       const analyser = analyserRef.current;
       if (!analyser || !sessionLiveRef.current) return;
-      const data = new Uint8Array(analyser.fftSize);
+      const data = micTimeRef.current ?? new Uint8Array(analyser.fftSize);
+      micTimeRef.current = data;
       analyser.getByteTimeDomainData(data);
       const rms = rmsFromTimeDomain(data);
-      setLevel(Math.min(1, rms * 6));
       const now = performance.now();
       const phase = statusRef.current;
+      const t = now / 1000;
+      const visual = spectrumRef.current;
+      if (phase === "speaking") {
+        synthSpeechSpectrum(visual, t, 0.88);
+        levelRef.current = 0.58 + 0.34 * Math.abs(Math.sin(t * 7.4));
+      } else if (phase === "listening" || phase === "arming") {
+        const freq = micFreqRef.current ?? new Uint8Array(analyser.frequencyBinCount);
+        micFreqRef.current = freq;
+        analyser.getByteFrequencyData(freq);
+        downsampleSpectrum(freq, visual);
+        levelRef.current = Math.min(1, Math.max(0.14, rms * 6));
+      } else if (phase === "thinking" || phase === "transcribing") {
+        synthIdleSpectrum(visual, t, 0.34);
+        levelRef.current = 0.24;
+      } else {
+        synthIdleSpectrum(visual, t, 0.12);
+        levelRef.current = 0.1;
+      }
+      if (now - lastLevelUi.current > 48) {
+        lastLevelUi.current = now;
+        setLevel(levelRef.current);
+      }
       const loud = rms > LISTEN_RMS;
 
       if (phase === "listening") {
@@ -502,8 +560,11 @@ export function useRagxVoice(opts: {
       sourceRef.current = source;
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 1024;
+      analyser.smoothingTimeConstant = 0.68;
       source.connect(analyser);
       analyserRef.current = analyser;
+      micTimeRef.current = new Uint8Array(analyser.fftSize);
+      micFreqRef.current = new Uint8Array(analyser.frequencyBinCount);
       sessionLiveRef.current = true;
       setSessionLive(true);
       watchVad();
@@ -555,6 +616,8 @@ export function useRagxVoice(opts: {
     timings,
     supported,
     sessionLive,
+    spectrumRef,
+    levelRef,
     toggle,
   };
 }

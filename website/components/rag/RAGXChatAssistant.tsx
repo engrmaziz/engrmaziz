@@ -555,6 +555,30 @@ export function RAGXChatAssistant() {
                     ))}
                     <button onClick={clearConversation} className="mt-4 py-2 flex items-center justify-center gap-2 bg-[#00D4FF]/10 text-[#7DF9FF] rounded-xl text-sm font-medium hover:bg-[#00D4FF] hover:text-[#050a14] transition-all"><MessageSquare className="w-4 h-4" />Start New Chat</button>
                   </div>
+                ) : mode === "voice" && !sessionEnded ? (
+                  <div className="flex min-h-0 flex-1 flex-col bg-[#050a14]">
+                    <RAGXVoiceHud
+                      status={voice.status}
+                      error={voice.error}
+                      level={voice.level}
+                      liveTranscript={voice.liveTranscript}
+                      timings={voice.timings}
+                      supported={voice.supported}
+                      sessionLive={voice.sessionLive}
+                      disabled={isLoading}
+                      reducedMotion={reducedMotion}
+                      spectrumRef={voice.spectrumRef}
+                      levelRef={voice.levelRef}
+                      onToggle={voice.toggle}
+                    />
+                    <div className="flex justify-between items-center px-4 pb-3">
+                      <span className="text-[10px] font-mono text-[#8B9BB4]">Live call · waveform follows you and RAGX</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-1.5 h-1.5 rounded-full ${engineStatus?.status === "ONLINE" ? "bg-[#3DFF9A]" : "bg-red-500"} ${engineStatus?.status === "ONLINE" ? "animate-pulse" : ""}`}></span>
+                        <span className="text-[10px] font-mono text-[#8B9BB4]">{engineStatus?.status === "ONLINE" ? "SYS.NOMINAL" : "OFFLINE"}</span>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <>
                     <div className="relative flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth bg-[#050a14]">
@@ -628,21 +652,7 @@ export function RAGXChatAssistant() {
                         </div>
                       ) : (
                         <>
-                          {mode === "voice" ? (
-                            <RAGXVoiceHud
-                              status={voice.status}
-                              error={voice.error}
-                              level={voice.level}
-                              liveTranscript={voice.liveTranscript}
-                              timings={voice.timings}
-                              supported={voice.supported}
-                              sessionLive={voice.sessionLive}
-                              disabled={isLoading}
-                              reducedMotion={reducedMotion}
-                              onToggle={voice.toggle}
-                            />
-                          ) : (
-                            <div className="relative flex items-end gap-2 bg-[#050a14] border border-[#00D4FF]/25 rounded-2xl focus-within:ring-2 focus-within:ring-[#00D4FF]/40 focus-within:border-[#00D4FF]/50 transition-all px-4 py-3">
+                          <div className="relative flex items-end gap-2 bg-[#050a14] border border-[#00D4FF]/25 rounded-2xl focus-within:ring-2 focus-within:ring-[#00D4FF]/40 focus-within:border-[#00D4FF]/50 transition-all px-4 py-3">
                               <textarea
                                 ref={textareaRef}
                                 value={inputValue}
@@ -654,7 +664,6 @@ export function RAGXChatAssistant() {
                               />
                               <button type="button" onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="cursor-pointer shrink-0 p-2 min-h-11 min-w-11 rounded-xl bg-[#00D4FF] text-[#050a14] disabled:opacity-40 hover:bg-[#7DF9FF] transition-all self-end" aria-label="Send"><Send className="w-4 h-4" /></button>
                             </div>
-                          )}
                           <div className="flex justify-between items-center mt-2 px-1">
                             <span className="text-[10px] font-mono text-[#8BA0B5]">{mode === "voice" ? "Live call · speak freely · tap to hang up" : "Enter to send"}</span>
                             <div className="flex items-center gap-1.5">
