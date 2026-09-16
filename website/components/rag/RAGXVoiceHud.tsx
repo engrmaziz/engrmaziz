@@ -1,0 +1,88 @@
+"use client";
+
+import { Mic, MicOff } from "lucide-react";
+import type { VoiceStatus, VoiceTimings } from "@/hooks/useRagxVoice";
+
+const STATUS_COPY: Record<VoiceStatus, string> = {
+  idle: "TAP TO SPEAK",
+  arming: "ARMING MIC",
+  listening: "LISTENING",
+  transcribing: "HEARING YOU",
+  thinking: "RETRIEVING",
+  speaking: "SPEAKING",
+  error: "TAP TO RETRY",
+};
+
+export function RAGXVoiceHud(props: {
+  status: VoiceStatus;
+  error: string | null;
+  level: number;
+  liveTranscript: string;
+  timings: VoiceTimings | null;
+  supported: boolean;
+  disabled?: boolean;
+  reducedMotion?: boolean;
+  onToggle: () => void;
+}) {
+  const { status, error, level, liveTranscript, timings, supported, disabled, reducedMotion, onToggle } = props;
+  const live = status === "listening" || status === "arming";
+  const busy = status === "transcribing" || status === "thinking" || status === "speaking";
+
+  return (
+    <div className="flex flex-col items-center gap-3 py-1">
+      <button
+        type="button"
+        onClick={onToggle}
+        disabled={disabled || !supported}
+        aria-label={STATUS_COPY[status]}
+        aria-pressed={live}
+        className={`cursor-pointer relative flex h-16 w-16 items-center justify-center rounded-full border transition-transform min-h-11 min-w-11 disabled:opacity-40 ${
+          live
+            ? "border-[#C9A227] bg-[#C9A227] text-[#050a14] shadow-[0_0_28px_rgba(201,162,39,0.35)]"
+            : busy
+              ? "border-[#00D4FF]/60 bg-[#07111f] text-[#7DF9FF]"
+              : "border-[#00D4FF]/50 bg-[#050a14] text-[#7DF9FF] hover:border-[#C9A227] hover:text-[#C9A227]"
+        }`}
+      >
+        {live && !reducedMotion ? (
+          <span
+            className="absolute inset-0 rounded-full border border-[#C9A227]/50"
+            style={{ transform: `scale(${1 + Math.min(level, 1) * 0.28})`, opacity: 0.7 }}
+          />
+        ) : null}
+        {status === "error" ? <MicOff className="relative z-10 h-6 w-6" /> : <Mic className="relative z-10 h-6 w-6" />}
+      </button>
+      <div className="flex flex-col items-center gap-1 text-center">
+        <p className="font-mono text-[10px] tracking-[0.22em] text-[#8BA0B5]">{STATUS_COPY[status]}</p>
+        {liveTranscript ? (
+          <p className="max-w-[320px] text-[12px] leading-relaxed text-[#E8F4FF]">{liveTranscript}</p>
+        ) : (
+          <p className="max-w-[320px] text-[12px] leading-relaxed text-[#8BA0B5]">
+            Calm voice. Direct answers. Ask what Musharraf can ship.
+          </p>
+        )}
+        {error ? <p className="max-w-[320px] text-[11px] text-red-400">{error}</p> : null}
+        {timings && status === "idle" ? (
+          <p className="font-mono text-[10px] text-[#8BA0B5]">
+            TTFA {Math.round(timings.ttfaMs)}ms · STT {Math.round(timings.sttMs)}ms · RAG {Math.round(timings.ragMs)}ms
+          </p>
+        ) : null}
+      </div>
+      {busy ? (
+        <div className="flex items-end gap-1 h-8">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              className="w-1 rounded-full bg-[#00D4FF]"
+              style={{
+                height: reducedMotion ? "10px" : "8px",
+                animation: reducedMotion ? undefined : "ragxEq 0.85s ease-in-out infinite",
+                animationDelay: `${i * 0.12}s`,
+              }}
+            />
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}

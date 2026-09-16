@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RAG_SYSTEM_PROMPT } from './prompts';
+import { RAG_SYSTEM_PROMPT, RAG_VOICE_SYSTEM_PROMPT } from './prompts';
 import { RAG_IDENTITY_FACTS, getCompactServiceCatalog } from './identity';
 
 export class PromptBuilder {
@@ -9,9 +9,11 @@ export class PromptBuilder {
     ragContext: string,
     currentQuery: string,
     toolOutputs: any[] = [],
-    visitorInfo?: { name: string; email: string }
+    visitorInfo?: { name: string; email: string },
+    options?: { channel?: 'text' | 'voice' }
   ): { role: 'system' | 'user' | 'assistant'; content: string }[] {
-    let systemContent = RAG_SYSTEM_PROMPT
+    const template = options?.channel === 'voice' ? RAG_VOICE_SYSTEM_PROMPT : RAG_SYSTEM_PROMPT;
+    let systemContent = template
       .replace('{identity}', RAG_IDENTITY_FACTS)
       .replace('{catalog}', getCompactServiceCatalog())
       .replace('{context}', ragContext || 'No additional source excerpts were retrieved.');

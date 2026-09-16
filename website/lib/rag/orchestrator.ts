@@ -67,6 +67,7 @@ export class RAGOrchestrator {
     const sessionId = requestBody.sessionId || '';
     const filters = requestBody.filters || {};
     const visitorInfo = requestBody.visitorInfo;
+    const isVoice = requestBody.channel === 'voice';
 
     if (!queryText.trim()) {
       throw new Error('Query text cannot be empty.');
@@ -176,7 +177,8 @@ export class RAGOrchestrator {
       ctx.retrieval.retrievedContext || '',
       queryText,
       ctx.response.toolOutputs,
-      ctx.request.visitorInfo
+      ctx.request.visitorInfo,
+      { channel: isVoice ? 'voice' : 'text' }
     );
     trace.endStage('PromptAssembly', true);
 
@@ -191,15 +193,17 @@ export class RAGOrchestrator {
           const generated = await withTimeout(
             aiClient.generate({
               messages: ctx.prompt.messages,
-              temperature: 0.15,
-              maxTokens: 800,
-              timeoutMs: 3500,
+              temperature: isVoice ? 0.28 : 0.15,
+              maxTokens: isVoice ? 180 : 800,
+              timeoutMs: isVoice ? 2200 : 3500,
             }),
-            3800,
+            isVoice ? 2400 : 3800,
             null
           );
           const text = (generated?.content || '').trim();
-          const weak = text.length < 80 || /json-ld|hero section|related services|^\s*source code:/i.test(text);
+          const weak = isVoice
+            ? text.length < 24
+            : text.length < 80 || /json-ld|hero section|related services|^\s*source code:/i.test(text);
           if (!weak) {
             ctx.response.assistantResponse = text;
             (ctx as any)._lastLlmModel = generated?.model || 'groq';
@@ -219,10 +223,14 @@ export class RAGOrchestrator {
         (ctx as any)._lastLlmModel = (ctx as any)._lastLlmModel || 'extractive-fallback';
       }
 
-      ctx.response.assistantResponse = CitationFormatter.format(
-        ctx.response.assistantResponse || '',
-        ctx.retrieval.citations
-      );
+      if (isVoice) {
+        ctx.response.assistantResponse = ctx.response.assistantResponse || '';
+      } else {
+        ctx.response.assistantResponse = CitationFormatter.format(
+          ctx.response.assistantResponse || '',
+          ctx.retrieval.citations
+        );
+      }
 
       ctx.executionContext.metadata = ctx.executionContext.metadata || {};
       ctx.executionContext.metadata.agentContext = {
@@ -235,10 +243,12 @@ export class RAGOrchestrator {
       trace.endStage('Generation', false, agentErr.message);
       ctx.executionContext.errors.push(`Generation Error: ${agentErr.message}`);
       telemetryLogger.error('AGENT', 'Fatal execution error', agentErr, { requestId });
-      ctx.response.assistantResponse = CitationFormatter.format(
-        buildExtractiveAnswer(queryText, ctx.retrieval.chunks || []),
-        ctx.retrieval.citations
-      );
+      ctx.response.assistantResponse = isVoice
+        ? (buildExtractiveAnswer(queryText, ctx.retrieval.chunks || []) || '')
+        : CitationFormatter.format(
+            buildExtractiveAnswer(queryText, ctx.retrieval.chunks || []),
+            ctx.retrieval.citations
+          );
       (ctx as any)._lastLlmModel = 'extractive-fallback';
       ctx.executionContext.metadata = ctx.executionContext.metadata || {};
       ctx.executionContext.metadata.agentContext = {

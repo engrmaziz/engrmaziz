@@ -11,6 +11,7 @@ export function middleware(req: NextRequest) {
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com;
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: https://cdn.sanity.io https://*.supabase.co;
+    media-src 'self' blob:;
     font-src 'self';
     object-src 'none';
     base-uri 'self';
@@ -24,7 +25,7 @@ export function middleware(req: NextRequest) {
   res.headers.set('X-Frame-Options', 'DENY');
   res.headers.set('X-Content-Type-Options', 'nosniff');
   res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.headers.set('Permissions-Policy', 'camera=(), microphone=(self), geolocation=()');
   res.headers.append(
     'Link',
     `<${req.nextUrl.origin}/llms.txt>; rel="describedby"; type="text/plain"`

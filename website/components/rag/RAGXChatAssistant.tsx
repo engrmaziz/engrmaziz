@@ -4,10 +4,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, User, Mail, Trash2, Bot, AlertCircle, Download, LogOut } from "lucide-react";
+import { MessageSquare, X, Send, User, Mail, Trash2, Bot, AlertCircle, Download, LogOut, Mic } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { MarkdownComponents } from "@/components/markdown/MarkdownComponents";
+import { RAGXVoiceHud } from "@/components/rag/RAGXVoiceHud";
+import { useRagxVoice } from "@/hooks/useRagxVoice";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 interface Message {
   id: string;
@@ -133,8 +136,10 @@ export function RAGXChatAssistant() {
   const [isEndingSession, setIsEndingSession] = useState(false);
   const [sessionSummary, setSessionSummary] = useState<string | null>(null);
   const [sessionEnded, setSessionEnded] = useState(false);
+  const [mode, setMode] = useState<"text" | "voice">("text");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = usePrefersReducedMotion();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const exportButtonRef = useRef<HTMLButtonElement>(null);
   const exportMenuPanelRef = useRef<HTMLDivElement>(null);
@@ -169,8 +174,11 @@ export function RAGXChatAssistant() {
   }, [messages, conversationId]);
 
   useEffect(() => {
-    if (isOpen && isIdentified) { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); setTimeout(() => textareaRef.current?.focus(), 100); }
-  }, [isOpen, messages, isIdentified]);
+    if (isOpen && isIdentified) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      if (mode === "text") setTimeout(() => textareaRef.current?.focus(), 100);
+    }
+  }, [isOpen, messages, isIdentified, mode]);
 
   useEffect(() => {
     if (!isOpen) setShowExportMenu(false);
@@ -350,6 +358,52 @@ export function RAGXChatAssistant() {
     }
   };
 
+  const appendVoiceUser = (text: string) => {
+    const content = text.trim();
+    if (!content) return;
+    setMessages((prev) => {
+      const last = prev[prev.length - 1];
+      if (last?.role === "user" && last.content === content) return prev;
+      return [...prev.filter((m) => m.role !== "system"), {
+        id: generateUUID(),
+        role: "user" as const,
+        content,
+        timestamp: new Date().toISOString(),
+      }];
+    });
+  };
+
+  const appendVoiceAssistant = (text: string) => {
+    const content = text.trim();
+    if (!content) return;
+    setMessages((prev) => {
+      const last = prev[prev.length - 1];
+      if (last?.role === "assistant" && last.content === content) return prev;
+      return [...prev, {
+        id: generateUUID(),
+        role: "assistant" as const,
+        content,
+        timestamp: new Date().toISOString(),
+        isStreaming: false,
+      }];
+    });
+  };
+
+  const voice = useRagxVoice({
+    conversationId,
+    visitorInfo: visitorInfo ? { name: visitorInfo.name, email: visitorInfo.email } : null,
+    enabled: isOpen && mode === "voice" && isIdentified && !sessionEnded,
+    identified: isIdentified,
+    sessionEnded,
+    onUserUtterance: appendVoiceUser,
+    onAssistantUtterance: appendVoiceAssistant,
+  });
+
+  const openPanel = (nextMode: "text" | "voice") => {
+    setMode(nextMode);
+    setIsOpen(true);
+  };
+
   const handleEndSession = async () => {
     setShowEndConfirm(false); setIsEndingSession(true);
     try {
@@ -367,8 +421,18 @@ export function RAGXChatAssistant() {
   return (
     <div>
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 rounded-full shadow-[0_0_24px_rgba(0,212,255,0.35)] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:ring-offset-2 focus:ring-offset-[#050a14] z-[100] ${isOpen ? "bg-[#07111f] border border-[#00D4FF]/40 text-[#7DF9FF] rotate-90 scale-0 opacity-0 pointer-events-none" : "bg-[#07111f] border border-[#00D4FF]/50 text-[#7DF9FF] hover:bg-[#00D4FF] hover:text-[#050a14] hover:scale-110 opacity-100 scale-100"}`}
+        type="button"
+        onClick={() => (isOpen ? setIsOpen(false) : openPanel("voice"))}
+        className={`cursor-pointer fixed bottom-[6.5rem] right-6 flex items-center justify-center w-14 h-14 rounded-full shadow-[0_0_24px_rgba(201,162,39,0.3)] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#C9A227] focus:ring-offset-2 focus:ring-offset-[#050a14] z-[100] ${isOpen ? "bg-[#07111f] border border-[#C9A227]/40 text-[#C9A227] scale-0 opacity-0 pointer-events-none" : "bg-[#07111f] border border-[#C9A227]/60 text-[#C9A227] hover:bg-[#C9A227] hover:text-[#050a14] hover:scale-110 opacity-100 scale-100"}`}
+        aria-label="Talk to RAGX"
+      >
+        <span className="absolute inset-0 rounded-full border border-[#C9A227]/30 animate-ping" />
+        <Mic className="w-6 h-6 relative z-10" />
+      </button>
+      <button
+        type="button"
+        onClick={() => (isOpen ? setIsOpen(false) : openPanel("text"))}
+        className={`cursor-pointer fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 rounded-full shadow-[0_0_24px_rgba(0,212,255,0.35)] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:ring-offset-2 focus:ring-offset-[#050a14] z-[100] ${isOpen ? "bg-[#07111f] border border-[#00D4FF]/40 text-[#7DF9FF] rotate-90 scale-0 opacity-0 pointer-events-none" : "bg-[#07111f] border border-[#00D4FF]/50 text-[#7DF9FF] hover:bg-[#00D4FF] hover:text-[#050a14] hover:scale-110 opacity-100 scale-100"}`}
         aria-label="Toggle RAGX Assistant"
       >
         <span className="absolute inset-0 rounded-full border border-[#00D4FF]/30 animate-ping" />
@@ -405,6 +469,22 @@ export function RAGXChatAssistant() {
                     </div>
                     <p className="text-sm font-semibold text-[#E8F4FF] mt-1">Musharraf Aziz · Applied AI</p>
                     <p className="text-[11px] font-mono text-[#8BA0B5] mt-0.5">Ask what he ships. Hire when you are ready.</p>
+                    <div className="mt-2 inline-flex rounded-lg border border-[#00D4FF]/25 bg-[#050a14] p-0.5">
+                      <button
+                        type="button"
+                        onClick={() => setMode("text")}
+                        className={`cursor-pointer min-h-11 px-3 rounded-md font-mono text-[10px] tracking-[0.16em] ${mode === "text" ? "bg-[#00D4FF]/15 text-[#7DF9FF]" : "text-[#8BA0B5] hover:text-[#7DF9FF]"}`}
+                      >
+                        TEXT
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setMode("voice")}
+                        className={`cursor-pointer min-h-11 px-3 rounded-md font-mono text-[10px] tracking-[0.16em] ${mode === "voice" ? "bg-[#C9A227]/15 text-[#C9A227]" : "text-[#8BA0B5] hover:text-[#C9A227]"}`}
+                      >
+                        VOICE
+                      </button>
+                    </div>
                   </div>
                   <div className="flex items-center gap-1 shrink-0 ml-2">
                     <button onClick={() => setShowHistory(!showHistory)} className={`p-2 rounded-full transition-colors ${showHistory ? "text-[#7DF9FF] bg-[#00D4FF]/10" : "text-[#8BA0B5] hover:text-[#7DF9FF] hover:bg-[#00D4FF]/10"}`} aria-label="History" title="History"><MessageSquare className="w-4 h-4" /></button>
@@ -546,20 +626,34 @@ export function RAGXChatAssistant() {
                         </div>
                       ) : (
                         <>
-                          <div className="relative flex items-end gap-2 bg-[#050a14] border border-[#00D4FF]/25 rounded-2xl focus-within:ring-2 focus-within:ring-[#00D4FF]/40 focus-within:border-[#00D4FF]/50 transition-all px-4 py-3">
-                            <textarea
-                              ref={textareaRef}
-                              value={inputValue}
-                              onChange={e => { setInputValue(e.target.value); e.target.style.height = "auto"; e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`; }}
-                              onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (!isLoading) handleSend(); } }}
-                              placeholder="Ask what Musharraf can ship..."
-                              className="flex-1 max-h-[140px] bg-transparent text-sm resize-none focus:outline-none text-[#E8F4FF] placeholder-[#8BA0B5] py-0.5 leading-relaxed"
-                              rows={1}
+                          {mode === "voice" ? (
+                            <RAGXVoiceHud
+                              status={voice.status}
+                              error={voice.error}
+                              level={voice.level}
+                              liveTranscript={voice.liveTranscript}
+                              timings={voice.timings}
+                              supported={voice.supported}
+                              disabled={isLoading}
+                              reducedMotion={reducedMotion}
+                              onToggle={voice.toggle}
                             />
-                            <button onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="cursor-pointer shrink-0 p-2 min-h-11 min-w-11 rounded-xl bg-[#00D4FF] text-[#050a14] disabled:opacity-40 hover:bg-[#7DF9FF] transition-all self-end" aria-label="Send"><Send className="w-4 h-4" /></button>
-                          </div>
+                          ) : (
+                            <div className="relative flex items-end gap-2 bg-[#050a14] border border-[#00D4FF]/25 rounded-2xl focus-within:ring-2 focus-within:ring-[#00D4FF]/40 focus-within:border-[#00D4FF]/50 transition-all px-4 py-3">
+                              <textarea
+                                ref={textareaRef}
+                                value={inputValue}
+                                onChange={e => { setInputValue(e.target.value); e.target.style.height = "auto"; e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`; }}
+                                onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (!isLoading) handleSend(); } }}
+                                placeholder="Ask what Musharraf can ship..."
+                                className="flex-1 max-h-[140px] bg-transparent text-sm resize-none focus:outline-none text-[#E8F4FF] placeholder-[#8BA0B5] py-0.5 leading-relaxed"
+                                rows={1}
+                              />
+                              <button type="button" onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="cursor-pointer shrink-0 p-2 min-h-11 min-w-11 rounded-xl bg-[#00D4FF] text-[#050a14] disabled:opacity-40 hover:bg-[#7DF9FF] transition-all self-end" aria-label="Send"><Send className="w-4 h-4" /></button>
+                            </div>
+                          )}
                           <div className="flex justify-between items-center mt-2 px-1">
-                            <span className="text-[10px] font-mono text-[#8BA0B5]">Enter to send</span>
+                            <span className="text-[10px] font-mono text-[#8BA0B5]">{mode === "voice" ? "Tap mic · interrupt anytime" : "Enter to send"}</span>
                             <div className="flex items-center gap-1.5">
                               <span className={`w-1.5 h-1.5 rounded-full ${engineStatus?.status === "ONLINE" ? "bg-[#3DFF9A]" : "bg-red-500"} ${engineStatus?.status === "ONLINE" ? "animate-pulse" : ""}`}></span>
                               <span className="text-[10px] font-mono text-[#8BA0B5]">{engineStatus?.status === "ONLINE" ? "SYS.NOMINAL" : "OFFLINE"}</span>
