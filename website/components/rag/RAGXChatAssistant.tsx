@@ -139,6 +139,7 @@ export function RAGXChatAssistant() {
   const [mode, setMode] = useState<"text" | "voice">("text");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<Message[]>([]);
   const reducedMotion = usePrefersReducedMotion();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const exportButtonRef = useRef<HTMLButtonElement>(null);
@@ -162,6 +163,7 @@ export function RAGXChatAssistant() {
   }, []);
 
   useEffect(() => {
+    messagesRef.current = messages;
     if (!messages.length) return;
     setHistory(prev => {
       const idx = prev.findIndex(h => h.id === conversationId);
@@ -407,7 +409,7 @@ export function RAGXChatAssistant() {
   const handleEndSession = async () => {
     setShowEndConfirm(false); setIsEndingSession(true);
     try {
-      const res = await fetch("/api/chat/end-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId, visitorInfo, messages }) });
+      const res = await fetch("/api/chat/end-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId, visitorInfo, messages: messagesRef.current, channel: mode }) });
       const data = await res.json();
       if (data.summary) setSessionSummary(data.summary);
       setSessionEnded(true);

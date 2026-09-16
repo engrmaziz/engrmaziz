@@ -16,25 +16,26 @@ export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", isLoading, leftIcon, rightIcon, children, disabled, ...props }, ref) => {
+    const isIcon = size === "icon";
     const baseStyles =
-      "group relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-full text-center font-semibold leading-tight tracking-tight whitespace-normal transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base disabled:opacity-50 disabled:pointer-events-none";
+      "group relative isolate inline-flex items-center justify-center gap-2 rounded-full text-center font-semibold leading-none tracking-tight cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base disabled:opacity-50 disabled:pointer-events-none";
 
     const variants = {
       primary:
-        "bg-gold text-[color:var(--color-bg-base)] hover:bg-gold-hover border border-transparent shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)]",
+        "overflow-hidden bg-gold text-[color:var(--color-bg-base)] hover:bg-gold-hover border border-transparent shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)]",
       secondary:
         "bg-elevated/80 text-primary hover:border-accent/50 border border-border-default backdrop-blur-md",
       outline:
         "bg-transparent border border-accent/50 text-accent hover:bg-accent/10 hover:border-accent",
-      ghost: "bg-transparent text-primary hover:bg-elevated border border-transparent",
+      ghost: "overflow-visible bg-transparent text-primary hover:bg-elevated border border-transparent",
       link: "bg-transparent text-accent underline-offset-4 hover:underline border-transparent !p-0 !h-auto rounded-none",
     };
 
     const sizes = {
-      sm: "min-h-10 px-4 py-2 text-sm",
-      md: "min-h-11 px-5 py-2.5 text-base sm:px-6",
-      lg: "min-h-11 px-5 py-3 text-sm sm:min-h-12 sm:px-7 sm:text-base",
-      icon: "h-11 w-11 min-h-11 min-w-11 p-0",
+      sm: "min-h-11 px-4 py-2 text-sm whitespace-nowrap",
+      md: "min-h-11 px-5 py-2.5 text-base whitespace-nowrap sm:px-6",
+      lg: "min-h-11 px-5 py-3 text-sm whitespace-nowrap sm:min-h-12 sm:px-7 sm:text-base",
+      icon: "h-11 w-11 min-h-11 min-w-11 p-0 overflow-visible",
     };
 
     const isDisabled = disabled || isLoading;
@@ -57,9 +58,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           />
         ) : null}
         {isLoading && <Loader2 className="h-4 w-4 shrink-0 animate-spin" />}
-        {!isLoading && leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>}
-        <span className="min-w-0 text-balance">{children as React.ReactNode}</span>
-        {!isLoading && rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
+        {!isLoading && leftIcon ? <span className="relative z-10 inline-flex shrink-0">{leftIcon}</span> : null}
+        {isIcon ? (
+          <span className="relative z-10 inline-flex items-center justify-center">{children as React.ReactNode}</span>
+        ) : children != null && children !== false ? (
+          <span className="relative z-10 inline-flex items-center">{children as React.ReactNode}</span>
+        ) : null}
+        {!isLoading && rightIcon ? <span className="relative z-10 inline-flex shrink-0">{rightIcon}</span> : null}
       </motion.button>
     );
   }

@@ -94,29 +94,35 @@ export function Navbar() {
             })}
           </ul>
 
-          <div className="flex items-center gap-3 border-l border-border-default pl-4">
+          <div className="flex items-center gap-2 border-l border-border-default pl-4">
             <ThemeToggle />
-            <Link href="https://github.com/engrmaziz" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-              <Button variant="ghost" size="icon" className="rounded-full text-secondary hover:text-primary">
-                <Code2 className="h-4 w-4" />
-              </Button>
+            <Link
+              href="https://github.com/engrmaziz"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="inline-flex h-11 w-11 min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full text-secondary transition-colors hover:bg-elevated hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              <Code2 className="h-4 w-4" />
             </Link>
             <Button
               variant="outline"
               size="sm"
-              className="hidden gap-2 font-mono text-xs xl:flex"
+              className="hidden shrink-0 xl:inline-flex"
+              leftIcon={<FileText className="h-3.5 w-3.5" />}
               onClick={openResume}
-              aria-label="Resume"
+              aria-label="Download resume"
             >
-              <FileText className="h-3.5 w-3.5" />
               Resume
             </Button>
             <Magnetic>
-              <Link href="/hire" aria-label="Hire">
-                <Button size="sm" className="gap-2">
-                  Hire
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Button>
+              <Link
+                href="/hire"
+                aria-label="Hire Musharraf"
+                className="group relative isolate inline-flex min-h-11 shrink-0 cursor-pointer items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-gold px-4 py-2 text-sm font-semibold text-[color:var(--color-bg-base)] shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)] transition-colors hover:bg-gold-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                Hire
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Link>
             </Magnetic>
           </div>
@@ -165,15 +171,15 @@ export function Navbar() {
                 })}
               </nav>
               <div className="mt-4 flex flex-col gap-4">
-                <Button variant="outline" className="w-full justify-between font-mono text-sm cursor-pointer" onClick={openResume} aria-label="Download Resume">
+                <Button variant="outline" className="w-full justify-between font-mono text-sm" leftIcon={<FileText className="h-4 w-4" />} onClick={openResume} aria-label="Download Resume">
                   Download resume
-                  <FileText className="h-4 w-4" />
                 </Button>
-                <Link href="/hire" className="w-full">
-                  <Button className="w-full justify-between">
-                    Hire me
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
+                <Link
+                  href="/hire"
+                  className="inline-flex min-h-11 w-full cursor-pointer items-center justify-between rounded-full bg-gold px-5 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] hover:bg-gold-hover"
+                >
+                  Hire me
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </div>

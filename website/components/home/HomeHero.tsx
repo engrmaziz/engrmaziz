@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, FileText, Code2 } from "lucide-react";
 import { HeroContainer } from "@/components/layout/HeroContainer";
-import { Button } from "@/components/ui/Button";
 import { DirectAnswer } from "@/components/seo/DirectAnswer";
 import { Magnetic } from "@/components/fx/Magnetic";
 import { HudFrame } from "@/components/fx/HudFrame";
@@ -67,16 +66,19 @@ export function HomeHero() {
             className="mt-2 flex flex-wrap items-center gap-4"
           >
             <Magnetic>
-              <Link href="/contact?intent=freelance" className="inline-flex">
-                <Button size="lg" rightIcon={<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />}>
-                  Hire for a project
-                </Button>
+              <Link
+                href="/contact?intent=freelance"
+                className="group relative isolate inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-gold px-7 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] shadow-[0_0_24px_color-mix(in_srgb,var(--color-gold)_35%,transparent)] transition-colors hover:bg-gold-hover sm:min-h-12 sm:text-base"
+              >
+                Hire for a project
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Magnetic>
-            <Link href="/hire" className="inline-flex">
-              <Button variant="secondary" size="lg">
-                Freelance or full-time
-              </Button>
+            <Link
+              href="/hire"
+              className="inline-flex min-h-11 cursor-pointer items-center justify-center whitespace-nowrap rounded-full border border-border-default bg-elevated/80 px-7 py-3 text-sm font-semibold text-primary backdrop-blur-md transition-colors hover:border-accent/50 sm:min-h-12 sm:text-base"
+            >
+              Freelance or full-time
             </Link>
           </motion.div>
 
@@ -92,10 +94,14 @@ export function HomeHero() {
               <FileText className="h-4 w-4 transition-transform group-hover:scale-110" />
               Download Resume
             </button>
-            <Link href="https://github.com/engrmaziz" target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="sm" className="gap-2 text-secondary hover:text-primary">
-                <Code2 className="h-4 w-4" /> GitHub
-              </Button>
+            <Link
+              href="https://github.com/engrmaziz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-secondary transition-colors hover:text-primary"
+            >
+              <Code2 className="h-4 w-4" />
+              GitHub
             </Link>
           </motion.div>
         </motion.div>

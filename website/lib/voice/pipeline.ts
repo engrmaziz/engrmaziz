@@ -7,6 +7,7 @@ import { withTimeout } from '../rag/timing';
 import { buildGroundedFallback } from '../rag/extractive';
 import { streamChatCompletion, synthesizeSpeech, transcribeAudio } from './groq-audio';
 import { lockVisitorAddress, pullCompleteSentences, spokenIntentReply, toSpokenText, VOICE_GREETING, VOICE_MISHEAR } from './spoken';
+import { recordVoiceTelemetry } from './metrics';
 
 export type VoiceEvent =
   | { type: 'transcript'; text: string; sttMs: number }
@@ -88,18 +89,27 @@ export async function runVoiceGreeting(emit: (event: VoiceEvent) => void, visito
   if (speaker.state.index === 0) {
     emit({ type: 'tts_fallback', text });
   }
-  emit({
-    type: 'done',
-    modelUsed: speaker.state.model,
-    voice: speaker.state.voice,
-    timings: {
+    emit({
+      type: 'done',
+      modelUsed: speaker.state.model,
+      voice: speaker.state.voice,
+      timings: {
+        sttMs: 0,
+        ragMs: 0,
+        ttsMs: speaker.state.ttsMs,
+        totalMs: Date.now() - started,
+        ttfaMs: speaker.state.firstAudioAt ?? Date.now() - started,
+      },
+    });
+    recordVoiceTelemetry({
+      ttfaMs: speaker.state.firstAudioAt ?? Date.now() - started,
       sttMs: 0,
       ragMs: 0,
       ttsMs: speaker.state.ttsMs,
       totalMs: Date.now() - started,
-      ttfaMs: speaker.state.firstAudioAt ?? Date.now() - started,
-    },
-  });
+      voice: speaker.state.voice,
+      model: speaker.state.model,
+    });
 }
 
 export async function runVoiceTurn(opts: {
@@ -129,9 +139,13 @@ export async function runVoiceTurn(opts: {
     if (speaker.state.index === 0 && spoken) {
       emit({ type: 'tts_fallback', text: spoken });
     }
-    void ragMemory.createConversation(opts.conversationId).catch(() => undefined);
-    void ragMemory.saveUserMessage(opts.conversationId, transcript).catch(() => undefined);
-    void ragMemory.saveAssistantMessage(opts.conversationId, spoken).catch(() => undefined);
+    try {
+      await ragMemory.createConversation(opts.conversationId);
+    } catch {
+      // conversation may already exist
+    }
+    if (transcript) await ragMemory.saveUserMessage(opts.conversationId, transcript).catch(() => undefined);
+    if (spoken) await ragMemory.saveAssistantMessage(opts.conversationId, spoken).catch(() => undefined);
     emit({
       type: 'done',
       modelUsed: modelUsed || speaker.state.model,
@@ -143,6 +157,15 @@ export async function runVoiceTurn(opts: {
         totalMs: Date.now() - started,
         ttfaMs: speaker.state.firstAudioAt ?? Date.now() - started,
       },
+    });
+    recordVoiceTelemetry({
+      ttfaMs: speaker.state.firstAudioAt ?? Date.now() - started,
+      sttMs: stt.ms,
+      ragMs,
+      ttsMs: speaker.state.ttsMs,
+      totalMs: Date.now() - started,
+      voice: speaker.state.voice,
+      model: modelUsed || speaker.state.model,
     });
   };
 

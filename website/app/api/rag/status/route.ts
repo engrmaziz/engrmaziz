@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { pgPool } from '@/lib/rag/supabase';
 import { systemConfig } from '@/lib/system/config';
 import { getLastTtft, probeTtft } from '@/lib/rag/metrics';
+import { localKnowledgeIndex } from '@/lib/rag/local-index';
+import { getLastVoiceTelemetry } from '@/lib/voice/metrics';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,6 +13,7 @@ export async function GET() {
     const start = Date.now();
     await pgPool.query('SELECT 1');
     const latency = Date.now() - start;
+    const kb = localKnowledgeIndex.size();
 
     let lastChatTtft: number | null = null;
     try {
@@ -24,13 +27,29 @@ export async function GET() {
     }
 
     const ttft = getLastTtft() ?? lastChatTtft ?? probeTtft();
+    const voice = getLastVoiceTelemetry();
 
     return NextResponse.json({
       status: 'ONLINE',
       latency,
       ttft,
       embeddingModel: systemConfig.JINA_EMBEDDING_MODEL || 'jina-embeddings-v4',
+      documents: kb.documents,
+      chunks: kb.chunks,
+      lastSync: new Date().toISOString(),
       health: 'EXCELLENT',
+      voice: voice
+        ? {
+            ttfaMs: voice.ttfaMs,
+            sttMs: voice.sttMs,
+            ragMs: voice.ragMs,
+            ttsMs: voice.ttsMs,
+            totalMs: voice.totalMs,
+            voice: voice.voice,
+            model: voice.model,
+            updatedAt: voice.updatedAt,
+          }
+        : null,
     });
   } catch (error: any) {
     console.error('RAG Status API route error:', error);
@@ -39,7 +58,11 @@ export async function GET() {
       latency: 0,
       ttft: 0,
       embeddingModel: 'jina-embeddings-v4',
+      documents: 0,
+      chunks: 0,
+      lastSync: null,
       health: 'CRITICAL',
+      voice: getLastVoiceTelemetry(),
       error: error.message || String(error),
     }, { status: 503 });
   }

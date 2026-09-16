@@ -36,6 +36,11 @@ class LocalKnowledgeIndex {
     this.loaded = true;
   }
 
+  size() {
+    this.ensureLoaded();
+    return { documents: this.docs.length, chunks: this.docs.length };
+  }
+
   search(query: string, limit = 6): RetrievedChunk[] {
     this.ensureLoaded();
     const STOP = new Set(['the','and','for','with','that','this','from','your','about','what','how','does','have','been','into','their','you','are','was','can','his','her']);

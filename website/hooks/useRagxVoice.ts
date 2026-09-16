@@ -287,6 +287,18 @@ export function useRagxVoice(opts: {
           doneTimings = event.timings;
           setTimings(event.timings);
           if (answer) optsRef.current.onAssistantUtterance(answer, event.timings);
+          try {
+            const payload = {
+              ...event.timings,
+              voice: event.voice,
+              model: event.modelUsed,
+              updatedAt: new Date().toISOString(),
+            };
+            localStorage.setItem("ragx_voice_telemetry", JSON.stringify(payload));
+            window.dispatchEvent(new Event("ragx-voice-telemetry"));
+          } catch {
+            // ignore storage
+          }
         } else if (event.type === "error") {
           throw new Error(event.message);
         }
