@@ -29,8 +29,9 @@ related_services: []
 - **Mar 2022 – Nov 2022:** Team Lead, Technical Assistance Center at Transworld Home (ISP). Led a 14-person team achieving 98% issue resolution within SLA across 50,000+ connections in Lahore.
 - **Dec 2022 – Dec 2023:** Team Lead, Quality Assurance & NOC Development at Ihsan Solar Energy Pvt. Ltd. Led a 4-person team managing 400+ kW in Raiwind. Productivity Leader Award (Jul 2023).
 - **Dec 2023 – Aug 2024:** Automation Engineer & IT Manager at NovaSole Pakistan in Kasur. Built automation connecting a 500,000+ monthly visitor e-commerce platform across 3 sales channels.
-- **Aug 2024 – Jul 2026:** AI Engineer & Operations Manager at Allama Iqbal Hospital, Kasur. Deployed an LLM-powered agent handling 1,000+ daily interactions. High Performance Excellence Award (Jun 2025).
-- **Jul 2026 – Present:** Senior Applied AI/ML Engineer at Cygnus Technologies in Lahore. Designing end-to-end AI/ML solutions covering ETL, RAG, and MLOps.
+- **Aug 2024 – Jul 2026:** AI Engineer & Operations Manager at Allama Iqbal Hospital, Kasur. Shipped an agentic CallBot on Llama 3.3 70B (Groq) over WhatsApp and Twilio handling 1,000+ daily production interactions. High Performance Excellence Award (Jun 2025).
+- **Jul 2026 – Present:** Senior Applied AI/ML Engineer at Cygnus Technologies in Lahore. Designing end-to-end AI/ML solutions covering ETL, RAG, AWS MLOps, Presidio PII redaction, and hallucination evals.
+- **Aug 2026 – Present:** Trainer, Applied Artificial Intelligence at Bano Qabil Pakistan (Alkhidmat Foundation initiative). Part-time volunteer instructorship covering Python, LLMs, RAG, agents, and MLOps.
 
 ## Certification Timeline
 - **Aug 2025:** Completed AI for Business Professionals (HP LIFE).
@@ -40,12 +41,14 @@ related_services: []
 - **Dec 2025:** Completed the McKinsey Forward Program.
 - **Jan 2026:** Completed RE101: Fundamental Math for Solar (Solar Energy International).
 - **Apr 2026:** Completed Google AI Professional Certificate (7 courses).
+- **IBM:** Python for Machine Learning; Python for Data Science.
 
 ## Publication & Project Timeline
 - **2022:** Published research paper "Implementation of a LoRaWAN Based Smart Agriculture Decision Support System" in MDPI Sustainability (Impact Factor: 3.125).
 - **2023-2026:** Architected and deployed 37+ highly documented engineering projects spanning AI Security, FinTech, and Enterprise SaaS.
 
 ## Philanthropy Timeline
-- **2020 – Present:** Coordinator for Alkhidmat Foundation Kasur.
+- **2020 – 2025:** District Coordinator, Alkhidmat Foundation Pakistan — volunteer emergency response (COVID-19; Pakistan floods August–October 2025) covering rescue, relief, recovery, and rehabilitation.
+- **Aug 2026 – Present:** Trainer, Applied Artificial Intelligence, Bano Qabil Pakistan (Alkhidmat Foundation initiative), part-time volunteer.
 - **2022 – Present:** Outreach Lead for Mubashar Aziz Foundation.
 - **2023 – Present:** Co-Founder of NISA Foundation Kasur.

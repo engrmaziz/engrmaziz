@@ -16,8 +16,11 @@ Users are looking for definitions, architectures, or how-to guides.
 Users are looking for specific facts about Musharraf Aziz's background.
 
 - **Query:** "Where does Musharraf work now?"
-  - *Mapped Target:* `experience/cygnus.md`
-  - *Required Context:* Role (Senior Applied AI/ML Engineer), Cygnus Technologies, July 2026 – Present.
+  - *Mapped Target:* `experience/cygnus.md`, `experience/bano-qabil.md`
+  - *Required Context:* Full-time Senior Applied AI/ML Engineer at Cygnus Technologies (July 2026 – Present). Concurrent part-time volunteer Trainer, Applied AI at Bano Qabil / Alkhidmat (August 2026 – Present).
+- **Query:** "Does Musharraf teach AI?"
+  - *Mapped Target:* `experience/bano-qabil.md`
+  - *Required Context:* Trainer, Applied Artificial Intelligence; Bano Qabil Pakistan; Alkhidmat Foundation initiative; part-time volunteer.
 - **Query:** "Did Musharraf work at NovaSole?"
   - *Mapped Target:* `experience/novasole.md`
   - *Required Context:* Role (Automation Engineer & IT Manager), duration, achievements (500k scale).

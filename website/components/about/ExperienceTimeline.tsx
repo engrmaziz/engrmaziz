@@ -24,41 +24,61 @@ const experiences = [
     summary:
       "Designing and deploying end-to-end AI and machine learning solutions for large-scale data processing, analytics, and intelligent automation across business functions.",
     responsibilities: [
-      "Build scalable ETL and data pipelines for high-volume ingestion, transformation, and storage supporting analytics and model training.",
-      "Develop and fine-tune custom ML, deep learning, and generative AI solutions, including LLMs and RAG applications.",
-      "Build AI-powered reporting dashboards, predictive analytics, and recommendation systems for data-driven decision making.",
-      "Deploy, monitor, and optimize production ML models following MLOps practices covering versioning, monitoring, and reliable rollout.",
+      "Build data pipelines and integration architectures for high-volume ingestion, transformation, and structured storage, aimed at lower latency.",
+      "Develop and fine-tune LLM and RAG applications using LangChain, LlamaIndex, Hugging Face, OpenAI APIs, and vector databases.",
+      "Deploy, monitor, and optimize production ML models on AWS following MLOps practices: versioning, performance monitoring, and reliable rollout.",
+      "Extend PII redaction and data governance with spaCy NER and Microsoft Presidio, and build hallucination-detection evals against golden datasets.",
     ],
     achievements: [
       "Enterprise AI applications grounded in operational data using LangChain, LlamaIndex, Hugging Face, OpenAI APIs, and vector databases.",
-      "Cross-functional delivery of scalable, secure, high-performance AI solutions aligned with business objectives.",
+      "Evaluation tooling that scores answer relevancy and faithfulness and tracks pass rate and latency over time.",
     ],
-    stack: ["Python", "LangChain", "LlamaIndex", "Hugging Face", "OpenAI", "Vector DBs", "MLOps", "ETL"],
+    stack: ["Python", "LangChain", "LlamaIndex", "Hugging Face", "OpenAI", "AWS", "Presidio", "MLOps"],
     impact:
       "Shipping production AI systems that turn high-volume operational data into reliable analytics, automation, and model-driven decisions.",
+  },
+  {
+    company: "Bano Qabil Pakistan (Alkhidmat Foundation)",
+    role: "Trainer, Applied Artificial Intelligence",
+    period: "Aug 2026 – Present · Part-time volunteer",
+    industry: "Applied AI Education",
+    location: "Kasur, Pakistan",
+    summary:
+      "Part-time instructorship delivering hands-on applied AI, machine learning, and generative AI training for learners with little or no technical background.",
+    responsibilities: [
+      "Design and deliver a curriculum focused on real-world AI implementation and end-to-end application development, built around practical project work.",
+      "Teach Python, large language models, prompt engineering, retrieval-augmented generation, AI agents, embeddings, vector databases, and modern AI frameworks in plain language.",
+      "Mentor and assess learners through hands-on projects covering AI deployment, MLOps fundamentals, responsible AI, safety, ethics, and governance.",
+    ],
+    achievements: [
+      "Volunteer instructorship under an Alkhidmat Foundation initiative, translating production AI practice into teachable, project-based skills.",
+    ],
+    stack: ["Python", "LLMs", "Prompt Engineering", "RAG", "AI Agents", "Vector DBs", "MLOps"],
+    impact:
+      "Turns production AI engineering into a teachable curriculum so beginners can ship real applications, not just notebooks.",
   },
   {
     company: "Allama Iqbal Hospital, Kasur",
     role: "AI Engineer & Operations Manager",
     period: "Aug 2024 – Jul 2026",
-    industry: "Healthcare / MedTech",
+    industry: "Production AI / Operations Platforms",
     location: "Kasur, Pakistan",
     summary:
-      "Designed and deployed an LLM-powered AI agent with a LangChain RAG pipeline on a multi-channel patient platform, connecting the agent to real hospital systems.",
+      "Designed and deployed an agentic AI call and chat system on Llama 3.3 70B (Groq), with OpenAI and Gemini as fallbacks, connected to live databases and messaging channels.",
     responsibilities: [
-      "Deployed an LLM-powered AI agent using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B, with a LangChain RAG pipeline handling 1,000+ daily interactions.",
-      "Built agent workflows integrating APIs, internal databases, and messaging platforms via a 16-node n8n automation system.",
-      "Built and published a Model Context Protocol server giving AI agents structured, tool-based access to external systems.",
-      "Hardened the agent against low-confidence or incorrect outputs using fallback handling and data governance before data reached the LLM.",
+      "Shipped an agentic AI CallBot on Llama 3.3 70B via Groq, reachable over WhatsApp and inbound phone calls through Twilio, handling 1,000+ daily production interactions.",
+      "Built a LangChain RAG pipeline grounding agent responses in operational knowledge, plus a 16-node n8n graph and an MCP server for tool-based system access.",
+      "Hardened the agent with fallback handling and PII redaction (spaCy + Microsoft Presidio) before any data reached the language model.",
+      "Deployed AI services on Microsoft Azure for nearly two years, and added OCR (Tesseract, PaddleOCR) plus PyTorch LSTM forecasting in the production inference path.",
     ],
     achievements: [
-      "1,000+ daily production interactions on a multi-channel patient platform.",
-      "Monitored agent output quality over time, refining prompt design and retrieval logic from real interaction failure patterns.",
+      "1,000+ daily production interactions across WhatsApp and voice.",
+      "Monitored agent output quality over time, refining retrieval and prompts from real interaction failure patterns.",
       "High Performance Excellence Award — June 2025.",
     ],
-    stack: ["Python", "LangChain", "OpenAI", "Gemini", "Groq", "Llama 3.3 70B", "n8n", "MCP"],
+    stack: ["Python", "LangChain", "Groq", "Llama 3.3 70B", "Twilio", "n8n", "MCP", "Azure"],
     impact:
-      "Gave clinical and operations teams a production AI agent grounded in hospital systems, with governance controls before any data reached the LLM.",
+      "Gave operations teams a production voice and chat agent grounded in live systems, with evals and governance before any data reached the LLM.",
   },
   {
     company: "NovaSole Pakistan",
@@ -139,7 +159,7 @@ export function ExperienceTimeline() {
             Professional Experience
           </h2>
           <p className="text-lg text-secondary max-w-2xl">
-            Four years of progressively complex roles across applied AI, healthcare, e-commerce, energy, and telecommunications — each producing measurable engineering outcomes.
+            More than five years of progressively complex roles across applied AI, backend systems, e-commerce, energy, and telecommunications — plus a current part-time applied-AI instructorship.
           </p>
         </motion.div>
 

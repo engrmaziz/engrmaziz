@@ -8,7 +8,7 @@ Pre-approved, fact-checked achievement statements for use in Cover Letters.
 
 ## AI & Security
 - "Architected a HIPAA-compliant LLM Guardrail Gateway, intercepting and redacting 18+ types of PII before payloads reached third-party models."
-- "Designed and deployed a Corrective RAG (CRAG) system in a clinical environment that achieved zero hallucinations in production."
+- "Designed and deployed a Corrective RAG (CRAG) system in production that achieved zero hallucinations."
 
 ## Operations & Leadership
 - "Managed a 14-person Technical Assistance Center (TAC), enforcing SLAs across a 50k user base and reducing fault resolution times by 18%."

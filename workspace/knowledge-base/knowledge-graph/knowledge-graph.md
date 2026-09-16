@@ -7,13 +7,13 @@ This document provides a human-readable summary of the underlying `knowledge-gra
 
 ### Node Types (Entities)
 1. **Person:** The root node (Musharraf Aziz).
-2. **Company:** Organizations you have worked for (Cygnus Technologies, AIHK, NovaSole, Transworld, Ihsan Solar).
+2. **Company:** Organizations you have worked for or taught with (Cygnus Technologies, Bano Qabil / Alkhidmat, AIHK, NovaSole, Transworld, Ihsan Solar).
 3. **University:** Educational institutions (COMSATS).
 4. **Project:** Software systems built (AegisFlow, SHBRAG, VoiceRAG, AuraNode, dentl2, Git MCP, LLM Guardrail).
 5. **Service:** Commercial offerings (AI Solutions, SaaS Development, Automation, Consulting).
 6. **Technology:** Programming languages, frameworks, and databases (Python, Next.js, FastAPI, LangGraph, Qdrant).
 7. **Certification:** Verifiable credentials (Google AI, Anthropic, PyTorch LFS116, McKinsey, PEC).
-8. **Industry:** Vertical markets served (Healthcare, FinTech, E-Commerce, Solar).
+8. **Industry:** Vertical markets served (Applied AI, FinTech, E-Commerce, Telecom, Solar, operations platforms).
 
 ### Edge Types (Relationships)
 1. `WORKS_AT` / `WORKED_AT`: Connects Person to Company.

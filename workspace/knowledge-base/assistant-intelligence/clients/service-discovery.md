@@ -4,7 +4,7 @@ Use this document to map a client's vague request to a specific, structured serv
 
 ## 1. "I need an AI Chatbot for my website"
 - **Map to:** AI Voice Agents & Conversational UI / Enterprise AI Solutions.
-- **Discovery Strategy:** Clarify if they just want a standard OpenAI wrapper (not recommended for enterprise) or a deterministic RAG system that uses their own secure data. Mention the *Clinical RAG* project as proof of secure implementation.
+- **Discovery Strategy:** Clarify if they just want a standard OpenAI wrapper (not recommended for enterprise) or a deterministic RAG system that uses their own secure data. Mention the production RAG + evals work as proof of secure implementation.
 
 ## 2. "Our team is doing too much manual data entry"
 - **Map to:** Enterprise Workflow Automation.

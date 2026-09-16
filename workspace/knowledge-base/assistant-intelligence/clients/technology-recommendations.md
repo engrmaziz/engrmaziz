@@ -12,4 +12,4 @@ When a client asks for a technology recommendation, use these framings. **Confid
 
 ## 3. When to recommend LangGraph over LangChain
 - **Scenario:** The client wants an autonomous agent that can "think" and loop through tasks, not just a simple Q&A bot.
-- **Framing:** "For complex reasoning, I recommend LangGraph. Standard chains break if they make a mistake. LangGraph's state machine allows the AI to self-correct, which is how I built the Clinical AI system to achieve zero hallucinations."
+- **Framing:** "For complex reasoning, I recommend LangGraph. Standard chains break if they make a mistake. LangGraph's state machine allows the AI to self-correct, which is how I built production RAG to achieve zero hallucinations."

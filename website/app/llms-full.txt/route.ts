@@ -36,6 +36,7 @@ export function GET() {
     "- Role: Senior AI Engineer",
     "- Education: B.S. (Hons.) Electrical Engineering, COMSATS University Islamabad",
     "- Current employer: Cygnus Technologies (Senior Applied AI/ML Engineer)",
+    "- Teaching: Trainer, Applied Artificial Intelligence at Bano Qabil Pakistan (Alkhidmat Foundation initiative), Aug 2026 – Present, part-time volunteer",
     "- Engagements: remote freelance projects; open to full-time hiring",
     "",
     `## ${MARKETS.california.name}`,

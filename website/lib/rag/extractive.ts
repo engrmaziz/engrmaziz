@@ -1,4 +1,4 @@
-import { RAG_IDENTITY_FACTS, getCompactServiceCatalog } from './identity';
+import { RAG_IDENTITY_FACTS, buildServiceOfferAnswer } from './identity';
 import { RetrievedChunk } from './retriever';
 
 const JSONLD_RE = /"@context"\s*:\s*"https:\/\/schema\.org"/i;
@@ -27,7 +27,22 @@ export function buildExtractiveAnswer(query: string, chunks: RetrievedChunk[]): 
   }
 
   if (/what services|what do you offer|services do you/.test(q)) {
-    return `Musharraf builds custom AI systems for hire. Core offerings:\n${getCompactServiceCatalog()}\n\nEmail io@maziz.me to start a project.`;
+    return buildServiceOfferAnswer();
+  }
+
+  if (/hire you|how do i hire|book a meeting|\bcontact\b/.test(q)) {
+    return [
+      'Hire Musharraf as the production owner: freelance for a scoped build, or full-time on a US remote team.',
+      '',
+      'He already ships the hard parts — voice and WhatsApp agents at 1,000+ daily interactions, RAG with evaluation gates, and backends that held 500,000+ monthly visitors.',
+      '',
+      'Email [io@maziz.me](mailto:io@maziz.me) with the channel (voice, chat, RAG, or automation), the system of record, and whether this is a project or a seat. Or open the hire page and pick an intent.',
+      '',
+      '**Explore**',
+      '- [Hire Musharraf](/hire)',
+      '- [Contact](/contact)',
+      '- [What he builds](/services)',
+    ].join('\n');
   }
 
   if (/aegisflow|\baegis\b/.test(q)) {
@@ -46,9 +61,7 @@ export function buildExtractiveAnswer(query: string, chunks: RetrievedChunk[]): 
   }
 
   if (/call agent|voice agent|chatbot|whatsapp|telegram/.test(q)) {
-    const catalog = getCompactServiceCatalog();
-    const lines = catalog.split('\n').filter((line) => /call|voice|chat|whatsapp|telegram|rag/i.test(line));
-    return `Yes. Musharraf designs and deploys custom AI call agents, voice agents, and chatbots for sales and support.\n${(lines.length ? lines : catalog.split('\n').slice(0, 6)).join('\n')}\n\nEmail io@maziz.me to scope a build.`;
+    return `${buildServiceOfferAnswer()}`;
   }
 
   const excerpts = chunks.slice(0, 2).map((chunk) => {

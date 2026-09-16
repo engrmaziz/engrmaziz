@@ -11,7 +11,7 @@
 ## AI / Machine Learning
 | Skill | Proficiency | Evidence (Projects/Roles) |
 |---|---|---|
-| RAG Architecture | Expert | SHBRAG, AIHK Clinical AI |
+| RAG Architecture | Expert | SHBRAG, production RAG agents |
 | Agentic Workflows | Advanced | LangGraph, VoiceRAG Core |
 | Vector Databases | Advanced | Qdrant, ChromaDB |
 | Prompt Eng. & Evals | Advanced | Anthropic Cert, DeepEval |

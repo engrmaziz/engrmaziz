@@ -148,10 +148,10 @@ For full-stack Next.js applications, I prefer Vercel due to its unparalleled edg
 ## Section 3: Projects & Experience (41-60)
 
 ### 41. What is your current role?
-I am Senior Applied AI/ML Engineer at Cygnus Technologies in Lahore (July 2026 – Present). I design and deploy end-to-end AI and machine learning solutions covering ETL pipelines, custom ML/LLM/RAG applications, AI-powered reporting, and MLOps.
+I am Senior Applied AI/ML Engineer at Cygnus Technologies in Lahore (July 2026 – Present). I design and deploy end-to-end AI and machine learning solutions covering ETL pipelines, custom ML/LLM/RAG applications, AWS MLOps, PII redaction, and hallucination evaluation. In parallel I am a part-time volunteer Trainer in Applied Artificial Intelligence at Bano Qabil Pakistan, an Alkhidmat Foundation initiative (August 2026 – Present).
 
 ### 42. What was your role at Allama Iqbal Hospital?
-I served as AI Engineer & Operations Manager from August 2024 to July 2026. I designed and deployed an LLM-powered AI agent using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B, with a LangChain RAG pipeline on a multi-channel patient platform handling 1,000+ daily interactions. I also published an MCP server and connected the agent to hospital systems via a 16-node n8n automation graph.
+I served as AI Engineer & Operations Manager from August 2024 to July 2026. I designed and deployed an agentic AI CallBot on Llama 3.3 70B (Groq) over WhatsApp and Twilio, with a LangChain RAG pipeline handling 1,000+ daily production interactions, plus an MCP server and a 16-node n8n automation graph.
 
 ### 43. How did you scale NovaSole to 500,000 monthly visitors?
 As Automation Engineer & IT Manager at NovaSole, I built automated workflows connecting the e-commerce platform to payment processors and inventory systems across 3 sales channels using REST APIs and webhook-based triggers. Data pipelines achieved 98%+ accuracy and eliminated a previously manual daily reconciliation process.
@@ -199,7 +199,7 @@ Team Lead, Technical Assistance Center at Transworld Home (ISP), March 2022 to N
 Yes, extensively. I led a 14-person TAC team at Transworld Home and a 4-person engineering/NOC team at Ihsan Solar Energy.
 
 ### 57. What industries have you built software for?
-Applied AI (Cygnus Technologies), Healthcare (MedTech SaaS, Clinical AI), FinTech (Fraud detection), E-Commerce (High-traffic retail), Telecommunications (ISP operations), and Renewable Energy (Solar NOCs).
+Applied AI and MLOps (Cygnus Technologies), production voice/chat RAG, applied-AI instructorship (Bano Qabil / Alkhidmat), FinTech, e-commerce, telecommunications, and renewable energy operations. Operations platforms are one domain among several — the through-line is software, RAG, and backend systems.
 
 ### 58. Are your projects open-source or proprietary?
 The majority of my enterprise projects (AegisFlow, AuraNode, Guardrail Gateways) are proprietary commercial systems. However, developer tooling like the `Git Archaeologist MCP Server` is published open-source on NPM.
@@ -305,7 +305,7 @@ Concise, data-driven, and context-aware. I speak to stakeholders in terms of ROI
 I am highly effective as an Async-First Remote worker, but I am open to strategic relocations or hybrid models for the right enterprise opportunity, particularly in the US or GCC regions.
 
 ### 91. What do you consider your greatest professional achievement?
-Achieving and maintaining a strict "zero hallucination" record over 12 months for the Clinical AI systems at Allama Iqbal Hospital, proving that AI can be safely deployed in high-stakes environments.
+Achieving and maintaining a strict zero-hallucination record in production RAG with evaluation gates, proving that AI can be safely deployed in high-stakes software systems.
 
 ### 92. What are your core values as a professional?
 Determinism over hype, holistic end-to-end ownership, relentless optimization, and treating continuous learning as a mandatory professional capability.
@@ -317,7 +317,7 @@ I view documentation as the highest leverage activity an engineer can perform. I
 I have extensive predictive and agile project management experience, backed by PMI certifications. I have managed teams of up to 14 people (Transworld) and consistently delivered complex software projects on schedule.
 
 ### 95. Do you participate in philanthropic work?
-Yes. I am the Co-Founder of the NISA Foundation (organizing medical camps for underserved women), Outreach Lead for Mubashar Aziz Foundation, and Coordinator for Alkhidmat Foundation.
+Yes. I am a part-time volunteer Trainer in Applied Artificial Intelligence at Bano Qabil Pakistan (Alkhidmat Foundation initiative, August 2026 – Present). I am also District Coordinator for Alkhidmat Foundation Pakistan (volunteer emergency response, including COVID-19 and the 2025 floods), Co-Founder of the NISA Foundation, and Outreach Lead for Mubashar Aziz Foundation.
 
 ### 96. What is the "AI-Native Operating Model"?
 It is my methodology of working as a "Superbuilder." By heavily utilizing AI copilots, custom MCP servers, and automation for boilerplate code, I multiply my output, allowing me to focus purely on complex system architecture and business logic.

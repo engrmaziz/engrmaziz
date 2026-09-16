@@ -26,7 +26,7 @@ export function AboutMetrics() {
           className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border-default"
         >
           {[
-            { value: "Zero", label: "AI Hallucinations", sub: "12+ months clinical production" },
+            { value: "Zero", label: "AI Hallucinations", sub: "Production RAG with evals" },
             { value: "500k+", label: "Monthly Visitors", sub: "E-commerce platform scaled" },
             { value: "99.95%", label: "Network Uptime", sub: "50,000+ ISP connections" },
             { value: "37+", label: "Production Projects", sub: "Documented engineering systems" },

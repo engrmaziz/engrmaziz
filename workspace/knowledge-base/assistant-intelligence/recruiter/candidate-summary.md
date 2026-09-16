@@ -7,7 +7,7 @@
 **Education:** B.S. (Hons.) Electrical Engineering, COMSATS University Islamabad  
 
 ## Profile Summary
-Musharraf Aziz is a Senior AI Engineer currently working as Senior Applied AI/ML Engineer at Cygnus Technologies (Jul 2026 – Present). He previously served as AI Engineer & Operations Manager at Allama Iqbal Hospital (Aug 2024 – Jul 2026), deploying an LLM-powered agent handling 1,000+ daily interactions, and as Automation Engineer & IT Manager at NovaSole, connecting a 500k+ monthly visitor e-commerce platform across three sales channels.
+Musharraf Aziz is a Senior AI Engineer currently working as Senior Applied AI/ML Engineer at Cygnus Technologies (Jul 2026 – Present), with a concurrent part-time volunteer instructorship as Trainer, Applied Artificial Intelligence at Bano Qabil Pakistan (Alkhidmat Foundation, Aug 2026 – Present). He previously served as AI Engineer & Operations Manager (Aug 2024 – Jul 2026), shipping an agentic voice/chat RAG system handling 1,000+ daily production interactions, and as Automation Engineer & IT Manager at NovaSole, connecting a 500k+ monthly visitor e-commerce platform across three sales channels.
 
 ## Key Differentiators
 - **Full-Stack AI Capability:** Not just an API wrapper developer; capable of building LangGraph state machines, configuring vector databases (Qdrant), and deploying FastAPI microservices.

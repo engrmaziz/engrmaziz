@@ -47,7 +47,7 @@ export function AboutHero() {
 
             <div className="space-y-4 text-secondary leading-relaxed text-lg">
               <p>
-                I build production-grade AI systems and high-performance full-stack platforms that solve real enterprise problems. My work spans applied AI at Cygnus Technologies, clinical AI at Allama Iqbal Hospital (1,000+ daily interactions), e-commerce automation at NovaSole (500,000+ monthly visitors), and renewable energy operations — each demanding the same discipline: systems that work when they are needed most.
+                I build production-grade AI systems and high-performance backends that solve real enterprise problems. My work spans applied AI and MLOps at Cygnus Technologies, a production voice/chat RAG agent handling 1,000+ daily interactions, e-commerce automation at NovaSole (500,000+ monthly visitors), and a part-time applied-AI instructorship with Bano Qabil (Alkhidmat Foundation). Same discipline in every setting: systems that work when they are needed most.
               </p>
               <p>
                 My foundation is Electrical Engineering (B.S. Hons., COMSATS University), which gave me a rigorous first-principles understanding of hardware constraints, failure modes, and systems design. That mindset now shapes every backend architecture, RAG pipeline, and LLM agent I deploy. Software is engineered with the same tolerance discipline an electrical engineer applies to circuit design — because the cost of failure is equally real.
@@ -58,7 +58,7 @@ export function AboutHero() {
             </div>
 
             <div className="flex flex-wrap gap-2 mt-2">
-              {["LangGraph", "FastAPI", "Next.js 14", "RAG Pipelines", "Python", "TypeScript", "PostgreSQL", "Healthcare AI"].map((tag) => (
+              {["LangGraph", "FastAPI", "Next.js", "RAG Pipelines", "Python", "TypeScript", "PostgreSQL", "MLOps"].map((tag) => (
                 <Badge key={tag} variant="default">
                   {tag}
                 </Badge>
@@ -127,7 +127,7 @@ export function AboutHero() {
 
                 <div className="grid grid-cols-2 gap-5">
                   <div>
-                    <p className="text-3xl font-bold text-primary">4+</p>
+                    <p className="text-3xl font-bold text-primary">5+</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.2em] text-secondary">Years</p>
                   </div>
 

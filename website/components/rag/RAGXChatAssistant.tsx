@@ -43,6 +43,43 @@ function generateUUID() {
   });
 }
 
+const SUGGESTIONS = [
+  "What services does Musharraf offer?",
+  "Can he build a production voice call agent?",
+  "How does his RAG stop hallucinations?",
+  "How do I hire him?",
+];
+
+const ChatMarkdown = {
+  ...MarkdownComponents,
+  a({ children, href, ...props }: any) {
+    const internal = typeof href === "string" && href.startsWith("/");
+    return (
+      <a
+        href={href}
+        target={internal ? undefined : "_blank"}
+        rel={internal ? undefined : "noopener noreferrer"}
+        className="text-[#7DF9FF] underline decoration-[#00D4FF]/40 underline-offset-2 hover:decoration-[#C9A227] break-words"
+        {...props}
+      >
+        {children}
+      </a>
+    );
+  },
+  ul({ children, ...props }: any) {
+    return <ul className="my-2 ml-4 list-disc space-y-1.5 text-[13px] leading-relaxed text-[#c9d6e3]" {...props}>{children}</ul>;
+  },
+  li({ children, ...props }: any) {
+    return <li className="marker:text-[#00D4FF]" {...props}>{children}</li>;
+  },
+  p({ children, ...props }: any) {
+    return <p className="mb-2 last:mb-0 text-[13px] leading-relaxed text-[#e8f4ff]" {...props}>{children}</p>;
+  },
+  strong({ children, ...props }: any) {
+    return <strong className="text-[#7DF9FF] font-semibold" {...props}>{children}</strong>;
+  },
+};
+
 function TypewriterText({ text, onComplete }: { text: string; onComplete?: () => void }) {
   const [displayedText, setDisplayedText] = useState("");
   useEffect(() => {
@@ -57,8 +94,8 @@ function TypewriterText({ text, onComplete }: { text: string; onComplete?: () =>
     return () => clearInterval(id);
   }, [text, onComplete]);
   return (
-    <div className="prose prose-sm dark:prose-invert max-w-none break-words">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>{displayedText}</ReactMarkdown>
+    <div className="max-w-none break-words">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={ChatMarkdown}>{displayedText}</ReactMarkdown>
     </div>
   );
 }
@@ -100,7 +137,7 @@ export function RAGXChatAssistant() {
     if (lv) {
       setMessages([{
         id: generateUUID(), role: "assistant", timestamp: new Date().toISOString(),
-        content: `Hello ${lv.name} 👋\n\nI'm RAGX, Musharraf Aziz's AI Knowledge Assistant.\n\nAsk me anything about his services, projects, or expertise — or type **"book a meeting"** to schedule a call.\n\n*Example: "What AI services does he offer?"*`
+        content: `Hello ${lv.name}.\n\nI am **RAGX**, Musharraf Aziz's production knowledge assistant.\n\nAsk what he can build, how the stack works, or type **book a meeting**.`
       }]);
     }
     fetch("/api/rag/status").then(r => r.json()).then(d => setEngineStatus(d)).catch(() => setEngineStatus({ status: "OFFLINE", health: "CRITICAL" }));
@@ -136,7 +173,7 @@ export function RAGXChatAssistant() {
 
   const welcome = (name: string) => ({
     id: generateUUID(), role: "assistant" as const, timestamp: new Date().toISOString(),
-    content: `Hello ${name} 👋\n\nI'm RAGX, Musharraf Aziz's AI Knowledge Assistant.\n\nAsk me anything about his services, projects, or expertise — or type **"book a meeting"** to schedule a call.\n\n*Example: "What AI services does he offer?"*`
+    content: `Hello ${name}.\n\nI am **RAGX**, Musharraf Aziz's production knowledge assistant.\n\nAsk what he can build, how the stack works, or type **book a meeting**.`
   });
 
   const handleWelcomeSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -151,9 +188,10 @@ export function RAGXChatAssistant() {
     }
   };
 
-  const handleSend = async () => {
-    if (!inputValue.trim() || sessionEnded) return;
-    const um: Message = { id: generateUUID(), role: "user", content: inputValue.trim(), timestamp: new Date().toISOString() };
+  const sendMessage = async (raw: string) => {
+    const text = raw.trim();
+    if (!text || sessionEnded) return;
+    const um: Message = { id: generateUUID(), role: "user", content: text, timestamp: new Date().toISOString() };
     setMessages(prev => [...prev.filter(m => m.role !== "system"), um]);
     setInputValue(""); setIsLoading(true);
     try {
@@ -163,8 +201,12 @@ export function RAGXChatAssistant() {
       setMessages(prev => [...prev, { id: generateUUID(), role: "assistant", content: data.data?.content || data.content, citations: data.data?.citations || data.citations, timestamp: new Date().toISOString(), isStreaming: true }]);
     } catch (err: any) {
       setMessages(prev => [...prev, { id: generateUUID(), role: "system", content: `Error: ${err?.message || "Unknown error"}. Please try again.`, timestamp: new Date().toISOString() }]);
-      setInputValue(um.content);
+      setInputValue(text);
     } finally { setIsLoading(false); }
+  };
+
+  const handleSend = async () => {
+    await sendMessage(inputValue);
   };
 
   const clearConversation = () => {
@@ -294,14 +336,15 @@ export function RAGXChatAssistant() {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 rounded-full shadow-2xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 z-[100] ${isOpen ? "bg-elevated/80 backdrop-blur-md border border-border-default text-primary rotate-90 scale-0 opacity-0 pointer-events-none" : "bg-elevated/80 backdrop-blur-md border border-border-default text-accent hover:bg-accent hover:text-white hover:scale-110 opacity-100 scale-100"}`}
-        aria-label="Toggle AI Assistant"
+        className={`fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 rounded-full shadow-[0_0_24px_rgba(0,212,255,0.35)] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:ring-offset-2 focus:ring-offset-[#050a14] z-[100] ${isOpen ? "bg-[#07111f] border border-[#00D4FF]/40 text-[#7DF9FF] rotate-90 scale-0 opacity-0 pointer-events-none" : "bg-[#07111f] border border-[#00D4FF]/50 text-[#7DF9FF] hover:bg-[#00D4FF] hover:text-[#050a14] hover:scale-110 opacity-100 scale-100"}`}
+        aria-label="Toggle RAGX Assistant"
       >
+        <span className="absolute inset-0 rounded-full border border-[#00D4FF]/30 animate-ping" />
         <span className="absolute top-0 right-0 flex h-3 w-3 -mt-0.5 -mr-0.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3DFF9A] opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-[#3DFF9A]"></span>
         </span>
-        <Bot className="w-6 h-6" />
+        <Bot className="w-6 h-6 relative z-10" />
       </button>
 
       {mounted && createPortal(
@@ -314,38 +357,43 @@ export function RAGXChatAssistant() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.95 }}
                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                className="fixed bottom-0 right-0 sm:bottom-24 sm:right-6 z-[101] flex flex-col bg-elevated/95 backdrop-blur-xl border border-border-default shadow-2xl overflow-hidden pointer-events-auto w-full h-[100dvh] sm:w-[420px] sm:h-[650px] sm:max-h-[calc(100vh-120px)] sm:rounded-2xl"
+                className="fixed bottom-0 right-0 sm:bottom-24 sm:right-6 z-[101] flex flex-col overflow-hidden pointer-events-auto w-full h-[100dvh] sm:w-[440px] sm:h-[680px] sm:max-h-[calc(100vh-120px)] sm:rounded-2xl bg-[#050a14] border border-[#00D4FF]/35 shadow-[0_0_40px_rgba(0,212,255,0.12)]"
               >
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-border-default bg-base shrink-0">
+                <div className="relative flex items-center justify-between p-4 border-b border-[#00D4FF]/20 bg-[#07111f] shrink-0 overflow-hidden">
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#7DF9FF] to-transparent animate-pulse" />
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="text-xl leading-none">🧠</span>
-                      <span className="font-bold text-primary text-base">RAGX Assistant</span>
-                      {sessionEnded && <span className="text-[10px] bg-orange-500/10 text-orange-500 px-1.5 py-0.5 rounded font-medium">Ended</span>}
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3DFF9A] opacity-75"></span>
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#3DFF9A]"></span>
+                      </span>
+                      <span className="font-mono text-[11px] tracking-[0.22em] text-[#8BA0B5]">RAGX // ONLINE</span>
+                      {sessionEnded && <span className="text-[10px] bg-orange-500/10 text-orange-400 px-1.5 py-0.5 rounded font-mono">ENDED</span>}
                     </div>
-                    <p className="text-xs text-secondary mt-0.5">Ask about services, projects, or expertise.</p>
+                    <p className="text-sm font-semibold text-[#E8F4FF] mt-1">Musharraf Aziz · Applied AI</p>
+                    <p className="text-[11px] font-mono text-[#8BA0B5] mt-0.5">Ask what he ships. Hire when you are ready.</p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0 ml-2">
-                    <button onClick={() => setShowHistory(!showHistory)} className={`p-2 rounded-full transition-colors ${showHistory ? "text-accent bg-accent/10" : "text-secondary hover:text-accent hover:bg-accent/10"}`} aria-label="History" title="History"><MessageSquare className="w-4 h-4" /></button>
+                    <button onClick={() => setShowHistory(!showHistory)} className={`p-2 rounded-full transition-colors ${showHistory ? "text-[#7DF9FF] bg-[#00D4FF]/10" : "text-[#8BA0B5] hover:text-[#7DF9FF] hover:bg-[#00D4FF]/10"}`} aria-label="History" title="History"><MessageSquare className="w-4 h-4" /></button>
                     {isIdentified && messages.filter(m => m.role !== "system").length > 1 && (
                       <div className="relative" ref={exportMenuRef}>
-                        <button onClick={() => setShowExportMenu(!showExportMenu)} className="p-2 rounded-full text-secondary hover:text-accent hover:bg-accent/10 transition-colors" aria-label="Export" title="Export"><Download className="w-4 h-4" /></button>
+                        <button onClick={() => setShowExportMenu(!showExportMenu)} className="p-2 rounded-full text-[#8BA0B5] hover:text-[#7DF9FF] hover:bg-[#00D4FF]/10 transition-colors" aria-label="Export" title="Export"><Download className="w-4 h-4" /></button>
                         <AnimatePresence>
                           {showExportMenu && (
-                            <motion.div initial={{ opacity: 0, y: -8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.95 }} className="absolute right-0 top-10 bg-elevated border border-border-default rounded-xl shadow-xl z-50 overflow-hidden min-w-[150px]">
-                              <button onClick={exportMarkdown} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-primary hover:bg-accent/10 transition-colors"><Download className="w-3.5 h-3.5 text-accent" />Markdown (.md)</button>
-                              <button onClick={exportPDF} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-primary hover:bg-accent/10 transition-colors"><Download className="w-3.5 h-3.5 text-accent" />PDF</button>
+                            <motion.div initial={{ opacity: 0, y: -8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.95 }} className="absolute right-0 top-10 bg-[#07111f] border border-[#00D4FF]/25 rounded-xl shadow-xl z-50 overflow-hidden min-w-[150px]">
+                              <button onClick={exportMarkdown} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#E8F4FF] hover:bg-[#00D4FF]/10 transition-colors"><Download className="w-3.5 h-3.5 text-[#7DF9FF]" />Markdown (.md)</button>
+                              <button onClick={exportPDF} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#E8F4FF] hover:bg-[#00D4FF]/10 transition-colors"><Download className="w-3.5 h-3.5 text-[#7DF9FF]" />PDF</button>
                             </motion.div>
                           )}
                         </AnimatePresence>
                       </div>
                     )}
                     {isIdentified && !sessionEnded && messages.filter(m => m.role === "user").length > 0 && (
-                      <button onClick={() => setShowEndConfirm(true)} className="p-2 rounded-full text-secondary hover:text-orange-500 hover:bg-orange-500/10 transition-colors" aria-label="End session" title="End Session" disabled={isEndingSession}><LogOut className="w-4 h-4" /></button>
+                      <button onClick={() => setShowEndConfirm(true)} className="p-2 rounded-full text-[#8BA0B5] hover:text-orange-400 hover:bg-orange-500/10 transition-colors" aria-label="End session" title="End Session" disabled={isEndingSession}><LogOut className="w-4 h-4" /></button>
                     )}
-                    <button onClick={clearConversation} className="p-2 text-secondary hover:text-accent hover:bg-accent/10 rounded-full transition-colors" aria-label="New chat" title="New chat"><Trash2 className="w-4 h-4" /></button>
-                    <button onClick={() => setIsOpen(false)} className="p-2 text-secondary hover:text-primary hover:bg-border-default rounded-full transition-colors" aria-label="Close"><X className="w-5 h-5" /></button>
+                    <button onClick={clearConversation} className="p-2 text-[#8BA0B5] hover:text-[#7DF9FF] hover:bg-[#00D4FF]/10 rounded-full transition-colors" aria-label="New chat" title="New chat"><Trash2 className="w-4 h-4" /></button>
+                    <button onClick={() => setIsOpen(false)} className="p-2 text-[#8BA0B5] hover:text-[#E8F4FF] hover:bg-[#00D4FF]/10 rounded-full transition-colors" aria-label="Close"><X className="w-5 h-5" /></button>
                   </div>
                 </div>
 
@@ -367,92 +415,123 @@ export function RAGXChatAssistant() {
                 </AnimatePresence>
 
                 {!isIdentified ? (
-                  <div className="flex-1 overflow-y-auto p-6 flex flex-col items-center justify-center text-center bg-base">
-                    <div className="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center mb-4"><MessageSquare className="w-8 h-8" /></div>
-                    <h3 className="text-lg font-bold text-primary mb-2">Welcome to RAGX</h3>
-                    <p className="text-sm text-secondary mb-8 max-w-[280px]">Before we begin, please introduce yourself. Your conversation will be securely saved.</p>
-                    <form onSubmit={handleWelcomeSubmit} className="w-full space-y-3 max-w-xs">
-                      <div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" /><input type="text" name="name" required placeholder="Your Name" className="w-full pl-10 pr-4 py-3 bg-elevated border border-border-default rounded-xl text-sm focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all" /></div>
-                      <div className="relative"><Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" /><input type="email" name="email" required placeholder="Your Email" className="w-full pl-10 pr-4 py-3 bg-elevated border border-border-default rounded-xl text-sm focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all" /></div>
-                      <button type="submit" className="w-full py-3 bg-accent text-white rounded-xl text-sm font-semibold shadow-sm hover:bg-accent-hover active:scale-95 transition-all">Start Conversation</button>
+                  <div className="relative flex-1 overflow-y-auto p-6 flex flex-col items-center justify-center text-center bg-[#050a14]">
+                    <div className="pointer-events-none absolute inset-0 opacity-[0.12]" style={{ backgroundImage: "linear-gradient(#00D4FF 1px, transparent 1px), linear-gradient(90deg, #00D4FF 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+                    <div className="relative w-16 h-16 rounded-full border border-[#00D4FF]/40 bg-[#07111f] text-[#7DF9FF] flex items-center justify-center mb-4 shadow-[0_0_24px_rgba(0,212,255,0.25)]">
+                      <Bot className="w-8 h-8" />
+                      <span className="absolute inset-0 rounded-full border border-[#00D4FF]/30 animate-ping" />
+                    </div>
+                    <p className="relative font-mono text-[11px] tracking-[0.28em] text-[#3DFF9A] mb-2">CORE LINK</p>
+                    <h3 className="relative text-lg font-bold text-[#E8F4FF] mb-2">Identify to talk to RAGX</h3>
+                    <p className="relative text-sm text-[#8BA0B5] mb-8 max-w-[280px]">Name and email so Musharraf can follow up. Then ask what he can ship.</p>
+                    <form onSubmit={handleWelcomeSubmit} className="relative w-full space-y-3 max-w-xs">
+                      <div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00D4FF]" /><input type="text" name="name" required placeholder="Your Name" className="w-full pl-10 pr-4 py-3 bg-[#07111f] border border-[#00D4FF]/25 rounded-xl text-sm text-[#E8F4FF] placeholder:text-[#8BA0B5] focus:ring-2 focus:ring-[#00D4FF]/50 focus:border-[#00D4FF] focus:outline-none transition-all" /></div>
+                      <div className="relative"><Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00D4FF]" /><input type="email" name="email" required placeholder="Your Email" className="w-full pl-10 pr-4 py-3 bg-[#07111f] border border-[#00D4FF]/25 rounded-xl text-sm text-[#E8F4FF] placeholder:text-[#8BA0B5] focus:ring-2 focus:ring-[#00D4FF]/50 focus:border-[#00D4FF] focus:outline-none transition-all" /></div>
+                      <button type="submit" className="w-full py-3 bg-[#00D4FF] text-[#050a14] rounded-xl text-sm font-semibold hover:bg-[#7DF9FF] active:scale-95 transition-all">Initialize session</button>
                     </form>
                   </div>
                 ) : showHistory ? (
-                  <div className="flex-1 overflow-y-auto p-4 bg-base flex flex-col space-y-2">
-                    <h3 className="text-sm font-semibold text-primary mb-2 px-2">Chat History</h3>
-                    {history.length === 0 ? <p className="text-sm text-secondary px-2">No previous conversations found.</p> : history.map(h => (
-                      <button key={h.id} onClick={() => { setConversationId(h.id); setMessages(h.messages); setShowHistory(false); }} className={`text-left p-3 rounded-xl transition-colors ${h.id === conversationId ? "bg-accent/10 border border-accent/20" : "bg-elevated border border-border-default hover:bg-accent/5"}`}>
-                        <p className="text-sm font-medium text-primary line-clamp-1">{h.title || "Conversation"}</p>
-                        <p className="text-[11px] text-secondary mt-1">{fmtTime(h.updatedAt)}</p>
+                  <div className="flex-1 overflow-y-auto p-4 bg-[#050a14] flex flex-col space-y-2">
+                    <h3 className="text-sm font-semibold text-[#E8F4FF] mb-2 px-2 font-mono tracking-wider">SESSION LOG</h3>
+                    {history.length === 0 ? <p className="text-sm text-[#8BA0B5] px-2">No previous conversations found.</p> : history.map(h => (
+                      <button key={h.id} onClick={() => { setConversationId(h.id); setMessages(h.messages); setShowHistory(false); }} className={`text-left p-3 rounded-xl transition-colors ${h.id === conversationId ? "bg-[#00D4FF]/10 border border-[#00D4FF]/30" : "bg-[#07111f] border border-[#00D4FF]/15 hover:border-[#00D4FF]/40"}`}>
+                        <p className="text-sm font-medium text-[#E8F4FF] line-clamp-1">{h.title || "Conversation"}</p>
+                        <p className="text-[11px] text-[#8BA0B5] mt-1">{fmtTime(h.updatedAt)}</p>
                       </button>
                     ))}
-                    <button onClick={clearConversation} className="mt-4 py-2 flex items-center justify-center gap-2 bg-accent/10 text-accent rounded-xl text-sm font-medium hover:bg-accent hover:text-white transition-all"><MessageSquare className="w-4 h-4" />Start New Chat</button>
+                    <button onClick={clearConversation} className="mt-4 py-2 flex items-center justify-center gap-2 bg-[#00D4FF]/10 text-[#7DF9FF] rounded-xl text-sm font-medium hover:bg-[#00D4FF] hover:text-[#050a14] transition-all"><MessageSquare className="w-4 h-4" />Start New Chat</button>
                   </div>
                 ) : (
                   <>
-                    <div className="flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth bg-base">
+                    <div className="relative flex-1 overflow-y-auto p-4 space-y-5 scroll-smooth bg-[#050a14]">
+                      <div className="pointer-events-none absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "linear-gradient(#00D4FF 1px, transparent 1px), linear-gradient(90deg, #00D4FF 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+                      <div className="relative space-y-5">
                       {messages.map(msg => (
                         <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
                           <div className={`flex items-center gap-2 mb-1.5 px-1 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                            {msg.role === "assistant" && <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center shrink-0"><Bot className="w-3.5 h-3.5 text-accent" /></div>}
-                            {msg.role === "user" && <div className="w-6 h-6 rounded-full bg-border-default flex items-center justify-center shrink-0"><User className="w-3.5 h-3.5 text-secondary" /></div>}
+                            {msg.role === "assistant" && <div className="w-6 h-6 rounded-full bg-[#00D4FF]/15 border border-[#00D4FF]/30 flex items-center justify-center shrink-0"><Bot className="w-3.5 h-3.5 text-[#7DF9FF]" /></div>}
+                            {msg.role === "user" && <div className="w-6 h-6 rounded-full bg-[#C9A227]/15 border border-[#C9A227]/30 flex items-center justify-center shrink-0"><User className="w-3.5 h-3.5 text-[#C9A227]" /></div>}
                             {msg.role === "system" && <div className="w-6 h-6 rounded-full bg-red-500/10 flex items-center justify-center shrink-0"><AlertCircle className="w-3.5 h-3.5 text-red-500" /></div>}
-                            <span className="text-[11px] font-medium text-primary">{msg.role === "assistant" ? "RAGX" : msg.role === "system" ? "System" : visitorInfo?.name || "You"}</span>
+                            <span className="text-[11px] font-mono tracking-wider text-[#8BA0B5]">{msg.role === "assistant" ? "RAGX" : msg.role === "system" ? "SYSTEM" : visitorInfo?.name || "You"}</span>
                           </div>
-                          <div className={`max-w-[88%] p-3.5 rounded-2xl ${msg.role === "user" ? "bg-accent text-white rounded-tr-sm shadow-sm" : msg.role === "system" ? "bg-red-500/10 border border-red-500/20 text-red-500 rounded-tl-sm text-sm" : "bg-elevated border border-border-default text-primary rounded-tl-sm shadow-sm"}`}>
+                          <div className={`max-w-[90%] p-3.5 rounded-2xl ${msg.role === "user" ? "bg-[#00D4FF] text-[#050a14] rounded-tr-sm shadow-[0_0_16px_rgba(0,212,255,0.25)]" : msg.role === "system" ? "bg-red-500/10 border border-red-500/20 text-red-400 rounded-tl-sm text-sm" : "bg-[#07111f] border border-[#00D4FF]/20 text-[#E8F4FF] rounded-tl-sm"}`}>
                             {msg.role === "user" || msg.role === "system" ? (
                               <p className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</p>
                             ) : msg.isStreaming ? (
                               <TypewriterText text={msg.content} onComplete={() => setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, isStreaming: false } : m))} />
                             ) : (
-                              <div className="prose prose-sm dark:prose-invert max-w-none break-words leading-relaxed">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]} components={MarkdownComponents}>{msg.content}</ReactMarkdown>
+                              <div className="max-w-none break-words leading-relaxed">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]} components={ChatMarkdown}>{msg.content}</ReactMarkdown>
                               </div>
                             )}
                           </div>
-                          <span className="text-[10px] text-secondary mt-1 px-1">{fmtTime(msg.timestamp)}</span>
+                          <span className="text-[10px] font-mono text-[#8BA0B5] mt-1 px-1">{fmtTime(msg.timestamp)}</span>
                         </div>
                       ))}
+                      {messages.filter(m => m.role === "user").length === 0 && !isLoading && (
+                        <div className="flex flex-wrap gap-2 pt-1">
+                          {SUGGESTIONS.map((prompt) => (
+                            <button
+                              key={prompt}
+                              type="button"
+                              onClick={() => sendMessage(prompt)}
+                              className="text-left text-[11px] font-mono tracking-wide px-3 py-2 rounded-lg border border-[#00D4FF]/25 bg-[#07111f] text-[#7DF9FF] hover:border-[#C9A227] hover:text-[#C9A227] transition-colors"
+                            >
+                              {prompt}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                       {isLoading && (
                         <div className="flex flex-col items-start">
-                          <div className="flex items-center gap-2 mb-1.5 px-1"><div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center shrink-0"><Bot className="w-3.5 h-3.5 text-accent" /></div><span className="text-[11px] font-medium text-primary">RAGX</span></div>
-                          <div className="max-w-[80%] px-4 py-3.5 rounded-2xl bg-elevated border border-border-default rounded-tl-sm shadow-sm flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                            <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                            <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                          <div className="flex items-center gap-2 mb-1.5 px-1"><div className="w-6 h-6 rounded-full bg-[#00D4FF]/15 border border-[#00D4FF]/30 flex items-center justify-center shrink-0"><Bot className="w-3.5 h-3.5 text-[#7DF9FF]" /></div><span className="text-[11px] font-mono tracking-wider text-[#8BA0B5]">RAGX</span></div>
+                          <div className="px-4 py-3 rounded-2xl bg-[#07111f] border border-[#00D4FF]/20 rounded-tl-sm flex items-end gap-1 h-10">
+                            {[0, 1, 2, 3, 4].map((i) => (
+                              <span
+                                key={i}
+                                className="w-1 rounded-full bg-[#00D4FF]"
+                                style={{
+                                  animation: "ragxEq 0.85s ease-in-out infinite",
+                                  animationDelay: `${i * 0.12}s`,
+                                  height: "8px",
+                                }}
+                              />
+                            ))}
+                            <span className="ml-2 font-mono text-[10px] text-[#8BA0B5]">retrieving</span>
                           </div>
                         </div>
                       )}
                       <div ref={messagesEndRef} />
+                      </div>
                     </div>
 
                     {/* Composer */}
-                    <div className="p-4 bg-elevated border-t border-border-default shrink-0">
+                    <div className="p-4 bg-[#07111f] border-t border-[#00D4FF]/20 shrink-0">
                       {sessionEnded ? (
                         <div className="text-center">
-                          <p className="text-sm text-secondary mb-3">This session has ended.</p>
-                          <button onClick={clearConversation} className="px-5 py-2.5 bg-accent text-white rounded-xl text-sm font-semibold hover:bg-accent-hover active:scale-95 transition-all">Start New Conversation</button>
+                          <p className="text-sm text-[#8BA0B5] mb-3">This session has ended.</p>
+                          <button onClick={clearConversation} className="px-5 py-2.5 bg-[#00D4FF] text-[#050a14] rounded-xl text-sm font-semibold hover:bg-[#7DF9FF] active:scale-95 transition-all">Start New Conversation</button>
                         </div>
                       ) : (
                         <>
-                          <div className="relative flex items-end gap-2 bg-base border border-border-default rounded-2xl focus-within:ring-2 focus-within:ring-accent/60 focus-within:border-accent/40 transition-all shadow-sm px-4 py-3">
+                          <div className="relative flex items-end gap-2 bg-[#050a14] border border-[#00D4FF]/25 rounded-2xl focus-within:ring-2 focus-within:ring-[#00D4FF]/40 focus-within:border-[#00D4FF]/50 transition-all px-4 py-3">
                             <textarea
                               ref={textareaRef}
                               value={inputValue}
                               onChange={e => { setInputValue(e.target.value); e.target.style.height = "auto"; e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`; }}
                               onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                              placeholder="Ask anything about Musharraf or his services..."
+                              placeholder="Ask what Musharraf can ship..."
                               disabled={isLoading}
-                              className="flex-1 max-h-[140px] bg-transparent text-sm resize-none focus:outline-none disabled:opacity-50 text-primary placeholder-secondary py-0.5 leading-relaxed"
+                              className="flex-1 max-h-[140px] bg-transparent text-sm resize-none focus:outline-none disabled:opacity-50 text-[#E8F4FF] placeholder-[#8BA0B5] py-0.5 leading-relaxed"
                               rows={1}
                             />
-                            <button onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="shrink-0 p-2 rounded-xl bg-accent text-white shadow-sm disabled:opacity-40 hover:bg-accent-hover hover:shadow transition-all self-end" aria-label="Send"><Send className="w-4 h-4" /></button>
+                            <button onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="shrink-0 p-2 rounded-xl bg-[#00D4FF] text-[#050a14] disabled:opacity-40 hover:bg-[#7DF9FF] transition-all self-end" aria-label="Send"><Send className="w-4 h-4" /></button>
                           </div>
                           <div className="flex justify-between items-center mt-2 px-1">
-                            <span className="text-[10px] text-secondary">Enter to send · Shift+Enter for newline</span>
+                            <span className="text-[10px] font-mono text-[#8BA0B5]">Enter to send</span>
                             <div className="flex items-center gap-1.5">
-                              <span className={`w-1.5 h-1.5 rounded-full ${engineStatus?.status === "ONLINE" ? "bg-green-500" : "bg-red-500"}`}></span>
-                              <span className="text-[10px] text-secondary">{engineStatus?.status === "ONLINE" ? "Online" : "Offline"}</span>
+                              <span className={`w-1.5 h-1.5 rounded-full ${engineStatus?.status === "ONLINE" ? "bg-[#3DFF9A]" : "bg-red-500"} ${engineStatus?.status === "ONLINE" ? "animate-pulse" : ""}`}></span>
+                              <span className="text-[10px] font-mono text-[#8BA0B5]">{engineStatus?.status === "ONLINE" ? "SYS.NOMINAL" : "OFFLINE"}</span>
                             </div>
                           </div>
                         </>

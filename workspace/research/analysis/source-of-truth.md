@@ -36,8 +36,9 @@
 | NovaSole Pakistan | Automation Engineer & IT Manager | Dec 2023 – Aug 2024 | Kasur |
 | Allama Iqbal Hospital, Kasur | AI Engineer & Operations Manager | Aug 2024 – Jul 2026 | Kasur |
 | Cygnus Technologies | Senior Applied AI/ML Engineer | Jul 2026 – Present | Lahore |
+| Bano Qabil Pakistan (Alkhidmat Foundation) | Trainer, Applied Artificial Intelligence | Aug 2026 – Present (part-time volunteer) | Kasur |
 
-**Canonical CV:** `cv.pdf` (August 2026). Headline: Senior AI Engineer │ Applied AI, LLM Systems. Sybrid is not listed on the current CV and should not appear on public experience pages.
+**Canonical CV:** `Musharraf_Aziz_Applied_AI_CV.docx` (September 2026). Headline: AI Engineer | Applied AI and Production Grade Machine Learning. Sybrid is not listed on the current CV and should not appear on public experience pages.
 
 ---
 

@@ -10,6 +10,8 @@
     {"name": "LLM Guardrail Gateway", "type": "Project", "confidence": 1.0},
     {"name": "Allama Iqbal Hospital", "type": "Company", "confidence": 1.0},
     {"name": "Cygnus Technologies", "type": "Company", "confidence": 1.0},
+    {"name": "Bano Qabil Pakistan", "type": "Organization", "confidence": 1.0},
+    {"name": "Alkhidmat Foundation", "type": "Organization", "confidence": 1.0},
     {"name": "NovaSole Pakistan", "type": "Company", "confidence": 1.0},
     {"name": "Ihsan Solar Energy", "type": "Company", "confidence": 1.0},
     {"name": "Transworld Home", "type": "Company", "confidence": 1.0},

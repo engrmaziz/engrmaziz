@@ -2,9 +2,13 @@
 
 <img src="./assets/ragx/hero.svg" alt="RAGX heads-up display — Musharraf Aziz, Senior Applied AI Engineer" width="100%" />
 
-[![typing](https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&weight=600&size=18&pause=900&color=00D4FF&center=true&vCenter=true&width=820&height=32&lines=RAGX+ONLINE;I+architect+deterministic+AI+systems.;Zero+hallucinations.+Sub-500ms+voice.;Enterprise+RAG.+HIPAA-principled+guardrails.)](https://maziz.me)
+[![typing](https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&weight=600&size=18&pause=900&color=00D4FF&center=true&vCenter=true&width=820&height=32&lines=RAGX+ONLINE;I+architect+deterministic+AI+systems.;Zero+hallucinations.+Sub-500ms+voice.;Production+RAG.+Backend.+MLOps.;Applied+AI+trainer+at+Bano+Qabil.)](https://maziz.me)
 
-<img src="./assets/ragx/telemetry.svg" alt="Production telemetry: zero hallucinations, sub-500ms voice, 1,000+ clinical interactions per day, 500K monthly commerce traffic" width="100%" />
+<img src="./assets/ragx/telemetry.svg" alt="Production telemetry: zero hallucinations, sub-500ms voice, 1,000+ daily agent interactions, 500K monthly commerce traffic" width="100%" />
+
+<img src="./assets/ragx/eq.svg" alt="Voice channel equalizer — sub-500ms streaming inference" width="100%" />
+
+<img src="./assets/ragx/radar.svg" alt="Retrieval radar for corrective RAG and Bano Qabil teaching track" width="100%" />
 
 <img src="./assets/ragx/mesh.svg" alt="Signal mesh across RAG, voice, guardrails, and MCP" width="100%" />
 
@@ -39,6 +43,7 @@ RAGX v3.1.0-prod
 identity ............. Engr. Musharraf Aziz (PEC)
 role ................. Senior Applied AI Engineer
 assistant ............ RAGX
+teach ................ Bano Qabil / Alkhidmat (part-time volunteer)
 location ............. Lahore, Pakistan
 availability ......... AI/ML roles + enterprise consulting
 ────────────────────────────────────────────────────────
@@ -46,7 +51,7 @@ guardrails ........... Microsoft Presidio + spaCy NER
 retrieval ............ hybrid dense + BM25 (CRAG)
 voice.e2e ............ <500ms with barge-in
 hallucinations ....... 0 (graded before generation)
-clinical.load ........ 1,000+ interactions / day
+agent.load ........... 1,000+ interactions / day
 commerce.scale ....... 500,000+ monthly visitors
 ────────────────────────────────────────────────────────
 STATUS ............... OPERATIONAL
@@ -62,9 +67,9 @@ STATUS ............... OPERATIONAL
 
 Registered Engineer (PEC) with a B.S. (Hons.) in Electrical Engineering from COMSATS University and a published research paper in MDPI Sustainability (IF 3.125). I transitioned from hardware systems engineering into applied AI, carrying with me the discipline of embedded constraints: strict tolerances, zero margin for failure, and deterministic outputs.
 
-I do not build thin API wrappers over foundation models. I engineer end-to-end AI systems covering ETL, RAG, LLM applications, and MLOps. My production systems have handled 1,000+ daily clinical interactions at Allama Iqbal Hospital, while e-commerce automation at NovaSole supported 500,000+ monthly visitors.
+I do not build thin API wrappers over foundation models. I engineer end-to-end AI systems covering ETL, RAG, LLM applications, and MLOps. Production agents have handled 1,000+ daily voice and WhatsApp interactions; e-commerce automation at NovaSole supported 500,000+ monthly visitors. I also teach applied AI part-time at Bano Qabil Pakistan (Alkhidmat Foundation).
 
-My work spans Applied AI, Healthcare AI, FinTech, E-Commerce, Telecommunications, and Renewable Energy. Each domain sharpened a different engineering muscle: applied AI demanded production MLOps, healthcare demanded absolute correctness, fintech demanded extreme throughput, e-commerce demanded scale under pressure, telecom demanded operational resilience, and solar demanded hardware-software integration from first principles.
+My work spans Applied AI, backend systems, FinTech, E-Commerce, Telecommunications, and Renewable Energy. Each domain sharpened a different engineering muscle: applied AI demanded production MLOps, operations platforms demanded absolute correctness, fintech demanded extreme throughput, e-commerce demanded scale under pressure, telecom demanded operational resilience, and solar demanded hardware-software integration from first principles.
 
 ---
 
@@ -194,7 +199,7 @@ flowchart LR
 **Problem:** Hospitals need LLMs to summarize patient data, but sending raw medical records to external APIs violates HIPAA and GDPR.
 **Architecture:** FastAPI reverse proxy intercepting all outbound LLM requests. Microsoft Presidio (backed by spaCy NER) detects and redacts 18+ PII/PHI entity types. Optional re-identification maps placeholders back on the secure internal network.
 **Stack:** FastAPI, Microsoft Presidio, spaCy, Docker, Nginx
-**Impact:** Enabled HIPAA-principled LLM adoption in a clinical environment. Custom Presidio recognizers handle Pakistani medical ID formats with near-zero false positives.
+**Impact:** Enabled HIPAA-principled LLM adoption in a production environment. Custom Presidio recognizers handle local ID formats with near-zero false positives.
 
 ### [VoiceRAG Core v1](https://github.com/engrmaziz/voice-rag)
 **Domain:** Enterprise Voice AI
@@ -226,14 +231,21 @@ flowchart LR
 ### Senior Applied AI/ML Engineer
 **Cygnus Technologies** · Jul 2026 – Present
 
-Designing and deploying end-to-end AI and machine learning solutions for large-scale data processing, analytics, and intelligent automation. Building scalable ETL pipelines, fine-tuning custom ML/LLM/RAG applications, and shipping AI-powered reporting, predictive analytics, and recommendation systems. Using LangChain, LlamaIndex, Hugging Face, OpenAI APIs, and vector databases, with MLOps coverage for versioning, monitoring, and reliable rollout.
+Designing and deploying end-to-end AI and machine learning solutions for large-scale data processing, analytics, and intelligent automation. Building scalable ETL pipelines, fine-tuning custom ML/LLM/RAG applications, deploying on AWS with MLOps coverage, extending Presidio PII redaction, and shipping hallucination-detection evals against golden datasets.
+
+---
+
+### Trainer, Applied Artificial Intelligence
+**Bano Qabil Pakistan (Alkhidmat Foundation initiative)** · Aug 2026 – Present · Part-time volunteer
+
+Deliver hands-on training in applied AI, machine learning, and generative AI. Curriculum covers Python, LLMs, prompt engineering, RAG, AI agents, embeddings, vector databases, and MLOps fundamentals through project work.
 
 ---
 
 ### AI Engineer & Operations Manager
 **Allama Iqbal Hospital, Kasur** · Aug 2024 – Jul 2026
 
-Designed and deployed an LLM-powered AI agent using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B, with a LangChain RAG pipeline on a multi-channel patient platform handling 1,000+ daily interactions. Built agent workflows connected to APIs, internal databases, and messaging platforms via a 16-node n8n system. Published a Model Context Protocol server for structured tool-based access to external systems. Hardened the agent with fallback handling and data governance before any data reached the LLM.
+Designed and deployed an agentic AI CallBot on Llama 3.3 70B (Groq) over WhatsApp and Twilio, with a LangChain RAG pipeline handling 1,000+ daily production interactions. Built agent workflows connected to APIs, internal databases, and messaging platforms via a 16-node n8n system. Published a Model Context Protocol server for structured tool-based access to external systems. Hardened the agent with fallback handling and Presidio PII redaction before any data reached the LLM.
 
 **Key metrics:** 1,000+ daily production interactions. High Performance Excellence Award (Jun 2025).
 

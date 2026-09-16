@@ -36,7 +36,7 @@ const faqItems = [
     title: "What industries have you worked in?",
     content: (
       <p>
-        Applied AI (Cygnus Technologies — ETL, RAG, MLOps), Healthcare (Allama Iqbal Hospital — Clinical AI, 1,000+ daily interactions), E-Commerce (NovaSole — 500k+ visitors), Renewable Energy (Ihsan Solar — NOC architecture), Telecommunications (Transworld Home — 50,000+ ISP connections), FinTech (AegisFlow — fraud detection), and Enterprise SaaS. I am comfortable in regulated, high-stakes environments.
+        Applied AI and MLOps (Cygnus Technologies), production voice/chat RAG (1,000+ daily interactions), applied-AI instructorship with Bano Qabil / Alkhidmat Foundation, e-commerce backends (NovaSole — 500k+ visitors), renewable energy operations (Ihsan Solar), telecommunications (Transworld Home — 50,000+ connections), and FinTech (AegisFlow). Healthcare operations is one domain among several — the through-line is software, RAG, and backend systems.
       </p>
     ),
   },
@@ -45,7 +45,7 @@ const faqItems = [
     title: "Can you build production-grade AI systems?",
     content: (
       <p>
-        Yes — production in the strictest sense. At Allama Iqbal Hospital I designed and deployed an LLM-powered agent with a LangChain RAG pipeline on a multi-channel patient platform handling 1,000+ daily interactions, using OpenAI, Gemini, and Groq-hosted Llama 3.3 70B. At Cygnus Technologies I now design end-to-end AI/ML systems covering ETL, RAG, and MLOps. I do not build AI demos; I ship systems that handle real usage.
+        Yes — production in the strictest sense. I shipped an agentic AI CallBot on Llama 3.3 70B (Groq) over WhatsApp and Twilio, with a LangChain RAG pipeline handling 1,000+ daily interactions, plus n8n tool graphs and an MCP server. At Cygnus Technologies I now design end-to-end AI/ML systems covering ETL, RAG, AWS MLOps, and hallucination evals. I also train applied AI at Bano Qabil (Alkhidmat Foundation) part-time. I do not build AI demos; I ship systems that handle real usage.
       </p>
     ),
   },
@@ -100,6 +100,15 @@ const faqItems = [
     content: (
       <p>
         Yes. I serve those states remotely. Schema and the location pages list California and Florida as area served and Lahore as home location. I will not invent a California or Florida street address to game Map Pack.
+      </p>
+    ),
+  },
+  {
+    id: "faq-11",
+    title: "Do you teach applied AI, or only ship systems?",
+    content: (
+      <p>
+        Both. Alongside full-time engineering at Cygnus Technologies, I am a part-time volunteer Trainer in Applied Artificial Intelligence with Bano Qabil Pakistan, an Alkhidmat Foundation initiative (August 2026 – Present). I teach Python, LLMs, prompt engineering, RAG, AI agents, embeddings, vector databases, and MLOps fundamentals through project-based curriculum — the same stack I ship in production.
       </p>
     ),
   },

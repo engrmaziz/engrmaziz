@@ -4,7 +4,7 @@ Tailor responses to the specific compliance and operational realities of the cli
 
 ## 1. Healthcare
 - **Primary Concern:** HIPAA Compliance, Data Privacy, Zero-Tolerance for Hallucinations.
-- **Case Study to Quote:** Allama Iqbal Hospital (AIHK) Clinical RAG.
+- **Case Study to Quote:** Production RAG and voice/WhatsApp agents at 1,000+ daily interactions (Allama Iqbal Hospital operations platform).
 - **Keywords:** PII Redaction, Microsoft Presidio, Local LLM Inference, Strict RBAC.
 
 ## 2. Solar & Manufacturing

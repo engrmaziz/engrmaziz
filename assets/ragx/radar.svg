@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 160" width="1100" height="160" role="img" aria-label="RAGX retrieval radar">
+  <rect width="1100" height="160" fill="#050a14"/>
+  <text x="28" y="22" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="10" letter-spacing="2.2">RETRIEVAL RADAR  /  CRAG</text>
+  <g transform="translate(120,92)" fill="none" stroke="#00D4FF">
+    <circle r="62" stroke-opacity="0.18"/>
+    <circle r="42" stroke-opacity="0.28"/>
+    <circle r="22" stroke-opacity="0.4"/>
+    <circle r="4" fill="#7DF9FF" stroke="none">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M0 0 L0 -62" stroke="#7DF9FF" stroke-width="1.6" stroke-opacity="0.85">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3.4s" repeatCount="indefinite"/>
+    </path>
+    <path d="M0 0 L48 -20" stroke="#C9A227" stroke-width="1" stroke-opacity="0.6">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="7s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <g font-family="Consolas, 'Courier New', monospace" font-size="12" fill="#8BA0B5">
+    <text x="220" y="58">dense + bm25 hybrid</text>
+    <text x="220" y="80" fill="#00D4FF">grader: groq lpu ~180ms</text>
+    <text x="220" y="102">fail closed if retrieval is irrelevant</text>
+    <text x="220" y="124" fill="#3DFF9A">hallucinations: 0</text>
+    <text x="620" y="70" fill="#C9A227">teach track: bano qabil / alkhidmat</text>
+    <text x="620" y="92">python  llms  rag  agents  mlops</text>
+    <text x="620" y="114" fill="#7DF9FF">part-time volunteer instructorship</text>
+  </g>
+</svg>

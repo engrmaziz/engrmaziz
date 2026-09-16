@@ -6,6 +6,8 @@
     {"id": "n4", "label": "Ihsan Solar Energy", "type": "Company", "properties": {"industry": "Renewable Energy"}},
     {"id": "n5", "label": "Transworld Home", "type": "Company", "properties": {"industry": "Telecommunications"}},
     {"id": "n6", "label": "Cygnus Technologies", "type": "Company", "properties": {"industry": "Applied AI"}},
+    {"id": "n35", "label": "Bano Qabil Pakistan", "type": "Organization", "properties": {"industry": "Applied AI Education", "parent": "Alkhidmat Foundation"}},
+    {"id": "n36", "label": "Alkhidmat Foundation", "type": "Organization", "properties": {"industry": "Nonprofit"}},
     {"id": "n7", "label": "COMSATS University Islamabad", "type": "University", "properties": {"degree": "B.S. Electrical Engineering"}},
     {"id": "n8", "label": "AegisFlow", "type": "Project", "properties": {"type": "FinTech SaaS"}},
     {"id": "n9", "label": "Self-Healing RAG (SHBRAG)", "type": "Project", "properties": {"type": "AI Architecture"}},
@@ -37,6 +39,8 @@
   ],
   "edges": [
     {"source": "n1", "target": "n6", "type": "WORKS_AT", "properties": {"role": "Senior Applied AI/ML Engineer"}},
+    {"source": "n1", "target": "n35", "type": "TEACHES_AT", "properties": {"role": "Trainer, Applied Artificial Intelligence", "type": "Part-time volunteer"}},
+    {"source": "n1", "target": "n36", "type": "VOLUNTEERS_AT", "properties": {"role": "District Coordinator"}},
     {"source": "n1", "target": "n2", "type": "WORKED_AT", "properties": {"role": "AI Engineer & Operations Manager"}},
     {"source": "n1", "target": "n3", "type": "WORKED_AT", "properties": {"role": "Automation Engineer & IT Manager"}},
     {"source": "n1", "target": "n4", "type": "WORKED_AT", "properties": {"role": "Team Lead, QA & NOC"}},

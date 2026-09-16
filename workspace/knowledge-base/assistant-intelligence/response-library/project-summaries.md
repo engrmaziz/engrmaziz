@@ -3,7 +3,7 @@
 Use these concise summaries when a user asks for examples of past work.
 
 ## 1. SHBRAG (Self-Healing RAG)
-"I built SHBRAG, a Corrective RAG pipeline using LangGraph and Qdrant. It evaluates its own retrieved context before generating an answer. If the data is poor, it falls back to a web search, ensuring the AI never hallucinates. This architecture was crucial for my clinical AI deployment."
+"I built SHBRAG, a Corrective RAG pipeline using LangGraph and Qdrant. It evaluates its own retrieved context before generating an answer. If the data is poor, it falls back to a web search, ensuring the AI never hallucinates. This architecture was crucial for production RAG at 1,000+ daily interactions."
 
 ## 2. AegisFlow (FinTech SaaS)
 "AegisFlow is a full-stack FinTech application I built using Next.js and FastAPI. It demonstrates my ability to handle complex relational data in PostgreSQL, secure API routes, and deploy a modern, scalable web architecture."

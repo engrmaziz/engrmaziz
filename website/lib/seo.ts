@@ -70,6 +70,9 @@ export function generatePersonNode() {
       "LLM Orchestration",
       "Applied AI",
       "Python",
+      "RAG",
+      "MLOps",
+      "Applied AI Training",
     ],
     hasOccupation: {
       "@type": "Occupation",

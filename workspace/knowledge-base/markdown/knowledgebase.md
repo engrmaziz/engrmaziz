@@ -44,11 +44,12 @@ The knowledge base follows a strict hierarchical and relational structure:
   - `/certifications/` - Verifiable credentials validating the skills.
 
 ## Quick Facts
-- **Total Experience:** 4+ Years Production Experience (Since Mar 2022)
-- **Key Metric:** Zero AI Hallucinations over 12+ months in a clinical setting.
-- **Key Metric:** 500,000+ monthly visitors handled on scalable E-Commerce infrastructure.
-- **Key Metric:** 99.95% uptime maintained for 50,000+ ISP connections.
-- **Key Metric:** Sub-500ms latency achieved in custom Voice AI integrations.
+- **Total Experience:** 5+ years production AI, backend, and operations engineering
+- **Key Metric:** Zero AI hallucinations in production RAG with evaluation gates
+- **Key Metric:** 1,000+ daily production voice/chat interactions
+- **Key Metric:** 500,000+ monthly visitors handled on scalable e-commerce infrastructure
+- **Key Metric:** 99.95% uptime maintained for 50,000+ ISP connections
+- **Key Metric:** Sub-500ms latency achieved in custom Voice AI integrations
 
 ## Major Sections
 
@@ -56,7 +57,7 @@ The knowledge base follows a strict hierarchical and relational structure:
 Details foundational engineering training, including the B.S. (Hons.) in Electrical Engineering from COMSATS University and the award-winning LoRaWAN Smart Agriculture FYP.
 
 ### 2. Experience
-Chronological enterprise roles spanning Applied AI (Cygnus Technologies), Healthcare AI (Allama Iqbal Hospital), E-Commerce (NovaSole), Solar Energy (Ihsan Solar), and Telecom (Transworld Home).
+Chronological enterprise roles spanning Applied AI (Cygnus Technologies), applied-AI instructorship at Bano Qabil / Alkhidmat Foundation, production RAG voice/chat systems, E-Commerce (NovaSole), Solar Energy (Ihsan Solar), and Telecom (Transworld Home).
 
 ### 3. Projects
 Deep architectural dives into 37 flagship systems, including AegisFlow (FinTech), VoiceRAG (Voice AI), Self-Healing RAG Pipeline, and AuraNode (SaaS).

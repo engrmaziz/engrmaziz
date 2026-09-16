@@ -31,7 +31,7 @@ export function ContactCTA() {
               Ready to build something that works in production?
             </h2>
             <p className="text-lg text-secondary leading-relaxed max-w-2xl mx-auto">
-              Whether you need a Clinical RAG system, a scalable SaaS platform, a real-time voice AI pipeline, or a technical architecture review — the conversation starts here.
+              Whether you need a production RAG system, a scalable SaaS backend, a real-time voice AI pipeline, or a technical architecture review — the conversation starts here.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
               <ResumeDownload />

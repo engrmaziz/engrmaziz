@@ -188,8 +188,8 @@ export default function HirePage() {
           <p className="text-secondary leading-relaxed mb-4">
             Agents fail when they cannot see the system of record, when retrieval has no evals, or when voice has no
             overflow. Freelance scopes start with channel, corpus, tools, and audit trail. Full-time conversations start
-            with whether your team wants a demo theater or a production owner. I have shipped clinical-scale RAG, ops
-            automation, and telephony-adjacent agents—those are the proof points, not a list of model logos.
+            with whether your team wants a demo theater or a production owner. I have shipped production RAG at 1,000+
+            daily interactions, ops automation, and telephony-adjacent agents—those are the proof points, not a list of model logos.
           </p>
           <h2 className="text-3xl font-bold text-primary mb-4 mt-12">Checklist before you reach out</h2>
           <ul className="space-y-3 text-secondary">

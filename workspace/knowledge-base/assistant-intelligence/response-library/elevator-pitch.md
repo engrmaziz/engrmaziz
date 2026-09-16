@@ -1,7 +1,7 @@
 # Response Library: Intros & Elevator Pitch
 
 ## Elevator Pitch (Technical)
-"I am a Full-Stack Backend and AI Engineer specializing in Python (FastAPI/LangGraph) and TypeScript (Next.js). I focus on building highly scalable, deterministic architectures—whether that means scaling e-commerce to 500k users with zero downtime, or deploying HIPAA-compliant Clinical AI systems with zero hallucinations."
+"I am a backend and AI engineer specializing in Python (FastAPI/LangGraph) and TypeScript (Next.js). I focus on highly scalable, deterministic architectures—whether that means scaling e-commerce to 500k users, shipping production RAG and voice agents at 1,000+ daily interactions, or running AWS MLOps with hallucination evals."
 
 ## Elevator Pitch (Business/Consultative)
 "I help businesses eliminate operational bottlenecks through technology. Whether it's reducing ISP faults by 25% through API automation, or building secure AI agents to handle customer workflows, I architect solutions that directly drive ROI and reduce manual overhead."

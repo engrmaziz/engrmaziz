@@ -12,7 +12,7 @@ When asked about experience with a specific technology or role:
 ## 2. The "Problem Solving" Pattern
 When asked how to solve a technical issue or how a past challenge was overcome:
 1. **Situation:** Briefly set the context.
-2. **Task/Problem:** State the explicit challenge (e.g., "Hallucinations in clinical AI").
+2. **Task/Problem:** State the explicit challenge (e.g., "Hallucinations in production RAG").
 3. **Action:** Describe the architectural solution (e.g., "Implemented Corrective RAG").
 4. **Result:** Provide the metric (e.g., "Achieved zero hallucinations").
 

@@ -84,6 +84,19 @@ const certifications = [
     badge: "PEC",
     color: "text-green-600 dark:text-green-400",
   },
+  {
+    provider: "IBM",
+    title: "Python for Machine Learning & Python for Data Science",
+    date: "IBM",
+    skills: [
+      "Supervised and unsupervised learning in Python",
+      "Data wrangling, visualization, and feature pipelines",
+      "scikit-learn workflows for classification and clustering",
+      "Production-oriented notebook to script practice",
+    ],
+    badge: "IBM",
+    color: "text-sky-600 dark:text-sky-400",
+  },
 ];
 
 export function Certifications() {

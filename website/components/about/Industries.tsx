@@ -19,29 +19,9 @@ const staggerContainer = {
 
 const industries = [
   {
-    name: "Healthcare / MedTech",
-    icon: <Heart className="w-8 h-8" />,
-    detail: "Clinical AI, RAG systems, PHI redaction, hospital workflow automation.",
-  },
-  {
-    name: "E-Commerce / Retail Tech",
-    icon: <TrendingUp className="w-8 h-8" />,
-    detail: "High-traffic storefronts, multi-channel inventory sync, payment gateway integration.",
-  },
-  {
-    name: "Renewable Energy / Solar",
-    icon: <Zap className="w-8 h-8" />,
-    detail: "NOC architecture, inverter telemetry APIs, QA protocol engineering.",
-  },
-  {
-    name: "Telecommunications",
-    icon: <Network className="w-8 h-8" />,
-    detail: "Large-scale ISP operations, SLA management, 50,000+ connection monitoring.",
-  },
-  {
-    name: "FinTech",
-    icon: <Shield className="w-8 h-8" />,
-    detail: "Real-time fraud detection, ML anomaly detection pipelines, secure payment flows.",
+    name: "Applied AI / MLOps",
+    icon: <Bot className="w-8 h-8" />,
+    detail: "Production LLM orchestration, RAG, ETL pipelines, evals, and agentic workflows.",
   },
   {
     name: "Enterprise SaaS",
@@ -49,14 +29,34 @@ const industries = [
     detail: "Multi-tenant platforms, subscription billing, self-healing backend architectures.",
   },
   {
+    name: "FinTech",
+    icon: <Shield className="w-8 h-8" />,
+    detail: "Real-time fraud detection, ML anomaly detection pipelines, secure payment flows.",
+  },
+  {
+    name: "E-Commerce / Retail Tech",
+    icon: <TrendingUp className="w-8 h-8" />,
+    detail: "High-traffic storefronts, multi-channel inventory sync, payment gateway integration.",
+  },
+  {
+    name: "Telecommunications",
+    icon: <Network className="w-8 h-8" />,
+    detail: "Large-scale ISP operations, SLA management, 50,000+ connection monitoring.",
+  },
+  {
+    name: "Renewable Energy / Solar",
+    icon: <Zap className="w-8 h-8" />,
+    detail: "NOC architecture, inverter telemetry APIs, QA protocol engineering.",
+  },
+  {
+    name: "Operations platforms",
+    icon: <Heart className="w-8 h-8" />,
+    detail: "Voice and chat RAG agents, PII redaction, multi-channel automation at production load.",
+  },
+  {
     name: "Agriculture / IoT",
     icon: <Terminal className="w-8 h-8" />,
     detail: "LoRaWAN sensor networks, real-time decision support systems, award-winning FYP.",
-  },
-  {
-    name: "Artificial Intelligence",
-    icon: <Bot className="w-8 h-8" />,
-    detail: "Production LLM orchestration, RAG, ETL pipelines, MLOps, and agentic workflows.",
   },
 ];
 

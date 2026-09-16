@@ -43,14 +43,18 @@ Lahore, Pakistan
 - Develop and fine-tune custom machine learning, deep learning, and generative AI solutions, including large language models and retrieval-augmented generation applications.
 - Build AI-powered reporting dashboards, predictive analytics, and recommendation systems that support data-driven decision making across teams.
 - Use LangChain, LlamaIndex, Hugging Face, OpenAI APIs, and vector databases to develop enterprise AI applications grounded in real operational data.
-- Deploy, monitor, and optimize production machine learning models following MLOps practices, covering versioning, monitoring, and reliable rollout.
+- Deploy, monitor, and optimize production machine learning models on AWS following MLOps practices, covering versioning, performance monitoring, and reliable rollout.
+- Extend PII redaction and data governance controls using spaCy named entity recognition alongside Microsoft Presidio across enterprise data pipelines.
+- Build evaluation and hallucination detection tooling for internal LLM applications, scoring answer relevancy and faithfulness against golden datasets and tracking pass rate and latency over time.
 - Collaborate with cross-functional teams to deliver scalable, secure, and high-performance AI solutions aligned with business objectives.
 
 ## Technical Stack
 - **Languages:** Python
 - **AI / ML:** LangChain, LlamaIndex, Hugging Face, OpenAI APIs, generative AI, RAG
 - **Data:** ETL pipelines, vector databases
-- **Operations:** MLOps (deployment, monitoring, optimization)
+- **Cloud:** AWS
+- **Security:** Microsoft Presidio, spaCy NER
+- **Operations:** MLOps (deployment, monitoring, optimization), LLM evaluation (relevancy, faithfulness)
 
 ## Architecture & Systems Worked On
 1. **Enterprise AI Reporting and Analytics Platform:** AI-powered reporting dashboards, predictive analytics, and recommendation systems on top of scalable ETL pipelines.

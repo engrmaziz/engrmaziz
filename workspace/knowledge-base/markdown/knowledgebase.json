@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "metadata": {
     "created": "2026-07-08",
-    "updated": "2026-08-25",
+    "updated": "2026-09-16",
     "description": "Machine-readable master source of truth for the enterprise knowledge base."
   },
   "person": {
@@ -31,7 +31,15 @@
       "id": "exp_cygnus",
       "company": "Cygnus Technologies",
       "role": "Senior Applied AI/ML Engineer",
-      "period": "Jul 2026 - Present"
+      "period": "Jul 2026 - Present",
+      "type": "Full-time"
+    },
+    {
+      "id": "exp_bano_qabil",
+      "company": "Bano Qabil Pakistan (Alkhidmat Foundation initiative)",
+      "role": "Trainer, Applied Artificial Intelligence",
+      "period": "Aug 2026 - Present",
+      "type": "Part-time volunteer"
     },
     {
       "id": "exp_aihk",
@@ -75,13 +83,13 @@
     { "id": "srv_consulting", "name": "Technical Consulting & Architecture Review" }
   ],
   "technologies": [
-    "LangChain", "LlamaIndex", "Next.js", "FastAPI", "Python", "TypeScript", "n8n", "MCP", "Supabase", "PostgreSQL", "React", "Docker", "PyTorch", "Qdrant", "ChromaDB"
+    "LangChain", "LlamaIndex", "Next.js", "FastAPI", "Python", "TypeScript", "n8n", "MCP", "Supabase", "PostgreSQL", "React", "Docker", "PyTorch", "Qdrant", "ChromaDB", "Hugging Face", "AWS", "Azure", "Pinecone", "MongoDB", "Kubernetes"
   ],
   "certifications": [
-    "Google AI Professional Certificate", "AI Fluency: Framework & Foundations", "PyTorch & Deep Learning for Decision Makers (LFS116)", "McKinsey Forward Program", "Registered Electrical Engineer (PEC)", "RE101: Fundamental Math for Solar"
+    "Google AI Professional Certificate", "AI Fluency: Framework & Foundations", "PyTorch & Deep Learning for Decision Makers (LFS116)", "McKinsey Forward Program", "Python for Machine Learning (IBM)", "Python for Data Science (IBM)", "Registered Electrical Engineer (PEC)", "RE101: Fundamental Math for Solar"
   ],
   "industries": [
-    "Healthcare", "FinTech", "E-Commerce", "Telecommunications", "Solar Energy", "Enterprise SaaS"
+    "Applied AI", "FinTech", "E-Commerce", "Telecommunications", "Solar Energy", "Enterprise SaaS", "Operations platforms"
   ],
   "achievements": [
     "Top Innovative FYP of the Year (IGNITE & HEC, 2021)",
@@ -92,6 +100,8 @@
     "Arshad J., Aziz M., et al. Implementation of a LoRaWAN Based Smart Agriculture Decision Support System for Optimum Crop Yield. MDPI Sustainability, 2022; 14(2):827."
   ],
   "relationships": [
+    { "source": "p_musharraf", "target": "exp_cygnus", "relation": "WORKS_AT" },
+    { "source": "p_musharraf", "target": "exp_bano_qabil", "relation": "TEACHES_AT" },
     { "source": "p_musharraf", "target": "exp_aihk", "relation": "WORKED_AT" },
     { "source": "exp_aihk", "target": "proj_voicerag", "relation": "DEPLOYED" },
     { "source": "proj_voicerag", "target": "LangGraph", "relation": "BUILT_WITH" },

@@ -15,7 +15,7 @@ Experience documents are semantically tied to high-level skills, proving the pra
 - **Ihsan Solar (QA & NOC Lead):** `PROVES` (Team Leadership, QA Operations, IoT API Integration).
 - **Transworld Home (TAC Lead):** `PROVES` (SLA Enforcement, Enterprise Team Management).
 - **NovaSole (IT Manager):** `PROVES` (High-Traffic Scaling, DB Optimization).
-- **AIHK (AI Engineer):** `PROVES` (Clinical RAG, Data Privacy, Workflow Automation).
+- **AIHK (AI Engineer):** `PROVES` (Production RAG, Data Privacy, Workflow Automation).
 
 ## 3. Service ↔ Validation Relationships
 Commercial service pages rely on evidence. The graph connects abstract services directly to concrete projects and certifications.

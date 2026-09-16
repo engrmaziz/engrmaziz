@@ -1,16 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 188" width="1100" height="188" role="img" aria-label="RAGX boot sequence">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 210" width="1100" height="210" role="img" aria-label="RAGX boot sequence">
   <defs>
     <linearGradient id="bootBg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#04080f"/>
       <stop offset="100%" stop-color="#07121e"/>
     </linearGradient>
   </defs>
-  <rect width="1100" height="188" fill="url(#bootBg)"/>
-  <rect x="12" y="12" width="1076" height="164" fill="none" stroke="#00D4FF" stroke-opacity="0.4"/>
+  <rect width="1100" height="210" fill="url(#bootBg)"/>
+  <rect x="12" y="12" width="1076" height="186" fill="none" stroke="#00D4FF" stroke-opacity="0.4"/>
   <path d="M12 32 L12 12 L32 12" fill="none" stroke="#7DF9FF" stroke-width="1.6"/>
   <path d="M1068 12 L1088 12 L1088 32" fill="none" stroke="#7DF9FF" stroke-width="1.6"/>
-  <path d="M12 156 L12 176 L32 176" fill="none" stroke="#7DF9FF" stroke-width="1.6"/>
-  <path d="M1068 176 L1088 176 L1088 156" fill="none" stroke="#7DF9FF" stroke-width="1.6"/>
+  <path d="M12 178 L12 198 L32 198" fill="none" stroke="#7DF9FF" stroke-width="1.6"/>
+  <path d="M1068 198 L1088 198 L1088 178" fill="none" stroke="#7DF9FF" stroke-width="1.6"/>
 
   <text x="28" y="34" fill="#C9A227" font-family="Consolas, 'Courier New', monospace" font-size="12" letter-spacing="2.2">RAGX BOOT SEQUENCE</text>
   <text x="1072" y="34" text-anchor="end" fill="#8BA0B5" font-family="Consolas, 'Courier New', monospace" font-size="11">v3.1.0-prod</text>
@@ -25,16 +25,20 @@
       <animate attributeName="opacity" from="0" to="1" begin="0.9s" dur="0.15s" fill="freeze"/>
     </text>
     <text x="32" y="108" opacity="0">
-      &gt; arming presidio.guardrails + phi redaction ......... OK
+      &gt; arming presidio.guardrails + pii redaction ......... OK
       <animate attributeName="opacity" from="0" to="1" begin="1.6s" dur="0.15s" fill="freeze"/>
     </text>
     <text x="32" y="130" opacity="0">
       &gt; voice.latency_budget = 500ms ....................... OK
       <animate attributeName="opacity" from="0" to="1" begin="2.3s" dur="0.15s" fill="freeze"/>
     </text>
-    <text x="32" y="158" fill="#3DFF9A" opacity="0" letter-spacing="1.4">
-      STATUS: OPERATIONAL  |  HALLUCINATIONS: 0  |  SYSTEMS NOMINAL
-      <animate attributeName="opacity" values="0;1;0.45;1" begin="3s" dur="2.4s" fill="freeze" repeatCount="indefinite"/>
+    <text x="32" y="152" opacity="0">
+      &gt; loading teach.track bano_qabil / alkhidmat ......... OK
+      <animate attributeName="opacity" from="0" to="1" begin="2.9s" dur="0.15s" fill="freeze"/>
+    </text>
+    <text x="32" y="174" fill="#3DFF9A" opacity="0" letter-spacing="1.4">
+      STATUS: OPERATIONAL  |  HALLUCINATIONS: 0  |  RAGX ONLINE
+      <animate attributeName="opacity" values="0;1;0.45;1" begin="3.4s" dur="2.4s" fill="freeze" repeatCount="indefinite"/>
     </text>
   </g>
 </svg>
