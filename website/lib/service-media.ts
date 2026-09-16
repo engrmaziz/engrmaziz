@@ -40,8 +40,11 @@ const TECH: Record<string, string> = {
   "workflow-automation": "/images/services/technical-consulting-tech.webp",
 };
 
-export function resolveServiceImage(slug: string, kind: "hero" | "tech") {
+const FALLBACK = "/images/services/ai-engineering-hero.webp";
+
+export function resolveServiceImage(slug: string, kind: "hero" | "tech"): string {
   const key = slug.split("/").filter(Boolean).pop() || slug;
   const table = kind === "hero" ? HERO : TECH;
-  return table[key] || table[slug.split("/")[0] || ""] || HERO["ai-engineering"];
+  const pillar = slug.split("/").filter(Boolean)[0] || "";
+  return table[key] || table[pillar] || HERO["ai-engineering"] || FALLBACK;
 }
