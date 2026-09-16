@@ -15,6 +15,7 @@ related_documents: []
 related_projects: [self-healing-rag.md]
 related_skills: [Django, LangGraph, WebSockets]
 related_services: [AI Voice Agents & Conversational UI]
+demoUrl: https://engrahmedrehan-voicerag.hf.space/
 ---
 # VoiceRAG Core v1
 
