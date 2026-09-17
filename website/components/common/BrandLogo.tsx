@@ -1,7 +1,5 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import lightLogo from "@/public/images/maklight.webp";
-import darkLogo from "@/public/images/makdark.webp";
 
 export interface BrandLogoProps {
   size?: "sm" | "md" | "lg";
@@ -10,7 +8,6 @@ export interface BrandLogoProps {
 }
 
 export function BrandLogo({ size = "md", priority = false, className }: BrandLogoProps) {
-  // Height mapping based on official branding requirements
   const sizeClasses = {
     sm: "h-10 md:h-12",
     md: "h-[52px] md:h-[65px]",
@@ -22,16 +19,20 @@ export function BrandLogo({ size = "md", priority = false, className }: BrandLog
   return (
     <div className={cn("relative flex items-center", sizeClasses[size], className)}>
       <Image
-        src={lightLogo}
+        src="/images/maklight.webp"
         alt={altText}
+        width={320}
+        height={80}
         priority={priority}
-        className="w-auto h-full object-contain dark:hidden"
+        className="h-full w-auto object-contain dark:hidden"
       />
       <Image
-        src={darkLogo}
+        src="/images/makdark.webp"
         alt={altText}
+        width={320}
+        height={80}
         priority={priority}
-        className="w-auto h-full object-contain hidden dark:block"
+        className="hidden h-full w-auto object-contain dark:block"
       />
     </div>
   );
