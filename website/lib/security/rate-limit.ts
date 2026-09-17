@@ -14,54 +14,39 @@ type HeaderReader = {
 };
 
 const memoryStore = new Map<string, RateLimitTracker>();
-let tableReady: Promise<boolean> | null = null;
-
-async function ensureRateLimitTable(): Promise<boolean> {
-  if (tableReady) return tableReady;
-  tableReady = (async () => {
-    try {
-      const { pgPool } = await import('@/lib/rag/supabase');
-      await pgPool.query(`
-        CREATE TABLE IF NOT EXISTS public.api_rate_limits (
-          key text PRIMARY KEY,
-          count integer NOT NULL DEFAULT 0,
-          reset_time bigint NOT NULL
-        )
-      `);
-      return true;
-    } catch (error) {
-      logger.warn('Shared rate-limit table unavailable; using in-memory fallback', {
-        error: error instanceof Error ? error.message : 'unknown',
-      });
-      return false;
-    }
-  })();
-  return tableReady;
-}
 
 async function checkSharedLimit(key: string, limit: number, windowMs: number): Promise<boolean | null> {
   try {
-    const ready = await ensureRateLimitTable();
-    if (!ready) return null;
-    const { pgPool } = await import('@/lib/rag/supabase');
+    const { supabase } = await import('@/lib/db/supabase');
     const now = Date.now();
-    const resetTime = now + windowMs;
-    const { rows } = await pgPool.query<{ count: number }>(
-      `INSERT INTO public.api_rate_limits (key, count, reset_time)
-       VALUES ($1, 1, $2)
-       ON CONFLICT (key) DO UPDATE SET
-         count = CASE
-           WHEN public.api_rate_limits.reset_time < $3 THEN 1
-           ELSE public.api_rate_limits.count + 1
-         END,
-         reset_time = CASE
-           WHEN public.api_rate_limits.reset_time < $3 THEN $2
-           ELSE public.api_rate_limits.reset_time
-         END
-       RETURNING count`,
-      [key, resetTime, now]
-    );
-    return (rows[0]?.count ?? 1) <= limit;
+    const { data, error } = await supabase
+      .from('api_rate_limits')
+      .select('count, reset_time')
+      .eq('key', key)
+      .maybeSingle();
+
+    if (error) return null;
+
+    const row = data as { count?: number; reset_time?: number } | null;
+    if (!row || Number(row.reset_time) < now) {
+      const { error: upsertError } = await supabase.from('api_rate_limits').upsert({
+        key,
+        count: 1,
+        reset_time: now + windowMs,
+      });
+      if (upsertError) return null;
+      return true;
+    }
+
+    const count = Number(row.count) || 0;
+    if (count >= limit) return false;
+
+    const { error: updateError } = await supabase
+      .from('api_rate_limits')
+      .update({ count: count + 1 })
+      .eq('key', key);
+    if (updateError) return null;
+    return true;
   } catch (error) {
     logger.warn('Shared rate-limit check failed; using in-memory fallback', {
       error: error instanceof Error ? error.message : 'unknown',
@@ -91,7 +76,7 @@ export async function checkRateLimit(ip: string, endpoint: string, limit: number
   const key = `${ip}:${endpoint}`;
   const shared = await checkSharedLimit(key, limit, windowMs);
   if (shared === false) {
-    logger.warn('Rate limit exceeded', { ip, endpoint, store: 'postgres' });
+    logger.warn('Rate limit exceeded', { ip, endpoint, store: 'supabase' });
     throw new RateLimitError(`Too many requests to ${endpoint}. Please try again later.`);
   }
   if (shared === true) return;

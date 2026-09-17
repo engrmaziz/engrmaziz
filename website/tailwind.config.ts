@@ -56,12 +56,17 @@ const config: Config = {
           "0%": { transform: "translateX(-120%) skewX(-16deg)" },
           "100%": { transform: "translateX(220%) skewX(-16deg)" },
         },
+        "beam-spin": {
+          "0%": { "--beam-angle": "0deg" },
+          "100%": { "--beam-angle": "360deg" },
+        },
       },
       animation: {
         marquee: "marquee 48s linear infinite",
         "marquee-reverse": "marquee-reverse 48s linear infinite",
         "hud-scan": "hud-scan 4.5s linear infinite",
         shine: "shine 1.8s ease-in-out infinite",
+        "beam-spin": "beam-spin 8s linear infinite",
       },
     },
   },

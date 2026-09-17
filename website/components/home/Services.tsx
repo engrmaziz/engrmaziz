@@ -7,6 +7,7 @@ import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { TiltCard } from "@/components/fx/TiltCard";
 import { Reveal } from "@/components/fx/Reveal";
+import { BorderBeam } from "@/components/fx/BorderBeam";
 import { SectionEyebrow } from "@/components/fx/HudFrame";
 
 const SERVICES = [
@@ -36,14 +37,27 @@ export function Services() {
           {SERVICES.map((service, i) => (
             <Reveal key={service.title} delay={i * 0.05} className={service.span}>
               <Link href={service.href} className="block h-full cursor-pointer">
-                <TiltCard className="min-h-[240px] p-7">
-                  <service.icon className="mb-5 h-6 w-6 text-accent" />
-                  <h3 className="mb-3 font-display text-2xl font-bold text-primary">{service.title}</h3>
-                  <p className="mb-6 leading-relaxed text-secondary">{service.desc}</p>
-                  <span className="inline-flex items-center gap-1 text-sm font-medium text-accent">
-                    Explore <ArrowRight className="h-4 w-4" />
-                  </span>
-                </TiltCard>
+                {service.span ? (
+                  <BorderBeam radius={16} className="h-full">
+                    <TiltCard className="min-h-[240px] p-7">
+                      <service.icon className="mb-5 h-6 w-6 text-accent" />
+                      <h3 className="mb-3 font-display text-2xl font-bold text-primary">{service.title}</h3>
+                      <p className="mb-6 leading-relaxed text-secondary">{service.desc}</p>
+                      <span className="inline-flex items-center gap-1 text-sm font-medium text-accent">
+                        Explore <ArrowRight className="h-4 w-4" />
+                      </span>
+                    </TiltCard>
+                  </BorderBeam>
+                ) : (
+                  <TiltCard className="min-h-[240px] p-7">
+                    <service.icon className="mb-5 h-6 w-6 text-accent" />
+                    <h3 className="mb-3 font-display text-2xl font-bold text-primary">{service.title}</h3>
+                    <p className="mb-6 leading-relaxed text-secondary">{service.desc}</p>
+                    <span className="inline-flex items-center gap-1 text-sm font-medium text-accent">
+                      Explore <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </TiltCard>
+                )}
               </Link>
             </Reveal>
           ))}

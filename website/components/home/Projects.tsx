@@ -10,6 +10,7 @@ import { Reveal } from "@/components/fx/Reveal";
 import { HudFrame, SectionEyebrow } from "@/components/fx/HudFrame";
 import { Magnetic } from "@/components/fx/Magnetic";
 import { ProjectFlow } from "@/components/fx/ProjectFlow";
+import { BorderBeam } from "@/components/fx/BorderBeam";
 
 const FLAGSHIP = [
   {
@@ -48,6 +49,7 @@ export function Projects() {
         <div className="space-y-8">
           {FLAGSHIP.map((project, index) => (
             <Reveal key={project.slug} delay={index * 0.08}>
+              <BorderBeam radius={18}>
               <HudFrame className="grid overflow-hidden md:grid-cols-2">
                 <div
                   className={`relative min-h-[220px] overflow-hidden bg-base/60 sm:min-h-[260px] md:min-h-[300px] ${
@@ -90,6 +92,7 @@ export function Projects() {
                   </div>
                 </div>
               </HudFrame>
+              </BorderBeam>
             </Reveal>
           ))}
         </div>

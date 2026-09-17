@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@property --beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
 @layer base {
   :root {
     --pointer-x: 50%;
@@ -263,4 +269,8 @@
 @keyframes shineSweep {
   0% { transform: translateX(-120%) skewX(-16deg); }
   100% { transform: translateX(220%) skewX(-16deg); }
+}
+
+@keyframes beamSpin {
+  to { --beam-angle: 360deg; }
 }

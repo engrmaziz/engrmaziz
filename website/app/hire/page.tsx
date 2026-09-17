@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { DirectAnswer } from "@/components/seo/DirectAnswer";
 import { Accordion } from "@/components/ui/Accordion";
+import { BorderBeam } from "@/components/fx/BorderBeam";
 import { siteMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -121,6 +122,7 @@ export default function HirePage() {
 
       <Section className="py-16 bg-elevated border-b border-border-default">
         <Container className="grid lg:grid-cols-2 gap-10">
+          <BorderBeam radius={16}>
           <div className="rounded-2xl border border-border-default bg-base p-8 hud-corners">
             <Briefcase className="w-8 h-8 text-accent mb-4" />
             <h2 className="text-3xl font-bold text-primary mb-4">Freelance and contract</h2>
@@ -147,6 +149,8 @@ export default function HirePage() {
               Send a project brief →
             </Link>
           </div>
+          </BorderBeam>
+          <BorderBeam radius={16}>
           <div id="full-time" className="scroll-mt-32 rounded-2xl border border-border-default bg-base p-8 hud-corners">
             <Building2 className="w-8 h-8 text-accent mb-4" />
             <h2 className="text-3xl font-bold text-primary mb-4">Full-time hiring</h2>
@@ -172,6 +176,7 @@ export default function HirePage() {
               Recruiting inquiry →
             </Link>
           </div>
+          </BorderBeam>
         </Container>
       </Section>
 

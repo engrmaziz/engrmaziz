@@ -5,6 +5,7 @@ import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/fx/Reveal";
 import { SectionEyebrow } from "@/components/fx/HudFrame";
+import { TracingRail } from "@/components/fx/TracingRail";
 
 const PHASES = [
   { step: "01", title: "Discovery & Scope", desc: "Deep dive into business requirements, identifying constraints, scale expectations, and core data models." },
@@ -24,23 +25,28 @@ export function Process() {
         </Reveal>
 
         <div className="relative">
-          <div className="absolute bottom-4 left-[15px] top-4 w-px bg-gradient-to-b from-accent via-border-default to-transparent md:left-1/2 md:-translate-x-1/2" />
-          <div className="space-y-10">
-            {PHASES.map((phase, i) => (
-              <Reveal key={phase.step} delay={i * 0.06} className={`relative flex flex-col items-start gap-8 md:flex-row ${i % 2 === 0 ? "md:flex-row-reverse md:text-right" : ""}`}>
-                <div className="md:w-1/2" />
-                <div className="absolute left-0 z-10 flex h-8 w-8 -translate-x-[15px] items-center justify-center rounded-full border border-accent bg-base font-mono text-xs font-bold text-accent md:left-1/2 md:-translate-x-1/2">
-                  {phase.step}
-                </div>
-                <div className="flex w-full flex-col justify-center pl-12 md:w-1/2 md:pl-0">
-                  <div className={`rounded-2xl border border-border-default bg-elevated/70 p-6 backdrop-blur-md ${i % 2 === 0 ? "md:mr-12" : "md:ml-12"}`}>
-                    <h3 className="mb-2 font-display text-xl font-bold text-primary">{phase.title}</h3>
-                    <p className="text-secondary">{phase.desc}</p>
+          <TracingRail className="relative">
+            <div className="space-y-10">
+              {PHASES.map((phase, i) => (
+                <Reveal
+                  key={phase.step}
+                  delay={i * 0.06}
+                  className={`relative flex flex-col items-start gap-8 md:flex-row ${i % 2 === 0 ? "md:flex-row-reverse md:text-right" : ""}`}
+                >
+                  <div className="md:w-1/2" />
+                  <div className="absolute left-0 z-10 flex h-8 w-8 -translate-x-[15px] items-center justify-center rounded-full border border-accent bg-base font-mono text-xs font-bold text-accent md:left-1/2 md:-translate-x-1/2">
+                    {phase.step}
                   </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+                  <div className="flex w-full flex-col justify-center pl-12 md:w-1/2 md:pl-0">
+                    <div className={`rounded-2xl border border-border-default bg-elevated/70 p-6 backdrop-blur-md ${i % 2 === 0 ? "md:mr-12" : "md:ml-12"}`}>
+                      <h3 className="mb-2 font-display text-xl font-bold text-primary">{phase.title}</h3>
+                      <p className="text-secondary">{phase.desc}</p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </TracingRail>
         </div>
       </Container>
     </Section>

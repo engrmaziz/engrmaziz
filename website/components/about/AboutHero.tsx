@@ -12,6 +12,7 @@ import { ResumeDownload } from "@/components/ui/ResumeDownload";
 import { Magnetic } from "@/components/fx/Magnetic";
 import { HudFrame, SectionEyebrow } from "@/components/fx/HudFrame";
 import { Reveal } from "@/components/fx/Reveal";
+import { BorderBeam } from "@/components/fx/BorderBeam";
 
 export function AboutHero() {
   return (
@@ -92,7 +93,8 @@ export function AboutHero() {
                   className="object-cover object-[center_22%]"
                 />
               </div>
-              <HudFrame className="mt-8 w-full max-w-sm p-6">
+              <BorderBeam radius={16} className="mt-8 w-full max-w-sm">
+              <HudFrame className="p-6">
                 <div className="mb-6 flex items-center gap-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10">
                     <Briefcase className="h-6 w-6 text-accent" />
@@ -116,6 +118,7 @@ export function AboutHero() {
                   ))}
                 </div>
               </HudFrame>
+              </BorderBeam>
             </div>
           </Reveal>
         </div>
