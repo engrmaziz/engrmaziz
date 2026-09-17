@@ -3,7 +3,11 @@ import { getAllProjects } from "@/lib/projects";
 import { getAllServices } from "@/lib/services";
 import { getAllPosts } from "@/lib/blog";
 import { getAllGeoPaths } from "@/lib/geo";
-import { siteMetadata } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const CANONICAL = "https://maziz.me";
 
 function entry(
   path: string,
@@ -14,7 +18,7 @@ function entry(
   } = {}
 ): MetadataRoute.Sitemap[number] {
   return {
-    url: `${siteMetadata.siteUrl}${path}`,
+    url: `${CANONICAL}${path}`,
     lastModified: options.lastModified ?? new Date(),
     changeFrequency: options.changeFrequency ?? "weekly",
     priority: options.priority ?? 0.7,

@@ -1,11 +1,11 @@
-import { siteMetadata } from "@/lib/seo";
+export const dynamic = "force-dynamic";
 
 export function GET() {
   const lastmod = new Date().toISOString();
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>${siteMetadata.siteUrl}/sitemap.xml</loc>
+    <loc>https://maziz.me/sitemap.xml</loc>
     <lastmod>${lastmod}</lastmod>
   </sitemap>
 </sitemapindex>
