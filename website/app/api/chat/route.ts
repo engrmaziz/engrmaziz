@@ -59,17 +59,24 @@ export async function POST(req: NextRequest) {
     const { conversationService } = await import('@/lib/db/services');
     await conversationService.assertVisitorOwnsConversation(data.conversationId, visitorInfo);
 
+    const priorTurns = sanitizeClientMessages(data.messages);
+    const hasThread = priorTurns.length > 0;
+
     if (data.message.toLowerCase().includes('hire') || data.message.toLowerCase().includes('meet')) {
       const { leadScoring } = await import('@/lib/services/LeadScoringService');
       const { emailService } = await import('@/lib/email/resend');
       const score = leadScoring.calculateScore({ email: visitorInfo.email, projectDescription: data.message });
       if (score > 50) {
-        emailService.sendContactNotification({ ...visitorInfo, message: data.message, projectType: 'RAGX Lead' }).catch(console.error);
+        emailService.sendContactNotification({
+          ...visitorInfo,
+          message: data.message,
+          projectType: "RAGX Lead",
+          channel: "RAGX chat",
+          source: "RAGX hire/meet intent",
+          conversation: [...priorTurns, { role: "user", content: data.message }],
+        }).catch(console.error);
       }
     }
-
-    const priorTurns = sanitizeClientMessages(data.messages);
-    const hasThread = priorTurns.length > 0;
 
     // 2. Lightweight Intent Router
     const msgLower = data.message.toLowerCase().trim();
@@ -122,7 +129,10 @@ export async function POST(req: NextRequest) {
         name: visitorInfo.name,
         email: visitorInfo.email,
         projectType: 'Booking Request',
-        message: formatBookingEmail(slots, priorTurns, data.message)
+        channel: 'RAGX chat',
+        source: 'RAGX booking',
+        message: formatBookingEmail(slots, priorTurns, data.message),
+        conversation: [...priorTurns, { role: 'user', content: data.message }],
       }).catch(console.error);
     }
 

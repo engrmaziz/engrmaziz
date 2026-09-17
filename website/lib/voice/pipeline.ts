@@ -203,21 +203,6 @@ export async function runVoiceTurn(opts: {
     });
   };
 
-  if (/\b(hire|meet|book)\b/i.test(transcript)) {
-    void import('@/lib/services/LeadScoringService').then(({ leadScoring }) => {
-      const score = leadScoring.calculateScore({ email: opts.visitorInfo.email, projectDescription: transcript });
-      if (score > 50) {
-        void import('@/lib/email/resend').then(({ emailService }) => {
-          emailService.sendContactNotification({
-            ...opts.visitorInfo,
-            message: transcript,
-            projectType: 'RAGX Voice Lead',
-          }).catch(() => undefined);
-        });
-      }
-    }).catch(() => undefined);
-  }
-
   if (transcript.length < 2) {
     spoken = VOICE_MISHEAR;
     emit({ type: 'answer', text: spoken, ragMs: 0 });
@@ -235,6 +220,24 @@ export async function runVoiceTurn(opts: {
   const history = session.history;
   const slots = slotsFromSession(history, transcript, opts.visitorInfo);
   const bookingReply = resolveBookingReply({ slots, query: transcript, history, channel: 'voice' });
+
+  if (/\b(hire|meet|book)\b/i.test(transcript)) {
+    void import('@/lib/services/LeadScoringService').then(({ leadScoring }) => {
+      const score = leadScoring.calculateScore({ email: opts.visitorInfo.email, projectDescription: transcript });
+      if (score > 50) {
+        void import('@/lib/email/resend').then(({ emailService }) => {
+          emailService.sendContactNotification({
+            ...opts.visitorInfo,
+            message: transcript,
+            projectType: 'RAGX Voice Lead',
+            channel: 'RAGX voice',
+            source: 'RAGX hire/meet intent',
+            conversation: history.concat([{ role: 'user', content: transcript }]),
+          }).catch(() => undefined);
+        });
+      }
+    }).catch(() => undefined);
+  }
 
   if (intent && !(isGreetingIntent && history.length > 0) && !isBookingQuery(transcript) && !bookingReply) {
     spoken = lockVisitorAddress(intent, opts.visitorInfo.name);
@@ -256,7 +259,10 @@ export async function runVoiceTurn(opts: {
           name: opts.visitorInfo.name,
           email: opts.visitorInfo.email,
           projectType: 'Booking Request',
+          channel: 'RAGX voice',
+          source: 'RAGX booking',
           message: formatBookingEmail(slots, history, transcript),
+          conversation: history.concat([{ role: 'user', content: transcript }]),
         }).catch(() => undefined);
       }).catch(() => undefined);
     }

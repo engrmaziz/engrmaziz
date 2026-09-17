@@ -41,6 +41,16 @@ const endSessionSchema = z.object({
     email: z.string().email().max(120),
     sessionId: z.string().max(120).optional(),
   }),
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant", "system"]),
+        content: z.string().max(12000),
+        timestamp: z.string().optional(),
+      })
+    )
+    .max(50)
+    .optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -59,12 +69,12 @@ export async function POST(req: NextRequest) {
     const { conversationService } = await import("@/lib/db/services");
     await conversationService.assertExistingConversationOwner(conversationId, visitorInfo);
 
-    let messages: Array<{ role: string; content: string; timestamp?: string }> = [];
+    let storedMessages: Array<{ role: string; content: string; timestamp?: string }> = [];
     try {
       const { ragMemory } = await import("@/lib/rag/memory");
-      const stored = await ragMemory.loadRecentMessages(conversationId, 40);
+      const stored = await ragMemory.loadRecentMessages(conversationId, 80);
       if (Array.isArray(stored) && stored.length) {
-        messages = stored.map((m: any) => ({
+        storedMessages = stored.map((m: any) => ({
           role: m.role,
           content: m.content,
           timestamp: m.created_at || m.timestamp,
@@ -74,7 +84,23 @@ export async function POST(req: NextRequest) {
       console.error("[end-session] Memory fallback failed:", err?.message);
     }
 
-    const startedAt = messages[0]?.timestamp || new Date().toISOString();
+    const { mergeHistories } = await import("@/lib/rag/session-memory");
+    const clientTurns = (parsed.data.messages || []).map((m) => ({
+      role: m.role,
+      content: m.content,
+      timestamp: m.timestamp,
+    }));
+    const merged = mergeHistories(storedMessages as any, clientTurns as any);
+    const messages = (merged.length ? merged : storedMessages.length ? storedMessages : clientTurns).map((m) => ({
+      role: m.role,
+      content: m.content,
+      timestamp: (m as { timestamp?: string }).timestamp,
+    }));
+
+    const startedAt =
+      clientTurns.find((m) => m.timestamp)?.timestamp ||
+      storedMessages.find((m) => m.timestamp)?.timestamp ||
+      new Date().toISOString();
     const endedAt = new Date().toISOString();
     const startMs = new Date(startedAt).getTime();
     const endMs = new Date(endedAt).getTime();
@@ -126,13 +152,16 @@ ${conversationText.slice(0, 9000)}`,
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
       );
-      await supabase
+      const { data: existing } = await supabase
         .from("conversations")
-        .update({ status: "ended", ended_at: endedAt, summary, visitor_name: visitorInfo.name, visitor_email: visitorInfo.email })
+        .select("status")
         .eq("id", conversationId)
-        .eq("visitor_email", visitorInfo.email);
+        .maybeSingle();
+      if (existing?.status === "ended" || existing?.status === "closed") {
+        return NextResponse.json({ success: true, endedAt, emailSent: false, alreadyEnded: true });
+      }
     } catch (err: any) {
-      console.error("[end-session] Supabase update failed:", err?.message);
+      console.error("[end-session] Status check failed:", err?.message);
     }
 
     let emailSent = false;
@@ -164,14 +193,47 @@ ${conversationText.slice(0, 9000)}`,
       const { error: emailError } = await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL || "ragx@maziz.me",
         to: [process.env.ADMIN_EMAIL || "io@maziz.me"],
+        replyTo: visitorInfo.email,
         subject: `New RAGX ${channel === "voice" ? "Voice" : "Chat"} Session — ${visitorInfo.name}`,
         html,
+        text: [
+          `RAGX ${channel} session — ${visitorInfo.name} <${visitorInfo.email}>`,
+          `Duration: ${durationMin} minute(s)`,
+          "",
+          "Summary:",
+          summary,
+          "",
+          "Full transcript:",
+          conversationText || "No transcript was captured.",
+        ].join("\n"),
       });
       if (!emailError) emailSent = true;
       else console.error("[end-session] Email error:", emailError);
       } catch (err: any) {
       console.error("[end-session] Email failed:", err?.message);
     }
+    }
+
+    try {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+      const { data: existing } = await supabase
+        .from("conversations")
+        .select("status")
+        .eq("id", conversationId)
+        .maybeSingle();
+      if (existing?.status !== "ended" && existing?.status !== "closed") {
+        await supabase
+          .from("conversations")
+          .update({ status: "ended", ended_at: endedAt, summary, visitor_name: visitorInfo.name, visitor_email: visitorInfo.email })
+          .eq("id", conversationId)
+          .eq("visitor_email", visitorInfo.email);
+      }
+    } catch (err: any) {
+      console.error("[end-session] Supabase update failed:", err?.message);
     }
 
     return NextResponse.json({

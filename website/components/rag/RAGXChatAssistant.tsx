@@ -142,6 +142,11 @@ export function RAGXChatAssistant() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<Message[]>([]);
+  const visitorRef = useRef<VisitorInfo | null>(null);
+  const conversationRef = useRef("");
+  const modeRef = useRef<"text" | "voice">("text");
+  const sessionEndedRef = useRef(false);
+  const flushedRef = useRef(false);
   const reducedMotion = usePrefersReducedMotion();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const exportButtonRef = useRef<HTMLButtonElement>(null);
@@ -163,6 +168,19 @@ export function RAGXChatAssistant() {
     }
     fetch("/api/rag/status").then(r => r.json()).then(d => setEngineStatus(d)).catch(() => setEngineStatus({ status: "OFFLINE", health: "CRITICAL" }));
   }, []);
+
+  useEffect(() => {
+    visitorRef.current = visitorInfo;
+  }, [visitorInfo]);
+  useEffect(() => {
+    conversationRef.current = conversationId;
+  }, [conversationId]);
+  useEffect(() => {
+    modeRef.current = mode;
+  }, [mode]);
+  useEffect(() => {
+    sessionEndedRef.current = sessionEnded;
+  }, [sessionEnded]);
 
   useEffect(() => {
     messagesRef.current = messages;
@@ -412,16 +430,54 @@ export function RAGXChatAssistant() {
   const handleEndSession = async () => {
     setShowEndConfirm(false); setIsEndingSession(true);
     try {
-      const res = await fetch("/api/chat/end-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId, visitorInfo, messages: messagesRef.current, channel: mode }) });
+      flushedRef.current = true;
+      const payload = {
+        conversationId,
+        visitorInfo,
+        channel: mode,
+        messages: messagesRef.current
+          .filter((m) => m.role === "user" || m.role === "assistant")
+          .map((m) => ({ role: m.role, content: m.content, timestamp: m.timestamp })),
+      };
+      const res = await fetch("/api/chat/end-session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = await res.json();
       if (data.summary) setSessionSummary(data.summary);
       setSessionEnded(true);
       setMessages(prev => [...prev, { id: generateUUID(), role: "assistant", timestamp: new Date().toISOString(), content: `✅ **Session ended.**\n\nThank you, ${visitorInfo?.name}! Your conversation has been saved and a summary sent to Musharraf.\n\nHe typically responds within 24-48 hours. You can also reach him at [io@maziz.me](mailto:io@maziz.me).` }]);
     } catch (err: any) {
+      flushedRef.current = false;
       setSessionEnded(true);
       setMessages(prev => [...prev, { id: generateUUID(), role: "system", timestamp: new Date().toISOString(), content: "Session ended locally. Summary generation encountered an error." }]);
     } finally { setIsEndingSession(false); }
   };
+
+  useEffect(() => {
+    const flush = () => {
+      if (flushedRef.current || sessionEndedRef.current) return;
+      const visitor = visitorRef.current;
+      const id = conversationRef.current;
+      const turns = messagesRef.current.filter((m) => m.role === "user" || m.role === "assistant");
+      if (!visitor || !id || !turns.some((m) => m.role === "user")) return;
+      flushedRef.current = true;
+      void fetch("/api/chat/end-session", {
+        method: "POST",
+        keepalive: true,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversationId: id,
+          visitorInfo: visitor,
+          channel: modeRef.current,
+          messages: turns.map((m) => ({ role: m.role, content: m.content, timestamp: m.timestamp })),
+        }),
+      }).catch(() => {
+        flushedRef.current = false;
+      });
+    };
+    window.addEventListener("pagehide", flush);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+    };
+  }, []);
 
   return (
     <div>
