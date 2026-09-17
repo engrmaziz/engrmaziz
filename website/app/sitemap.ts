@@ -4,9 +4,6 @@ import { getAllServices } from "@/lib/services";
 import { getAllPosts } from "@/lib/blog";
 import { getAllGeoPaths } from "@/lib/geo";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 const CANONICAL = "https://maziz.me";
 
 function entry(

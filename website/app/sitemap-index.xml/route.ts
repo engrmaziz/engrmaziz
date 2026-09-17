@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 export function GET() {
   const lastmod = new Date().toISOString();
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

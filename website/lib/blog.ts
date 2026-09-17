@@ -31,7 +31,6 @@ export interface BlogData {
 
 export function getAllPosts(): BlogData[] {
   if (!fs.existsSync(BLOG_DIR)) {
-    fs.mkdirSync(BLOG_DIR, { recursive: true });
     return [];
   }
 
