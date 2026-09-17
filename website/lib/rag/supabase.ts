@@ -9,9 +9,6 @@ const password = systemConfig.SUPABASE_DB_PASSWORD || '';
 const host = `aws-0-ap-northeast-1.pooler.supabase.com`;
 const connectionString = `postgresql://${username}:${password}@${host}:5432/postgres`;
 
-// Use service role key if available for backend ops
-const key = systemConfig.SUPABASE_SERVICE_ROLE_KEY || 'dummy';
-// Export a single connection pool for the server
 export const pgPool = new Pool({
   connectionString,
   max: 10,
@@ -45,7 +42,7 @@ export interface ChunkRecord {
   parent_document: string;
   chunk_text: string;
   chunk_number: number;
-  metadata: Record<string, any>;
+  metadata: object;
   token_count?: number;
   chunk_hash?: string;
   created_at?: string;
@@ -117,7 +114,7 @@ export class RAGDatabase {
       WHERE id = $1
       RETURNING *
     `;
-    const values = [id, ...keys.map(k => (updates as any)[k])];
+    const values = [id, ...keys.map((k) => updates[k as keyof DocumentRecord])];
     
     const { rows } = await pgPool.query(query, values);
     return rows[0];
@@ -215,7 +212,7 @@ export class RAGDatabase {
     queryEmbedding: number[],
     threshold: number,
     limit: number,
-    filterMetadata: Record<string, any> = {}
+    filterMetadata: object = {}
   ) {
     const vectorString = `[${queryEmbedding.join(',')}]`;
     const query = 'SELECT * FROM public.match_chunks($1, $2, $3, $4)';
@@ -228,7 +225,7 @@ export class RAGDatabase {
     queryText: string,
     limit: number,
     threshold: number = 0.3,
-    filterMetadata: Record<string, any> = {},
+    filterMetadata: object = {},
     semanticWeight: number = 0.7,
     lexicalWeight: number = 0.3
   ) {
@@ -257,7 +254,7 @@ export class RAGDatabase {
       WHERE dc.metadata->>'title' ILIKE ANY($1::text[])
       LIMIT $2
     `;
-    const titleRes = await pgPool.query(titleQuery, [patterns, limit]);
+    const titleRes = await pgPool.query<{ chunk_id: string }>(titleQuery, [patterns, limit]);
     if (titleRes.rows.length > 0) return titleRes.rows;
 
     const bodyQuery = `
@@ -272,15 +269,15 @@ export class RAGDatabase {
       WHERE dc.chunk_text ILIKE ANY($1::text[])
       LIMIT $2
     `;
-    const bodyRes = await pgPool.query(bodyQuery, [patterns, limit]);
-    const seen = new Set(titleRes.rows.map((r: any) => r.chunk_id));
-    return [...titleRes.rows, ...bodyRes.rows.filter((r: any) => !seen.has(r.chunk_id))].slice(0, limit);
+    const bodyRes = await pgPool.query<{ chunk_id: string }>(bodyQuery, [patterns, limit]);
+    const seen = new Set(titleRes.rows.map((r) => r.chunk_id));
+    return [...titleRes.rows, ...bodyRes.rows.filter((r) => !seen.has(r.chunk_id))].slice(0, limit);
   }
 
   async ftsSearch(
     queryText: string,
     limit: number,
-    filterMetadata: Record<string, any> = {}
+    filterMetadata: object = {}
   ) {
     const query = `
       SELECT 
@@ -321,7 +318,7 @@ export class RAGDatabase {
     queryText: string,
     queryEmbedding: number[],
     responseText: string,
-    metadata: Record<string, any> = {}
+    metadata: object = {}
   ) {
     const vectorString = `[${queryEmbedding.join(',')}]`;
     const query = `
@@ -344,7 +341,7 @@ export class RAGDatabase {
     queryText: string,
     queryEmbedding: number[],
     responseText: string,
-    metadata: Record<string, any> = {}
+    metadata: object = {}
   ) {
     return this.writeCache(queryHash, queryText, queryEmbedding, responseText, metadata);
   }
@@ -360,7 +357,7 @@ export class RAGDatabase {
     completionTokens?: number;
     totalTokens?: number;
     cost?: number;
-    metadata?: Record<string, any>;
+    metadata?: object;
     feedback?: string;
     clickedCitation?: string;
   }) {
@@ -480,7 +477,7 @@ export class RAGDatabase {
     };
   }
 
-  async insertMessage(conversationId: string, role: string, content: string, citations: any = null, model: string | null = null, latency: number | null = null) {
+  async insertMessage(conversationId: string, role: string, content: string, citations: unknown = null, model: string | null = null, latency: number | null = null) {
     const query = `
       INSERT INTO public.messages (conversation_id, role, content, citations, model, latency)
       VALUES ($1, $2, $3, $4, $5, $6)

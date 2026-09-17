@@ -3,9 +3,12 @@ import { NextResponse } from 'next/server';
 import { adminKnowledgeService } from '../../../../lib/knowledge/admin-service';
 import { CreateKnowledgeDocumentRequest } from '../../../../lib/knowledge/contracts';
 import { authorizationService, PERMISSIONS } from '../../../../lib/security';
+import { checkRateLimit, getClientIp } from '@/lib/security/rate-limit';
+import { RateLimitError } from '@/lib/utils/errors';
 
 export async function POST(request: Request) {
   try {
+    await checkRateLimit(getClientIp(request), 'admin-knowledge', 30, 60000);
     const authHeader = request.headers.get('Authorization');
     const user = authorizationService.authenticate(authHeader);
     authorizationService.authorize(user, [PERMISSIONS.KNOWLEDGE_WRITE]);
@@ -31,6 +34,9 @@ export async function POST(request: Request) {
     }
     if (err.name === 'KnowledgeExecutionError') {
       return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    if (err instanceof RateLimitError || err.name === 'RateLimitError') {
+      return NextResponse.json({ error: 'Too many requests.' }, { status: 429 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

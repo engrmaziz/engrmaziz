@@ -19,8 +19,8 @@ export class ConversationService {
     return db.insert('conversations', { visitor_id: visitorId, status: 'active', lead_score: 0 });
   }
 
-  async ensureConversationExists(id: string, visitorInfo?: any) {
-    const payload: any = { id, status: 'active' };
+  async ensureConversationExists(id: string, visitorInfo?: { name?: string; email?: string }) {
+    const payload: Record<string, unknown> = { id, status: 'active' };
     if (visitorInfo) {
       payload.visitor_name = visitorInfo.name;
       payload.visitor_email = String(visitorInfo.email || "").trim().toLowerCase();
@@ -28,8 +28,9 @@ export class ConversationService {
     
     try {
       await db.insert('conversations', payload);
-    } catch (err: any) {
-      if (err.code !== '23505') {
+    } catch (err: unknown) {
+      const code = typeof err === 'object' && err && 'code' in err ? String((err as { code: unknown }).code) : '';
+      if (code !== '23505') {
         throw err;
       }
     }
@@ -69,7 +70,7 @@ export class ConversationService {
     }
   }
 
-  async saveMessage(conversationId: string, role: string, content: string, citations?: any) {
+  async saveMessage(conversationId: string, role: string, content: string, citations?: unknown) {
     // Notice: To use upsert via the 'db' stub we would need to add an upsert method,
     // but we can just use supabase client directly if we export it, or handle it in RAGXService.
     const { supabase } = require('@/lib/db/supabase');

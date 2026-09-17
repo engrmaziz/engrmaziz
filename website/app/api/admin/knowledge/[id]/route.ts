@@ -2,12 +2,22 @@
 import { NextResponse } from 'next/server';
 import { adminKnowledgeService } from '../../../../../lib/knowledge/admin-service';
 import { authorizationService, PERMISSIONS } from '../../../../../lib/security';
+import { checkRateLimit, getClientIp } from '@/lib/security/rate-limit';
+import { RateLimitError } from '@/lib/utils/errors';
+
+function rateLimitResponse(err: unknown) {
+  if (err instanceof RateLimitError || (err && typeof err === 'object' && 'name' in err && err.name === 'RateLimitError')) {
+    return NextResponse.json({ error: 'Too many requests.' }, { status: 429 });
+  }
+  return null;
+}
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
+    await checkRateLimit(getClientIp(request), 'admin-knowledge', 30, 60000);
     const authHeader = request.headers.get('Authorization');
     const user = authorizationService.authenticate(authHeader);
     authorizationService.authorize(user, [PERMISSIONS.KNOWLEDGE_READ]);
@@ -34,7 +44,7 @@ export async function GET(
     if (err.name === 'StorageExecutionError') {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return rateLimitResponse(err) || NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
@@ -43,6 +53,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    await checkRateLimit(getClientIp(request), 'admin-knowledge', 30, 60000);
     const authHeader = request.headers.get('Authorization');
     const user = authorizationService.authenticate(authHeader);
     authorizationService.authorize(user, [PERMISSIONS.KNOWLEDGE_DELETE]);
@@ -65,6 +76,6 @@ export async function DELETE(
     if (err.name === 'StorageExecutionError') {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return rateLimitResponse(err) || NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
