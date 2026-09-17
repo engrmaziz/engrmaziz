@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/Badge";
 import { BlogCard } from "@/components/blog/BlogCard";
 import type { BlogData } from "@/lib/blog";
 import { SplitLayout } from "@/components/layout/SplitLayout";
+import { PageHero } from "@/components/layout/PageHero";
 
 export function BlogClient({ initialPosts }: { initialPosts: BlogData[] }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -39,8 +40,7 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogData[] }) {
 
   return (
     <>
-      <Section className="pt-24 pb-12 bg-base border-b border-border-default">
-        <Container>
+      <PageHero className="border-b border-border-default pb-12 pt-24">
           <div className="max-w-4xl">
             <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
               <span className="h-px w-6 bg-accent/70" aria-hidden />
@@ -53,8 +53,7 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogData[] }) {
               Deep-dive technical articles, system architecture breakdowns, and production engineering practices. No fluff, just scalable engineering.
             </p>
           </div>
-        </Container>
-      </Section>
+      </PageHero>
 
       <Section className="py-16 bg-base">
         <Container>
@@ -62,7 +61,7 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogData[] }) {
             ratio="1/3-2/3"
             className="items-start gap-12"
             left={
-              <div className="sticky top-24 space-y-8">
+              <div className="space-y-8 md:sticky md:top-24 md:self-start">
                 <div>
                   <h3 className="text-sm font-bold text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
                     <Search className="w-4 h-4 text-accent" /> Search Articles

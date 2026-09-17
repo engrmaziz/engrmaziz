@@ -27,10 +27,10 @@ const ITEMS = [
 
 export function Philosophy() {
   return (
-    <Section className="overflow-hidden bg-base">
+    <Section className="bg-base">
       <Container>
-        <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-12">
-          <Reveal className="sticky top-32 lg:col-span-5">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-16">
+          <Reveal className="relative z-0 lg:sticky lg:top-32 lg:col-span-5 lg:self-start">
             <SectionEyebrow>Philosophy</SectionEyebrow>
             <h2 className="mb-6 font-display text-3xl font-bold leading-tight text-primary md:text-5xl">
               Software is not just written. It is <span className="text-accent">architected.</span>
@@ -40,10 +40,10 @@ export function Philosophy() {
             </p>
           </Reveal>
 
-          <div className="flex flex-col gap-6 lg:col-span-7">
+          <div className="relative z-10 flex flex-col gap-6 lg:col-span-7">
             {ITEMS.map((item, i) => (
               <Reveal key={item.title} delay={i * 0.08}>
-                <div className="flex gap-5 rounded-2xl border border-border-default bg-elevated/60 p-6 backdrop-blur-md">
+                <div className="flex gap-5 rounded-2xl border border-border-default bg-elevated p-6">
                   <item.icon className="mt-1 h-6 w-6 shrink-0 text-accent" />
                   <div>
                     <h3 className="mb-3 font-display text-2xl font-bold text-primary">{item.title}</h3>

@@ -11,7 +11,7 @@ type BorderBeamProps = {
   thickness?: number;
 };
 
-export function BorderBeam({ children, className, radius = 16, thickness = 1.5 }: BorderBeamProps) {
+export function BorderBeam({ children, className, radius = 16, thickness = 2 }: BorderBeamProps) {
   const reduced = usePrefersReducedMotion();
 
   return (
@@ -27,7 +27,7 @@ export function BorderBeam({ children, className, radius = 16, thickness = 1.5 }
             borderRadius: radius,
             padding: thickness,
             background:
-              "conic-gradient(from var(--beam-angle, 0deg), transparent 0deg, color-mix(in srgb, var(--color-accent) 8%, transparent) 40deg, var(--color-accent) 58deg, color-mix(in srgb, var(--color-gold) 80%, white) 62deg, transparent 70deg, transparent 198deg, color-mix(in srgb, var(--color-gold) 10%, transparent) 230deg, var(--color-gold) 255deg, transparent 270deg, transparent 360deg)",
+              "conic-gradient(from var(--beam-angle, 0deg), transparent 0deg, color-mix(in srgb, var(--color-accent) 18%, transparent) 28deg, var(--color-accent) 50deg, color-mix(in srgb, var(--color-gold) 90%, white) 58deg, transparent 72deg, transparent 186deg, color-mix(in srgb, var(--color-gold) 22%, transparent) 214deg, var(--color-gold) 242deg, transparent 268deg, transparent 360deg)",
             WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             WebkitMaskComposite: "xor",
             mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",

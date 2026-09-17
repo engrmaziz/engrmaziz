@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { ServiceCard } from "@/components/service/ServiceCard";
 import type { Pillar } from "@/lib/services";
 import { SplitLayout } from "@/components/layout/SplitLayout";
+import { PageHero } from "@/components/layout/PageHero";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -42,8 +43,7 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
 
   return (
     <>
-      <Section className="pt-24 pb-12 bg-base">
-        <Container>
+      <PageHero className="pb-12 pt-24">
           <div className="max-w-4xl">
             <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
               <span className="h-px w-6 bg-accent/70" aria-hidden />
@@ -76,8 +76,7 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
               </Link>
             </div>
           </div>
-        </Container>
-      </Section>
+      </PageHero>
 
       <div className="border-y border-border-default bg-elevated">
         <Container>
@@ -103,7 +102,7 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
             ratio="1/3-2/3"
             className="items-start gap-12"
             left={
-              <div className="sticky top-24 space-y-8">
+              <div className="space-y-8 md:sticky md:top-24 md:self-start">
                 <div>
                   <h3 className="text-sm font-bold text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
                     <Search className="w-4 h-4 text-accent" /> Find Service

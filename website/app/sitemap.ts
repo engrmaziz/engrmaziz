@@ -1,61 +1,71 @@
-import { MetadataRoute } from 'next';
-import { getAllProjects } from '@/lib/projects';
-import { getAllServices } from '@/lib/services';
-import { getAllPosts } from '@/lib/blog';
-import { getAllGeoPaths } from '@/lib/geo';
-import { siteMetadata } from '@/lib/seo';
+import { MetadataRoute } from "next";
+import { getAllProjects } from "@/lib/projects";
+import { getAllServices } from "@/lib/services";
+import { getAllPosts } from "@/lib/blog";
+import { getAllGeoPaths } from "@/lib/geo";
+import { siteMetadata } from "@/lib/seo";
+
+function entry(
+  path: string,
+  options: {
+    lastModified?: string | Date;
+    changeFrequency?: MetadataRoute.Sitemap[number]["changeFrequency"];
+    priority?: number;
+  } = {}
+): MetadataRoute.Sitemap[number] {
+  return {
+    url: `${siteMetadata.siteUrl}${path}`,
+    lastModified: options.lastModified ?? new Date(),
+    changeFrequency: options.changeFrequency ?? "weekly",
+    priority: options.priority ?? 0.7,
+  };
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = siteMetadata.siteUrl;
+  const core: MetadataRoute.Sitemap = [
+    entry("", { changeFrequency: "weekly", priority: 1 }),
+    entry("/hire", { changeFrequency: "weekly", priority: 0.95 }),
+    entry("/services", { changeFrequency: "weekly", priority: 0.9 }),
+    entry("/about", { changeFrequency: "monthly", priority: 0.85 }),
+    entry("/projects", { changeFrequency: "weekly", priority: 0.8 }),
+    entry("/blog", { changeFrequency: "weekly", priority: 0.75 }),
+    entry("/contact", { changeFrequency: "monthly", priority: 0.8 }),
+    entry("/entity", { changeFrequency: "monthly", priority: 0.7 }),
+    entry("/sitemap", { changeFrequency: "weekly", priority: 0.4 }),
+    entry("/privacy", { changeFrequency: "yearly", priority: 0.2 }),
+    entry("/terms", { changeFrequency: "yearly", priority: 0.2 }),
+  ];
 
-  // Base routes
-  const routes = [
-    '',
-    '/about',
-    '/hire',
-    '/entity',
-    '/projects',
-    '/services',
-    '/blog',
-    '/contact',
-    '/sitemap',
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1 : 0.8,
-  }));
+  const projects = getAllProjects().map((project) =>
+    entry(`/projects/${project.slug}`, {
+      lastModified: project.updated || project.created || new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    })
+  );
 
-  // Projects
-  const projects = getAllProjects().map((project) => ({
-    url: `${baseUrl}/projects/${project.slug}`,
-    lastModified: project.updated || new Date().toISOString(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+  const services = getAllServices().map((service) =>
+    entry(`/services/${service.slug}`, {
+      lastModified: service.updated || new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    })
+  );
 
-  // Services
-  const services = getAllServices().map((service) => ({
-    url: `${baseUrl}/services/${service.slug}`,
-    lastModified: service.updated || new Date().toISOString(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }));
+  const posts = getAllPosts().map((post) =>
+    entry(`/blog/${post.slug}`, {
+      lastModified: post.date || new Date(),
+      changeFrequency: "yearly",
+      priority: 0.6,
+    })
+  );
 
-  // Blog Posts
-  const posts = getAllPosts().map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: post.date || new Date().toISOString(),
-    changeFrequency: 'yearly' as const,
-    priority: 0.6,
-  }));
+  const geo = getAllGeoPaths().map((path) =>
+    entry(path, {
+      changeFrequency: "weekly",
+      priority: path.split("/").filter(Boolean).length === 2 ? 0.9 : 0.85,
+    })
+  );
 
-  const geo = getAllGeoPaths().map((path) => ({
-    url: `${baseUrl}${path}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: 'weekly' as const,
-    priority: path.split('/').length === 3 ? 0.9 : 0.85,
-  }));
-
-  return [...routes, ...projects, ...services, ...geo, ...posts];
+  return [...core, ...projects, ...services, ...geo, ...posts];
 }

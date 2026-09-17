@@ -1,7 +1,8 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
-import { DotGrid } from "@/components/fx/DotGrid";
+import { ConstellationField } from "@/components/fx/ConstellationField";
+import { Meteors } from "@/components/fx/Meteors";
 
 export interface HeroContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -19,7 +20,12 @@ export const HeroContainer = React.forwardRef<HTMLDivElement, HeroContainerProps
         )}
         {...props}
       >
-        {pattern !== "none" ? <DotGrid /> : null}
+        {pattern !== "none" ? (
+          <>
+            <ConstellationField />
+            <Meteors count={16} />
+          </>
+        ) : null}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent"

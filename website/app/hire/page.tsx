@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { DirectAnswer } from "@/components/seo/DirectAnswer";
 import { Accordion } from "@/components/ui/Accordion";
 import { BorderBeam } from "@/components/fx/BorderBeam";
+import { PageHero } from "@/components/layout/PageHero";
 import { siteMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -91,8 +92,7 @@ export default function HirePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <Section className="border-b border-border-default bg-base pb-12 pt-32">
-        <Container>
+      <PageHero className="border-b border-border-default pb-12 pt-32">
           <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
             <span className="h-px w-6 bg-accent/70" aria-hidden />
             Freelance · Contract · Full-time
@@ -117,8 +117,7 @@ export default function HirePage() {
               </Button>
             </Link>
           </div>
-        </Container>
-      </Section>
+      </PageHero>
 
       <Section className="py-16 bg-elevated border-b border-border-default">
         <Container className="grid lg:grid-cols-2 gap-10">

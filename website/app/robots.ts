@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/private/", "/drafts/", "/admin"],
+        disallow: ["/api/", "/private/", "/drafts/", "/admin", "/admin/"],
       },
       { userAgent: "GPTBot", allow: "/" },
       { userAgent: "ChatGPT-User", allow: "/" },
@@ -20,6 +20,8 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "anthropic-ai", allow: "/" },
       { userAgent: "Google-Extended", allow: "/" },
       { userAgent: "Googlebot", allow: "/" },
+      { userAgent: "Googlebot-Image", allow: "/" },
+      { userAgent: "Googlebot-Mobile", allow: "/" },
       { userAgent: "GoogleOther", allow: "/" },
       { userAgent: "Google-CloudVertexBot", allow: "/" },
       { userAgent: "PerplexityBot", allow: "/" },
@@ -36,8 +38,10 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Bytespider", disallow: "/" },
       { userAgent: "CCBot", disallow: "/" },
       { userAgent: "PetalBot", disallow: "/" },
+      { userAgent: "ImagesiftBot", disallow: "/" },
+      { userAgent: "Diffbot", disallow: "/" },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: [`${baseUrl}/sitemap.xml`, `${baseUrl}/sitemap-index.xml`],
     host: baseUrl,
   };
 }

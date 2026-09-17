@@ -7,13 +7,13 @@ import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { SplitLayout } from "@/components/layout/SplitLayout";
+import { PageHero } from "@/components/layout/PageHero";
 import { downloadResume } from "@/lib/download-resume";
 
 export function ContactClient() {
   return (
     <>
-      <Section className="pt-24 pb-12 bg-base border-b border-border-default">
-        <Container>
+      <PageHero className="border-b border-border-default pb-12 pt-24">
           <div className="max-w-4xl">
             <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
               <span className="h-px w-6 bg-accent/70" aria-hidden />
@@ -26,8 +26,7 @@ export function ContactClient() {
               California and Florida companies: custom AI call agents, chatbots, RAG agents, and workflow automation. Freelance/contract builds and full-time remote roles. Pacific and Eastern overlap. No fake US storefront.
             </p>
           </div>
-        </Container>
-      </Section>
+      </PageHero>
 
       <Section className="py-16 bg-base relative overflow-hidden">
         <Container>

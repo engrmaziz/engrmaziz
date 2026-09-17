@@ -199,9 +199,9 @@
 
   .site-spotlight {
     background: radial-gradient(
-      520px circle at var(--pointer-x) var(--pointer-y),
-      color-mix(in srgb, var(--color-accent) 10%, transparent),
-      transparent 42%
+      720px circle at var(--pointer-x) var(--pointer-y),
+      color-mix(in srgb, var(--color-accent) 16%, transparent),
+      transparent 44%
     );
   }
   .dark .site-spotlight {

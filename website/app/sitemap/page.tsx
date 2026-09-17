@@ -25,15 +25,29 @@ export default function HtmlSitemapPage() {
       <Container>
         <h1 className="mb-4 font-display text-4xl font-bold text-primary">Sitemap</h1>
         <p className="text-secondary mb-4 max-w-2xl">
-          Human-readable map of the site. Machine sitemap:{" "}
-          <Link href="/sitemap.xml" className="text-accent font-medium hover:underline">
-            /sitemap.xml
+          Human-readable map of every public URL. Mobile and desktop share the same canonical URLs
+          (responsive pages — no separate m. subdomain). Submit the XML sitemap in Google Search Console:
+        </p>
+        <p className="mb-4 font-mono text-sm text-accent">
+          <Link href="/sitemap.xml" className="hover:underline">
+            {siteMetadata.siteUrl}/sitemap.xml
           </Link>
-          . AI index:{" "}
+        </p>
+        <p className="text-secondary mb-4 max-w-2xl">
+          Sitemap index:{" "}
+          <Link href="/sitemap-index.xml" className="text-accent font-medium hover:underline">
+            /sitemap-index.xml
+          </Link>
+          . AI crawler index:{" "}
           <Link href="/llms.txt" className="text-accent font-medium hover:underline">
             /llms.txt
           </Link>
-          .
+          {" "}
+          (also{" "}
+          <Link href="/llm.txt" className="text-accent font-medium hover:underline">
+            /llm.txt
+          </Link>
+          ).
         </p>
 
         <h2 className="text-2xl font-bold text-primary mt-12 mb-4">Core</h2>
@@ -47,6 +61,8 @@ export default function HtmlSitemapPage() {
             ["/projects", "Projects"],
             ["/blog", "Blog"],
             ["/contact", "Contact"],
+            ["/privacy", "Privacy"],
+            ["/terms", "Terms"],
           ] as const).map(([href, label]) => (
             <li key={href}>
               <Link href={href} className="hover:text-accent">
