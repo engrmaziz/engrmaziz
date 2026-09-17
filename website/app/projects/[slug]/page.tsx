@@ -1,5 +1,6 @@
 import { getProjectSlugs, getProjectBySlug } from "@/lib/projects";
 import { ProjectDetailLayout } from "@/components/project/ProjectDetailLayout";
+import { siteMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
@@ -27,7 +28,7 @@ export function generateMetadata({ params }: ProjectPageProps): Metadata {
     };
   }
 
-  const url = `https://musharrafaziz.com/projects/${project.slug}`;
+  const url = `${siteMetadata.siteUrl}/projects/${project.slug}`;
 
   return {
     title: `${project.title} | Engineering Case Study | Musharraf Aziz`,
@@ -66,18 +67,18 @@ export default function ProjectPage({ params }: ProjectPageProps) {
     "@type": "Article",
     "headline": `${project.title} | Engineering Case Study`,
     "description": project.description,
-    "url": `https://musharrafaziz.com/projects/${project.slug}`,
+    "url": `${siteMetadata.siteUrl}/projects/${project.slug}`,
     "author": {
       "@type": "Person",
       "name": "Musharraf Aziz",
-      "url": "https://musharrafaziz.com/about"
+      "url": `${siteMetadata.siteUrl}/about`
     },
     "datePublished": project.created,
     "dateModified": project.updated || project.created,
     "keywords": project.keywords?.join(", "),
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://musharrafaziz.com/projects/${project.slug}`
+      "@id": `${siteMetadata.siteUrl}/projects/${project.slug}`
     }
   };
 
@@ -90,13 +91,13 @@ export default function ProjectPage({ params }: ProjectPageProps) {
         "@type": "ListItem",
         "position": 1,
         "name": "Projects",
-        "item": "https://musharrafaziz.com/projects"
+        "item": `${siteMetadata.siteUrl}/projects`
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": project.title,
-        "item": `https://musharrafaziz.com/projects/${project.slug}`
+        "item": `${siteMetadata.siteUrl}/projects/${project.slug}`
       }
     ]
   };

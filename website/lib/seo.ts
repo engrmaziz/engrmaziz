@@ -3,7 +3,7 @@ export const siteMetadata = {
   title: "Musharraf Aziz | Hire a Senior AI Engineer (Freelance or Full-Time)",
   description:
     "Hire Musharraf Aziz for remote freelance projects or full-time roles. Custom AI call agents, chatbots, RAG agents, and workflow automation for California and Florida companies.",
-  siteUrl: "https://musharrafaziz.com",
+  siteUrl: "https://maziz.me",
   author: "Musharraf Aziz",
   jobTitle: "Senior AI Engineer",
   email: "io@maziz.me",

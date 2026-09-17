@@ -39,7 +39,7 @@ const SHORT_SERVICE_NAMES: Record<string, string> = {
   'technical-consulting/ai-feasibility-study': 'AI Feasibility Studies',
 };
 
-const SITE = 'https://musharrafaziz.com';
+const SITE = 'https://maziz.me';
 
 function friendlyServiceName(slug: string, title: string): string {
   if (SHORT_SERVICE_NAMES[slug]) return SHORT_SERVICE_NAMES[slug];

@@ -1,7 +1,24 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const CANONICAL_HOST = "maziz.me";
+
 export function middleware(req: NextRequest) {
+  const host = req.headers.get("host")?.split(":")[0] || "";
+  const isPreview = host.endsWith(".vercel.app");
+  if (
+    process.env.NODE_ENV === "production" &&
+    host &&
+    host !== CANONICAL_HOST &&
+    !isPreview
+  ) {
+    const url = req.nextUrl.clone();
+    url.protocol = "https:";
+    url.host = CANONICAL_HOST;
+    url.port = "";
+    return NextResponse.redirect(url, 308);
+  }
+
   if (req.nextUrl.pathname.startsWith('/admin') && process.env.NODE_ENV === 'production') {
     return new NextResponse('Not Found', { status: 404 });
   }
