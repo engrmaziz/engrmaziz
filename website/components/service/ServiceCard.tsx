@@ -18,7 +18,7 @@ export const ServiceCard = React.forwardRef<HTMLDivElement, ServiceCardProps>(
     return (
       <Card ref={ref} className={cn("group flex h-full flex-col overflow-hidden border-border-default bg-elevated transition-all duration-300 hover:border-accent/40 hud-corners", className)} {...props}>
         <div className="p-8 pb-6 border-b border-border-default/50 flex-grow">
-          <div className="flex items-center gap-2 mb-6">
+          <div className="mb-6 flex min-w-0 flex-wrap items-center gap-2">
             <Badge variant="outline" className="text-xs uppercase tracking-wider font-mono border-accent/20 text-accent bg-accent/5">
               {category}
             </Badge>

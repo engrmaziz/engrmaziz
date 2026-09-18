@@ -17,7 +17,7 @@ export const Pill = React.forwardRef<HTMLSpanElement, PillProps>(
       <span
         ref={ref}
         className={cn(
-          "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider",
+          "capsule inline-flex items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.06em] sm:tracking-wider",
           variantClasses[variant],
           className
         )}

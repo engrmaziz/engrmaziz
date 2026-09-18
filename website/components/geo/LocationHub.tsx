@@ -26,7 +26,7 @@ export function LocationHub({ market }: { market: GeoMarket }) {
             <Link href="/services" className="text-sm font-bold text-secondary hover:text-primary mb-8 inline-block">
               ← All services
             </Link>
-            <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+            <p className="mb-4 inline-flex max-w-full flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-accent sm:tracking-[0.22em]">
               <span className="h-px w-6 bg-accent/70" aria-hidden />
               Serving {market.name} remotely
             </p>

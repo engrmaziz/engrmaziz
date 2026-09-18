@@ -141,6 +141,19 @@
     border: 1px solid var(--surface-glass-border);
   }
 
+  .capsule {
+    display: inline-flex;
+    max-width: 100%;
+    min-width: 0;
+    width: fit-content;
+    align-items: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.35;
+    text-align: left;
+  }
+
   .link-underline {
     position: relative;
     text-decoration: none;

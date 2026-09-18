@@ -58,8 +58,8 @@ export const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
         
         {/* Header Section */}
         <div className="p-6 pb-4 border-b border-border-default/50">
-          <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="mb-4 flex min-w-0 flex-wrap items-start justify-between gap-2">
+            <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
               <Badge variant="outline" className="text-xs uppercase tracking-wider font-mono border-accent/20 text-accent bg-accent/5">
                 {category}
               </Badge>
@@ -69,7 +69,7 @@ export const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
                 </Badge>
               )}
             </div>
-            <div className={cn("px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border flex items-center gap-1.5", getStatusColor(status))}>
+            <div className={cn("capsule px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border flex items-center gap-1.5", getStatusColor(status))}>
               <span className="w-1.5 h-1.5 rounded-full bg-current" />
               {status}
             </div>

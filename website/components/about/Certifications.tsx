@@ -137,7 +137,7 @@ export function Certifications() {
                       </span>
                       <p className="text-xs text-secondary mt-0.5">{cert.provider}</p>
                     </div>
-                    <Badge variant="outline" className="text-xs shrink-0">{cert.date}</Badge>
+                    <Badge variant="outline" className="max-w-full text-xs">{cert.date}</Badge>
                   </div>
 
                   <h3 className="text-sm font-bold text-primary mb-4 leading-snug flex-1">

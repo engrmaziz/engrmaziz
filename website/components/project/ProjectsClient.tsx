@@ -75,7 +75,7 @@ export function ProjectsClient({ initialProjects }: { initialProjects: ProjectDa
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
       <PageHero className="pb-12 pt-24">
           <div className="max-w-4xl">
-            <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+            <p className="mb-4 inline-flex max-w-full flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-accent sm:tracking-[0.22em]">
               <span className="h-px w-6 bg-accent/70" aria-hidden />
               Engineering Portfolio
             </p>
@@ -173,7 +173,7 @@ export function ProjectsClient({ initialProjects }: { initialProjects: ProjectDa
                         <button
                           key={filter}
                           onClick={() => toggleFilter(filter)}
-                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base ${
+                          className={`capsule max-w-full cursor-pointer px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base ${
                             isActive 
                               ? 'bg-accent border-transparent text-[color:var(--color-bg-base)] shadow-sm' 
                               : 'bg-elevated border-border-default text-secondary hover:border-accent hover:text-accent hover:bg-accent/5'

@@ -79,12 +79,12 @@ export function AboutHero() {
       <Container className="relative z-10">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <Reveal className="flex flex-col gap-6">
-            <div className="inline-flex w-max items-center gap-2 rounded-full border border-accent/30 bg-elevated px-3 py-1.5 text-sm shadow-sm">
-              <span className="relative flex h-2 w-2">
+            <div className="capsule inline-flex max-w-full items-center gap-2 rounded-full border border-accent/30 bg-elevated px-3 py-1.5 text-sm shadow-sm">
+              <span className="relative flex h-2 w-2 shrink-0">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
               </span>
-              <span className="font-mono text-xs font-medium uppercase tracking-[0.14em] text-primary">
+              <span className="font-mono text-[11px] font-medium uppercase leading-snug tracking-[0.08em] text-primary sm:tracking-[0.14em]">
                 Available — freelance and full-time
               </span>
             </div>
@@ -144,13 +144,13 @@ export function AboutHero() {
                 />
               </PortraitFrame>
 
-              <div className="flex flex-wrap justify-center gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full border border-border-default bg-base/90 px-4 py-2 text-xs font-semibold text-primary shadow-lg backdrop-blur-md">
-                  <Bot className="h-4 w-4 text-accent" />
+              <div className="flex max-w-full flex-wrap justify-center gap-2">
+                <span className="capsule inline-flex items-center gap-2 rounded-full border border-border-default bg-base/90 px-4 py-2 text-xs font-semibold text-primary shadow-lg backdrop-blur-md">
+                  <Bot className="h-4 w-4 shrink-0 text-accent" />
                   Deterministic AI
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-border-default bg-base/90 px-4 py-2 text-xs font-semibold text-primary shadow-lg backdrop-blur-md">
-                  <Database className="h-4 w-4 text-accent" />
+                <span className="capsule inline-flex items-center gap-2 rounded-full border border-border-default bg-base/90 px-4 py-2 text-xs font-semibold text-primary shadow-lg backdrop-blur-md">
+                  <Database className="h-4 w-4 shrink-0 text-accent" />
                   High-Performance APIs
                 </span>
               </div>

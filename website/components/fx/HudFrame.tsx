@@ -22,7 +22,7 @@ export function HudFrame({ children, className, label }: HudFrameProps) {
 
 export function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+    <p className="mb-4 inline-flex max-w-full flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-accent sm:tracking-[0.22em]">
       <span className="h-px w-6 bg-accent/70" aria-hidden />
       {children}
     </p>

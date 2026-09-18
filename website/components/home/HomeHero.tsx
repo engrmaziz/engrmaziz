@@ -29,17 +29,17 @@ export function HomeHero() {
     <HeroContainer pattern="dots">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
         <div className="flex flex-col gap-6 lg:col-span-7">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-accent/30 bg-elevated/70 px-3 py-1.5 shadow-sm backdrop-blur-md">
-              <span className="relative flex h-2 w-2">
+          <div className="flex max-w-full flex-wrap items-center gap-3">
+            <div className="capsule inline-flex items-center gap-2 rounded-full border border-accent/30 bg-elevated/70 px-3 py-1.5 shadow-sm backdrop-blur-md">
+              <span className="relative flex h-2 w-2 shrink-0">
                 <span className="absolute inline-flex h-full w-full motion-safe:animate-ping rounded-full bg-accent opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
               </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">
+              <span className="font-mono text-[11px] uppercase leading-snug tracking-[0.08em] text-primary sm:tracking-[0.14em]">
                 Open to freelance & full-time
               </span>
             </div>
-            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">Senior AI Engineer</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-accent sm:tracking-[0.2em]">Senior AI Engineer</span>
           </div>
 
           <h1 className="font-display text-4xl font-bold leading-[1.08] tracking-tight text-primary lg:text-6xl">

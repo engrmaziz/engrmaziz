@@ -79,7 +79,7 @@ export function Footer() {
             <p className="max-w-sm leading-relaxed text-secondary">
               Custom AI call agents, chatbots, RAG agents, and workflow automation for California and Florida teams. Remote freelance builds and full-time hiring.
             </p>
-            <div className="mt-2 flex w-fit items-center gap-3 rounded-full border border-border-default bg-elevated px-4 py-2">
+            <div className="capsule mt-2 flex items-center gap-3 rounded-full border border-border-default bg-elevated px-4 py-2">
               <span className="relative flex h-3 w-3">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
                 <span className="relative inline-flex h-3 w-3 rounded-full bg-accent" />

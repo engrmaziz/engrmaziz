@@ -45,8 +45,8 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
     <>
       <PageHero className="pb-12 pt-24">
           <div className="max-w-4xl">
-            <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
-              <span className="h-px w-6 bg-accent/70" aria-hidden />
+            <p className="mb-4 inline-flex max-w-full flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-accent sm:tracking-[0.22em]">
+              <span className="h-px w-6 shrink-0 bg-accent/70" aria-hidden />
               Services & Capabilities
             </p>
             <h1 className="mb-6 font-display text-4xl font-bold leading-tight text-primary md:text-6xl">
@@ -55,23 +55,23 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
             <p className="text-xl text-secondary leading-relaxed max-w-3xl">
               Production systems for California and Florida operators: inbound/outbound AI call agents, custom AI chatbots, RAG agents, voice and WhatsApp agents, LLM orchestration, and the backends those agents run on. Remote delivery. No fake US storefront.
             </p>
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Link href="/services/california" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-bold text-primary hover:border-accent/50">
+            <div className="mt-8 flex max-w-full flex-wrap gap-3">
+              <Link href="/services/california" className="capsule cursor-pointer px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-bold text-primary hover:border-accent/50">
                 California
               </Link>
-              <Link href="/services/florida" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-bold text-primary hover:border-accent/50">
+              <Link href="/services/florida" className="capsule cursor-pointer px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-bold text-primary hover:border-accent/50">
                 Florida
               </Link>
-              <Link href="/services/ai-agents/ai-call-agents" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
+              <Link href="/services/ai-agents/ai-call-agents" className="capsule cursor-pointer px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
                 Call agents
               </Link>
-              <Link href="/services/ai-agents/chatbots" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
+              <Link href="/services/ai-agents/chatbots" className="capsule cursor-pointer px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
                 Chatbots
               </Link>
-              <Link href="/services/ai-engineering/rag-development" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
+              <Link href="/services/ai-engineering/rag-development" className="capsule cursor-pointer px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
                 RAG agents
               </Link>
-              <Link href="/services/technical-consulting/workflow-automation" className="px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
+              <Link href="/services/technical-consulting/workflow-automation" className="capsule cursor-pointer px-4 py-2 rounded-full border border-border-default bg-elevated text-sm font-medium text-secondary hover:text-primary hover:border-accent/50">
                 Workflow automation
               </Link>
             </div>
@@ -130,7 +130,7 @@ export function ServicesClient({ initialServices }: { initialServices: Pillar[] 
                         <button
                           key={cat}
                           onClick={() => setActiveCategory(isActive ? null : cat)}
-                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+                          className={`capsule max-w-full cursor-pointer px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
                             isActive 
                               ? 'bg-accent/10 border-accent text-accent' 
                               : 'bg-elevated border-border-default text-secondary hover:border-accent/40 hover:text-primary'

@@ -93,7 +93,7 @@ export default function HirePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <PageHero className="border-b border-border-default pb-12 pt-32">
-          <p className="mb-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent">
+          <p className="mb-4 inline-flex max-w-full flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-accent sm:tracking-[0.22em]">
             <span className="h-px w-6 bg-accent/70" aria-hidden />
             Freelance · Contract · Full-time
           </p>
@@ -202,14 +202,14 @@ export default function HirePage() {
             <li>3. Link the service page that matches: call agents, chatbots, RAG, or workflow automation.</li>
             <li>4. If full-time: include remote policy and whether you sponsor or already expect Pakistan-based remote.</li>
           </ul>
-          <div className="flex flex-wrap gap-3 mt-8">
-            <Link href="/services/california" className="px-4 py-2 rounded-full border border-accent/50 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
+          <div className="mt-8 flex max-w-full flex-wrap gap-3">
+            <Link href="/services/california" className="capsule cursor-pointer rounded-full border border-accent/50 px-4 py-2 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
               California services
             </Link>
-            <Link href="/services/florida" className="px-4 py-2 rounded-full border border-accent/50 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
+            <Link href="/services/florida" className="capsule cursor-pointer rounded-full border border-accent/50 px-4 py-2 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
               Florida services
             </Link>
-            <Link href="/about" className="px-4 py-2 rounded-full border border-accent/50 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
+            <Link href="/about" className="capsule cursor-pointer rounded-full border border-accent/50 px-4 py-2 text-sm font-medium text-[color:var(--color-accent)] hover:border-accent hover:bg-accent/10">
               Experience
             </Link>
           </div>

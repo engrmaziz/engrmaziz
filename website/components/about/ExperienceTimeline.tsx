@@ -172,37 +172,37 @@ export function ExperienceTimeline() {
               viewport={{ once: true }}
               variants={fadeUp}
             >
-              <Card className="bg-base border-border-default overflow-hidden">
+              <Card className="overflow-hidden border-border-default bg-base">
                 <CardContent className="p-0">
                   {/* Header */}
-                  <div className="p-8 border-b border-border-default">
-                    <div className="flex flex-wrap items-start justify-between gap-4">
-                      <div>
+                  <div className="border-b border-border-default p-5 sm:p-8">
+                    <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+                      <div className="min-w-0 max-w-full">
                         <h3 className="text-2xl font-bold text-primary">{exp.role}</h3>
-                        <div className="flex flex-wrap items-center gap-3 mt-2">
-                          <span className="text-accent font-semibold flex items-center gap-1 text-sm">
-                            <Building2 className="w-4 h-4" />
-                            {exp.company}
+                        <div className="mt-2 flex min-w-0 flex-wrap items-center gap-3">
+                          <span className="flex min-w-0 items-center gap-1 text-sm font-semibold text-accent">
+                            <Building2 className="h-4 w-4 shrink-0" />
+                            <span className="min-w-0 break-words">{exp.company}</span>
                           </span>
-                          <span className="text-secondary text-sm flex items-center gap-1">
-                            <MapPin className="w-3.5 h-3.5" />
-                            {exp.location}
+                          <span className="flex min-w-0 items-center gap-1 text-sm text-secondary">
+                            <MapPin className="h-3.5 w-3.5 shrink-0" />
+                            <span className="min-w-0 break-words">{exp.location}</span>
                           </span>
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
+                      <div className="min-w-0 max-w-full sm:max-w-xs sm:text-right">
                         <Badge variant="outline" className="mb-1">{exp.industry}</Badge>
-                        <p className="text-sm font-mono text-secondary">{exp.period}</p>
+                        <p className="font-mono text-sm text-secondary">{exp.period}</p>
                       </div>
                     </div>
-                    <p className="text-secondary leading-relaxed mt-4 text-sm">{exp.summary}</p>
+                    <p className="mt-4 text-sm leading-relaxed text-secondary">{exp.summary}</p>
                   </div>
 
                   {/* Body */}
-                  <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border-default">
-                    <div className="p-8">
-                      <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <Briefcase className="w-4 h-4 text-accent" /> Responsibilities
+                  <div className="grid divide-y divide-border-default md:grid-cols-2 md:divide-x md:divide-y-0">
+                    <div className="p-5 sm:p-8">
+                      <h4 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+                        <Briefcase className="h-4 w-4 text-accent" /> Responsibilities
                       </h4>
                       <ul className="space-y-2">
                         {exp.responsibilities.map((r, j) => (
@@ -214,9 +214,9 @@ export function ExperienceTimeline() {
                       </ul>
                     </div>
 
-                    <div className="p-8">
-                      <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <Star className="w-4 h-4 text-accent" /> Achievements & KPIs
+                    <div className="p-5 sm:p-8">
+                      <h4 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+                        <Star className="h-4 w-4 text-accent" /> Achievements & KPIs
                       </h4>
                       <ul className="space-y-2">
                         {exp.achievements.map((a, j) => (
@@ -230,7 +230,7 @@ export function ExperienceTimeline() {
                   </div>
 
                   {/* Footer */}
-                  <div className="px-8 py-5 bg-base/50 border-t border-border-default">
+                  <div className="border-t border-border-default bg-base/50 px-5 py-5 sm:px-8">
                     <div className="flex flex-wrap gap-2 mb-3">
                       {exp.stack.map((s) => (
                         <Badge key={s} variant="default" className="text-xs">{s}</Badge>
