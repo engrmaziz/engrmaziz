@@ -7,6 +7,7 @@ import { getAllProjects } from "@/lib/projects";
 import { getAllPosts } from "@/lib/blog";
 import { CITIES, GEO_SERVICES, MARKETS } from "@/lib/geo";
 import { siteMetadata } from "@/lib/seo";
+import { XclerCredit, XclerLink } from "@/components/common/XclerLink";
 
 export const metadata: Metadata = {
   title: "HTML Sitemap",
@@ -136,9 +137,13 @@ export default function HtmlSitemapPage() {
           </>
         )}
 
-        <p className="text-sm text-secondary mt-16">
+        <p className="text-sm text-secondary mt-16 mb-6">
           Canonical host: {siteMetadata.siteUrl}
         </p>
+        <XclerCredit>
+          This HTML sitemap is part of a site developed by{" "}
+          <XclerLink>Xcler</XclerLink>.
+        </XclerCredit>
       </Container>
     </Section>
   );

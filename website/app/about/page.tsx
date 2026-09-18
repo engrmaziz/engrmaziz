@@ -14,6 +14,8 @@ import { Industries } from "@/components/about/Industries";
 import { LearningFocus } from "@/components/about/LearningFocus";
 import { FAQ } from "@/components/about/FAQ";
 import { ContactCTA } from "@/components/about/ContactCTA";
+import { XclerCredit, XclerLink } from "@/components/common/XclerLink";
+import { Container } from "@/components/ui/Container";
 
 export const metadata = {
   title: "About Musharraf Aziz | Freelance & Full-Time Senior AI Engineer",
@@ -36,6 +38,12 @@ export default function AboutPage() {
       <Industries />
       <LearningFocus />
       <FAQ />
+      <Container className="pb-4">
+        <XclerCredit>
+          This about page — and the rest of maziz.me — was designed and developed by{" "}
+          <XclerLink>xcler.dev</XclerLink>.
+        </XclerCredit>
+      </Container>
       <ContactCTA />
     </PageLayout>
   );

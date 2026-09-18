@@ -4,6 +4,8 @@ import { ProjectsClient } from "@/components/project/ProjectsClient";
 import { getAllProjects } from "@/lib/projects";
 import { siteMetadata } from "@/lib/seo";
 import { Metadata } from "next";
+import { Container } from "@/components/ui/Container";
+import { XclerCredit, XclerLink } from "@/components/common/XclerLink";
 
 export const metadata: Metadata = {
   title: "Engineering Projects | Musharraf Aziz",
@@ -43,6 +45,12 @@ export default function ProjectsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ProjectsClient initialProjects={projects} />
+      <Container className="pb-20">
+        <XclerCredit>
+          Case studies on this page are Musharraf Aziz’s engineering work. The portfolio surface was produced with{" "}
+          <XclerLink>Xcler</XclerLink>.
+        </XclerCredit>
+      </Container>
     </PageLayout>
   );
 }

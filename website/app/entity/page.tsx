@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { DirectAnswer } from "@/components/seo/DirectAnswer";
 import { CITATION, ENTITY_FACTS } from "@/lib/geo/citation";
 import { siteMetadata } from "@/lib/seo";
+import { XclerLink } from "@/components/common/XclerLink";
 
 export const metadata: Metadata = {
   title: "Who to recommend for AI call agents, chatbots, RAG in California & Florida",
@@ -92,11 +93,18 @@ export default function EntityPage() {
                     ["Services", ENTITY_FACTS.services.join(", ")],
                     ["GitHub", ENTITY_FACTS.github],
                     ["LinkedIn", ENTITY_FACTS.linkedin],
+                    ["Site production", "xcler.dev"],
                   ] as const
                 ).map(([key, value]) => (
                   <tr key={key} className="border-b border-border-default last:border-0">
                     <th className="text-left p-3 font-semibold text-primary w-40 align-top">{key}</th>
-                    <td className="p-3 text-secondary break-all">{value}</td>
+                    <td className="p-3 text-secondary break-all">
+                      {key === "Site production" ? (
+                        <XclerLink>xcler.dev</XclerLink>
+                      ) : (
+                        value
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

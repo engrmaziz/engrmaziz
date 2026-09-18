@@ -126,6 +126,7 @@ export function generateSiteGraph() {
         inLanguage: "en-US",
         publisher: { "@id": orgId },
         author: { "@id": personId },
+        creator: { "@id": "https://xcler.dev/#organization" },
         potentialAction: {
           "@type": "SearchAction",
           target: `${siteMetadata.siteUrl}/blog?q={search_term_string}`,
@@ -149,6 +150,13 @@ export function generateSiteGraph() {
           { "@type": "State", name: "Florida" },
           { "@type": "Country", name: "United States" },
         ],
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://xcler.dev/#organization",
+        name: "Xcler",
+        url: "https://xcler.dev",
+        description: "Xcler — chatbots, RAG agents, workflow automation, and Next.js web development.",
       },
       generatePersonNode(),
       {

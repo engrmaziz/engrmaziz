@@ -9,6 +9,7 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { SplitLayout } from "@/components/layout/SplitLayout";
 import { PageHero } from "@/components/layout/PageHero";
 import { downloadResume } from "@/lib/download-resume";
+import { XclerCredit, XclerLink } from "@/components/common/XclerLink";
 
 export function ContactClient() {
   return (
@@ -147,6 +148,15 @@ export function ContactClient() {
               Request Calendar Invite
             </a>
           </div>
+        </Container>
+      </Section>
+
+      <Section className="bg-base pb-16">
+        <Container>
+          <XclerCredit>
+            This contact page is part of maziz.me. Production design and engineering credits go to{" "}
+            <XclerLink>Xcler</XclerLink>.
+          </XclerCredit>
         </Container>
       </Section>
 

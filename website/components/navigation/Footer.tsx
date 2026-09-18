@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { BackToTop } from "@/components/navigation/BackToTop";
 import { BrandLogo } from "@/components/common/BrandLogo";
 import { Marquee } from "@/components/ui/Marquee";
+import { XclerLink } from "@/components/common/XclerLink";
 
 const FOOTER_LINKS = {
   Navigation: [
@@ -110,6 +111,9 @@ export function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-4 border-t border-border-default py-8 md:flex-row">
           <p className="text-sm text-secondary">© {currentYear} Musharraf Aziz. All rights reserved.</p>
+          <p className="text-sm text-secondary">
+            Developed by <XclerLink>Xcler</XclerLink>
+          </p>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="text-sm text-secondary transition-colors hover:text-primary">
               Privacy Policy
