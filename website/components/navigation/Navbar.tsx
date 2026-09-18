@@ -3,6 +3,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,6 +31,7 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
   const pathname = usePathname();
   const { isScrolled } = useScroll();
 
@@ -40,8 +42,21 @@ export function Navbar() {
   };
 
   React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  React.useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen]);
 
   React.useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -50,10 +65,65 @@ export function Navbar() {
     };
   }, [isOpen]);
 
+  const mobileMenu =
+    mounted &&
+    createPortal(
+      <AnimatePresence>
+        {isOpen ? (
+          <motion.div
+            key="mobile-nav"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="fixed inset-x-3 bottom-4 top-[4.75rem] z-[120] flex flex-col overflow-hidden rounded-3xl border border-accent/25 bg-base/90 shadow-2xl backdrop-blur-2xl lg:hidden"
+          >
+            <div className="flex h-full flex-col gap-6 overflow-y-auto px-6 py-8">
+              <nav id="mobile-nav" className="flex flex-col gap-2">
+                {NAV_LINKS.map((link) => {
+                  const isActive = isLinkActive(link.href);
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                        "border-b border-border-default/50 py-3 font-display text-3xl font-bold transition-colors",
+                        isActive ? "text-accent" : "text-primary hover:text-accent"
+                      )}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+              <div className="mt-4 flex flex-col gap-4">
+                <Button variant="outline" className="w-full justify-between font-mono text-sm" leftIcon={<FileText className="h-4 w-4" />} onClick={openResume} aria-label="Download Resume">
+                  Download resume
+                </Button>
+                <Link
+                  href="/hire"
+                  className="inline-flex min-h-11 w-full cursor-pointer items-center justify-between rounded-full bg-gold px-5 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] hover:bg-gold-hover"
+                >
+                  Hire me
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>,
+      document.body
+    );
+
   return (
+    <>
     <header
       className={cn(
-        "pointer-events-auto fixed inset-x-3 top-3 z-[110] mx-auto max-w-6xl overflow-visible rounded-full transition-all duration-500 md:inset-x-6",
+        "pointer-events-auto fixed inset-x-3 top-3 z-[130] mx-auto max-w-6xl overflow-visible rounded-full transition-[padding,background-color,border-color,box-shadow] duration-500 md:inset-x-6",
         isScrolled
           ? "border border-accent/25 bg-base/70 px-4 py-2 shadow-[0_0_40px_color-mix(in_srgb,var(--color-accent)_12%,transparent)] backdrop-blur-2xl md:px-6"
           : "border border-transparent bg-transparent px-4 py-3 md:px-6"
@@ -132,60 +202,18 @@ export function Navbar() {
           <ThemeToggle />
           <button
             type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            className="min-h-11 min-w-11 rounded-md p-2 text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            onClick={() => setIsOpen((open) => !open)}
+            className="min-h-11 min-w-11 cursor-pointer rounded-md p-2 text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-expanded={isOpen}
-            aria-label="Toggle navigation menu"
+            aria-controls="mobile-nav"
+            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-x-3 bottom-4 top-[4.75rem] z-[90] flex flex-col overflow-hidden rounded-3xl border border-accent/25 bg-base/90 shadow-2xl backdrop-blur-2xl lg:hidden"
-          >
-            <div className="flex h-full flex-col gap-6 overflow-y-auto px-6 py-8">
-              <nav className="flex flex-col gap-2">
-                {NAV_LINKS.map((link) => {
-                  const isActive = isLinkActive(link.href);
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className={cn(
-                        "border-b border-border-default/50 py-3 font-display text-3xl font-bold transition-colors",
-                        isActive ? "text-accent" : "text-primary hover:text-accent"
-                      )}
-                    >
-                      {link.name}
-                    </Link>
-                  );
-                })}
-              </nav>
-              <div className="mt-4 flex flex-col gap-4">
-                <Button variant="outline" className="w-full justify-between font-mono text-sm" leftIcon={<FileText className="h-4 w-4" />} onClick={openResume} aria-label="Download Resume">
-                  Download resume
-                </Button>
-                <Link
-                  href="/hire"
-                  className="inline-flex min-h-11 w-full cursor-pointer items-center justify-between rounded-full bg-gold px-5 py-3 text-sm font-semibold text-[color:var(--color-bg-base)] hover:bg-gold-hover"
-                >
-                  Hire me
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
+    {mobileMenu}
+    </>
   );
 }
