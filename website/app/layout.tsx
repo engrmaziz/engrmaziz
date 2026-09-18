@@ -38,7 +38,6 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: light)", color: "#F3F6FB" },
     { media: "(prefers-color-scheme: dark)", color: "#06090F" },
   ],
-  colorScheme: "light dark",
 };
 
 export const metadata: Metadata = {
@@ -130,14 +129,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${syne.variable} ${jetbrainsMono.variable} dark`}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(generateSiteGraph()) }}
         />
       </head>
-      <body className="font-sans min-h-screen">
+      <body className={`${inter.variable} ${syne.variable} ${jetbrainsMono.variable} font-sans min-h-screen`}>
         <ThemeProvider>
           <SiteAtmosphere />
           <ScrollProgress />

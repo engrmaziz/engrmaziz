@@ -53,7 +53,7 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "pointer-events-auto fixed inset-x-3 top-3 z-40 mx-auto max-w-6xl rounded-full transition-all duration-500 md:inset-x-6",
+        "pointer-events-auto fixed inset-x-3 top-3 z-[110] mx-auto max-w-6xl overflow-visible rounded-full transition-all duration-500 md:inset-x-6",
         isScrolled
           ? "border border-accent/25 bg-base/70 px-4 py-2 shadow-[0_0_40px_color-mix(in_srgb,var(--color-accent)_12%,transparent)] backdrop-blur-2xl md:px-6"
           : "border border-transparent bg-transparent px-4 py-3 md:px-6"
@@ -62,9 +62,9 @@ export function Navbar() {
       <div className="flex w-full items-center justify-between">
         <Link
           href="/"
-          className="group flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="group flex min-w-0 items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
-          <BrandLogo priority size="md" className="transition-transform duration-300 group-hover:scale-[1.02]" />
+          <BrandLogo priority size="md" className="max-w-[min(208px,46vw)] transition-transform duration-300 group-hover:scale-[1.02]" />
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">
@@ -128,7 +128,7 @@ export function Navbar() {
           </div>
         </nav>
 
-        <div className="flex items-center gap-3 lg:hidden">
+        <div className="relative z-10 flex shrink-0 items-center gap-1 sm:gap-3 lg:hidden">
           <ThemeToggle />
           <button
             type="button"

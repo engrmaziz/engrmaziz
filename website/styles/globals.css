@@ -80,10 +80,17 @@
 
   html {
     scroll-behavior: smooth;
+    color-scheme: light;
+    background-color: var(--color-bg-base);
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
     @apply bg-base text-primary antialiased overflow-x-hidden;
+    color-scheme: inherit;
     font-feature-settings: "rlig" 1, "calt" 1;
     background-image:
       radial-gradient(1200px 500px at 12% -10%, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 55%),
