@@ -41,7 +41,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "ImagesiftBot", disallow: "/" },
       { userAgent: "Diffbot", disallow: "/" },
     ],
-    sitemap: [`${baseUrl}/sitemap.xml`, `${baseUrl}/sitemap-index.xml`],
+    sitemap: [`${baseUrl}/sitemap.xml`, `${baseUrl}/sitemap-blog.xml`, `${baseUrl}/sitemap-index.xml`],
     host: baseUrl,
   };
 }

@@ -55,11 +55,20 @@ export const MarkdownComponents = {
   // Clean, linkable headers
   h2({ children, ...props }: any) {
     const id = String(children).toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    return <h2 id={id} className="scroll-mt-32 group relative" {...props}>{children}</h2>;
+    return <h2 id={id} className="scroll-mt-32 mb-4 mt-14 text-left font-display text-3xl font-bold tracking-tight text-primary" {...props}>{children}</h2>;
   },
   h3({ children, ...props }: any) {
     const id = String(children).toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    return <h3 id={id} className="scroll-mt-32 group relative" {...props}>{children}</h3>;
+    return <h3 id={id} className="scroll-mt-32 mb-3 mt-8 text-left font-display text-xl font-bold tracking-tight text-primary" {...props}>{children}</h3>;
+  },
+  li({ children, ...props }: any) {
+    return <li className="my-1.5 text-justify leading-[1.75] text-secondary [hyphens:auto]" {...props}>{children}</li>;
+  },
+  ol({ children, ...props }: any) {
+    return <ol className="my-6 list-decimal space-y-2 pl-6 text-secondary" {...props}>{children}</ol>;
+  },
+  ul({ children, ...props }: any) {
+    return <ul className="my-6 list-disc space-y-2 pl-6 text-secondary" {...props}>{children}</ul>;
   },
   table({ children, ...props }: any) {
     return (
@@ -94,12 +103,27 @@ export const MarkdownComponents = {
       </a>
     );
   },
+  p({ children, node, ...props }: any) {
+    const hasMedia = node?.children?.some(
+      (child: { type?: string; tagName?: string }) => child.type === "element" && child.tagName === "img"
+    );
+    if (hasMedia) return <div className="my-8" {...props}>{children}</div>;
+    return <p className="mb-6 text-justify text-[1.0625rem] font-normal leading-[1.85] text-secondary [hyphens:auto]" {...props}>{children}</p>;
+  },
   img({ src, alt }: any) {
     const safe = sanitizeHref(src);
     if (!safe || safe.startsWith("mailto:")) return null;
     return (
       <div className="rounded-xl overflow-hidden border border-border-default my-4 bg-base">
-        <img src={safe} alt={alt || ""} className="max-w-full h-auto object-contain" loading="lazy" />
+        <img
+          src={safe}
+          alt={alt || ""}
+          width={safe.includes("/images/blog/") ? 1200 : undefined}
+          height={safe.includes("/images/blog/") ? 675 : undefined}
+          className={safe.includes("/images/blog/") ? "aspect-video w-full max-w-full object-contain" : "max-w-full h-auto object-contain"}
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     );
   }

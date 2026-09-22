@@ -6,6 +6,10 @@ export function GET() {
     <loc>https://maziz.me/sitemap.xml</loc>
     <lastmod>${lastmod}</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://maziz.me/sitemap-blog.xml</loc>
+    <lastmod>${lastmod}</lastmod>
+  </sitemap>
 </sitemapindex>
 `;
 

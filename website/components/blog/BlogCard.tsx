@@ -16,10 +16,13 @@ export interface BlogCardProps extends React.HTMLAttributes<HTMLDivElement> {
   difficulty?: string;
   href: string;
   tags?: string[];
+  coverImage?: string;
+  coverAlt?: string;
+  featured?: boolean;
 }
 
 export const BlogCard = React.forwardRef<HTMLDivElement, BlogCardProps>(
-  ({ className, title, description, category, date, readingTime, difficulty, href, tags = [], ...props }, ref) => {
+  ({ className, title, description, category, date, readingTime, difficulty, href, tags = [], coverImage, coverAlt, featured = false, ...props }, ref) => {
     
     // Format date beautifully
     const formattedDate = new Date(date).toLocaleDateString('en-US', {
@@ -30,9 +33,23 @@ export const BlogCard = React.forwardRef<HTMLDivElement, BlogCardProps>(
     });
 
     return (
-      <Card ref={ref} className={cn("flex flex-col h-full border-border-default hover:border-accent/30 transition-all duration-300 group overflow-hidden bg-elevated", className)} {...props}>
-        <div className="p-8 pb-6 border-b border-border-default/50 flex-grow">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <Card ref={ref} className={cn("flex flex-col h-full border-border-default hover:border-accent/40 transition-all duration-300 group overflow-hidden bg-elevated hud-corners", featured && "border-gold/40", className)} {...props}>
+        <div className="relative aspect-video w-full overflow-hidden border-b border-border-default bg-base">
+          {coverImage ? (
+            <img
+              src={coverImage}
+              alt={coverAlt || title}
+              width={1200}
+              height={675}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+          ) : (
+            <div className="h-full w-full bg-[radial-gradient(circle_at_20%_20%,color-mix(in_srgb,var(--color-accent)_28%,transparent),transparent_55%)]" />
+          )}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base/80 via-transparent to-transparent" />
+        </div>
+        <div className="p-6 pb-5 border-b border-border-default/50 flex-grow">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <Badge variant="outline" className="text-xs uppercase tracking-wider font-mono border-accent/20 text-accent bg-accent/5">
               {category}
             </Badge>

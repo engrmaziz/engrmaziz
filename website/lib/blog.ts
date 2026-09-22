@@ -19,6 +19,9 @@ export interface BlogData {
   // SEO & Meta
   featured?: boolean;
   coverImage?: string;
+  coverAlt?: string;
+  directAnswer?: string;
+  faqs?: { q: string; a: string }[];
   
   // Relations
   related_projects?: string[];
@@ -82,12 +85,15 @@ export function getAllPosts(): BlogData[] {
       description: data.description || '',
       category: data.category || 'Engineering',
       date: data.date || new Date().toISOString().split('T')[0],
-      author: data.author || 'Senior AI Engineer',
-      readingTime: data.readingTime || '5 min read',
+      author: data.author || "Engr. Musharraf Aziz",
+      readingTime: `${Math.max(8, Math.round(content.trim().split(/\s+/).length / 200))} min read`,
       difficulty: data.difficulty || undefined,
       tags: data.tags || [],
       featured: data.featured || false,
       coverImage: data.coverImage || undefined,
+      coverAlt: data.coverAlt || data.title,
+      directAnswer: data.directAnswer || data.description || "",
+      faqs: Array.isArray(data.faqs) ? data.faqs : [],
       related_projects: data.related_projects || [],
       related_services: data.related_services || [],
       content,

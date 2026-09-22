@@ -146,6 +146,9 @@ export function BlogClient({ initialPosts }: { initialPosts: BlogData[] }) {
                             readingTime={post.readingTime}
                             difficulty={post.difficulty}
                             tags={post.tags}
+                            coverImage={post.coverImage}
+                            coverAlt={post.coverAlt}
+                            featured={post.featured}
                           />
                         </motion.div>
                       ))}
