@@ -23,7 +23,10 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 
   const cleanDescription = post.description || `Technical article: ${post.title}`;
   const image = post.coverImage ? `${siteMetadata.siteUrl}${post.coverImage}` : undefined;
-  
+  const images = image
+    ? [{ url: image, width: 1200, height: 675, alt: post.coverAlt || post.title }]
+    : undefined;
+
   return {
     title: `${post.title} | Knowledge Center`,
     description: cleanDescription,
@@ -36,13 +39,13 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       authors: [post.author],
       tags: post.tags || [],
       url: `${siteMetadata.siteUrl}/blog/${post.slug}`,
-      images: image ? [{ url: image, width: 1200, height: 675, alt: post.coverAlt || post.title }] : undefined,
+      ...(images ? { images } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: cleanDescription,
-      images: image ? [image] : undefined,
+      ...(image ? { images: [image] } : {}),
     }
   };
 }
