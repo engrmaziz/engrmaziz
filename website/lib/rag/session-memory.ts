@@ -70,7 +70,8 @@ function isOrderedSubsequence(needle: ChatTurn[], haystack: ChatTurn[]): boolean
   if (!needle.length) return true;
   let index = 0;
   for (const turn of haystack) {
-    if (sameTurn(turn, needle[index])) {
+    const expected = needle[index];
+    if (expected && sameTurn(turn, expected)) {
       index += 1;
       if (index === needle.length) return true;
     }
@@ -83,7 +84,9 @@ function suffixPrefixOverlap(base: ChatTurn[], extra: ChatTurn[]): number {
   for (let size = max; size > 0; size -= 1) {
     let match = true;
     for (let i = 0; i < size; i += 1) {
-      if (!sameTurn(base[base.length - size + i], extra[i])) {
+      const left = base[base.length - size + i];
+      const right = extra[i];
+      if (!left || !right || !sameTurn(left, right)) {
         match = false;
         break;
       }
@@ -97,7 +100,10 @@ function suffixPrefixOverlap(base: ChatTurn[], extra: ChatTurn[]): number {
 function collapseMirrored(turns: ChatTurn[]): ChatTurn[] {
   if (turns.length < 2 || turns.length % 2 !== 0) return turns;
   const half = turns.length / 2;
-  const mirrored = turns.slice(0, half).every((turn, i) => sameTurn(turn, turns[half + i]));
+  const mirrored = turns.slice(0, half).every((turn, i) => {
+    const other = turns[half + i];
+    return Boolean(other && sameTurn(turn, other));
+  });
   return mirrored ? turns.slice(0, half) : turns;
 }
 
