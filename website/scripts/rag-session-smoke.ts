@@ -2,6 +2,7 @@ import {
   alreadySentMeeting,
   bookingComplete,
   MEETING_SENT,
+  mergeHistories,
   resolveBookingReply,
   slotsFromSession,
   type ChatTurn,
@@ -43,5 +44,20 @@ const repeat = resolveBookingReply({
   channel: 'text',
 });
 assert(Boolean(repeat && /already/i.test(repeat)), `no re-ask after send, got ${repeat}`);
+
+const bookAsk = resolveBookingReply({
+  slots: slotsFromSession([], 'book an appointment with musharraf', visitor),
+  query: 'book an appointment with musharraf',
+  history: [],
+  channel: 'text',
+});
+assert(Boolean(bookAsk && /date and time/i.test(bookAsk) && !/error/i.test(bookAsk)), `asks for date and time, got ${bookAsk}`);
+
+const doubled = mergeHistories(history, history);
+assert(doubled.length === history.length, `stored+client transcript stays ${history.length}, got ${doubled.length}`);
+
+const withGreeting: ChatTurn[] = [{ role: 'assistant', content: 'Hello maziz. I am RAGX.' }, ...history.slice(1)];
+const prefixed = mergeHistories(history.slice(1), withGreeting);
+assert(prefixed.length === withGreeting.length, `greeting prefix is not duplicated, got ${prefixed.length}`);
 
 console.log('session memory smoke passed');

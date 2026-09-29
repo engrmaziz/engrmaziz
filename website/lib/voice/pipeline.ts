@@ -10,7 +10,7 @@ import { lockVisitorAddress, pullCompleteSentences, spokenIntentReply, toSpokenT
 import { recordVoiceTelemetry } from './metrics';
 import {
   alreadySentMeeting,
-  formatBookingEmail,
+  bookingRequestMessage,
   formatSessionState,
   isBookingQuery,
   mergeHistories,
@@ -261,8 +261,8 @@ export async function runVoiceTurn(opts: {
           projectType: 'Booking Request',
           channel: 'RAGX voice',
           source: 'RAGX booking',
-          message: formatBookingEmail(slots, history, transcript),
-          conversation: history.concat([{ role: 'user', content: transcript }]),
+          message: bookingRequestMessage(slots),
+          conversation: mergeHistories(history, [{ role: 'user', content: transcript }]),
         }).catch(() => undefined);
       }).catch(() => undefined);
     }

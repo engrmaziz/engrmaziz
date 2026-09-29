@@ -194,16 +194,24 @@ export class RAGOrchestrator {
     });
 
     trace.startStage('PromptAssembly');
-    ctx.prompt.messages = promptBuilder.buildPrompt(
-      ctx.memory.summary || null,
-      ctx.memory.history,
-      ctx.retrieval.retrievedContext || '',
-      queryText,
-      ctx.response.toolOutputs,
-      ctx.request.visitorInfo,
-      { channel: isVoice ? 'voice' : 'text', sessionState }
-    );
-    trace.endStage('PromptAssembly', true);
+    try {
+      ctx.prompt.messages = bookingReply
+        ? [{ role: 'user', content: queryText }]
+        : promptBuilder.buildPrompt(
+            ctx.memory.summary || null,
+            ctx.memory.history,
+            ctx.retrieval.retrievedContext || '',
+            queryText,
+            ctx.response.toolOutputs,
+            ctx.request.visitorInfo,
+            { channel: isVoice ? 'voice' : 'text', sessionState }
+          );
+      trace.endStage('PromptAssembly', true);
+    } catch (promptErr: any) {
+      trace.endStage('PromptAssembly', false, promptErr?.message);
+      ctx.executionContext.errors.push(`Prompt Error: ${promptErr?.message || 'prompt assembly failed'}`);
+      ctx.prompt.messages = [{ role: 'user', content: queryText }];
+    }
 
     if (sessionId) {
       await ragMemory.createConversation(sessionId).catch(() => undefined);

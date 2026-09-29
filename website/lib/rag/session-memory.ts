@@ -53,22 +53,71 @@ export function recallTurns(conversationId: string): ChatTurn[] {
   return [...(sessionTurns.get(conversationId) || [])];
 }
 
-export function mergeHistories(...lists: Array<ChatTurn[] | null | undefined>): ChatTurn[] {
+function cleanTurns(list: ChatTurn[]): ChatTurn[] {
   const out: ChatTurn[] = [];
-  for (const list of lists) {
-    if (!list) continue;
-    for (const raw of list) {
-      if (!raw || (raw.role !== 'user' && raw.role !== 'assistant')) continue;
-      const turn: ChatTurn = { role: raw.role, content: normalize(raw.content) };
-      if (!turn.content) continue;
-      const last = out[out.length - 1];
-      if (last && sameTurn(last, turn)) continue;
-      const dup = out.findIndex((item) => sameTurn(item, turn));
-      if (dup >= 0 && out.length - dup <= 3) continue;
-      out.push(turn);
+  for (const raw of list) {
+    if (!raw || (raw.role !== 'user' && raw.role !== 'assistant')) continue;
+    const turn: ChatTurn = { role: raw.role, content: normalize(raw.content) };
+    if (!turn.content) continue;
+    const last = out[out.length - 1];
+    if (last && sameTurn(last, turn)) continue;
+    out.push(turn);
+  }
+  return out;
+}
+
+function isOrderedSubsequence(needle: ChatTurn[], haystack: ChatTurn[]): boolean {
+  if (!needle.length) return true;
+  let index = 0;
+  for (const turn of haystack) {
+    if (sameTurn(turn, needle[index])) {
+      index += 1;
+      if (index === needle.length) return true;
     }
   }
-  return out.slice(-MAX_TURNS);
+  return false;
+}
+
+function suffixPrefixOverlap(base: ChatTurn[], extra: ChatTurn[]): number {
+  const max = Math.min(base.length, extra.length);
+  for (let size = max; size > 0; size -= 1) {
+    let match = true;
+    for (let i = 0; i < size; i += 1) {
+      if (!sameTurn(base[base.length - size + i], extra[i])) {
+        match = false;
+        break;
+      }
+    }
+    if (match) return size;
+  }
+  return 0;
+}
+
+/** A stored copy and the browser copy of the same chat were being concatenated. */
+function collapseMirrored(turns: ChatTurn[]): ChatTurn[] {
+  if (turns.length < 2 || turns.length % 2 !== 0) return turns;
+  const half = turns.length / 2;
+  const mirrored = turns.slice(0, half).every((turn, i) => sameTurn(turn, turns[half + i]));
+  return mirrored ? turns.slice(0, half) : turns;
+}
+
+function mergeTwo(base: ChatTurn[], extra: ChatTurn[]): ChatTurn[] {
+  if (!extra.length) return base;
+  if (!base.length) return extra;
+  if (isOrderedSubsequence(extra, base)) return base;
+  if (isOrderedSubsequence(base, extra)) return extra;
+  const overlap = suffixPrefixOverlap(base, extra);
+  if (overlap > 0) return [...base, ...extra.slice(overlap)];
+  return [...base, ...extra];
+}
+
+export function mergeHistories(...lists: Array<ChatTurn[] | null | undefined>): ChatTurn[] {
+  let out: ChatTurn[] = [];
+  for (const list of lists) {
+    if (!list?.length) continue;
+    out = mergeTwo(out, cleanTurns(list));
+  }
+  return collapseMirrored(out).slice(-MAX_TURNS);
 }
 
 export function stripCurrentUserTurn(history: ChatTurn[], query: string): ChatTurn[] {
@@ -167,21 +216,30 @@ export function slotsFromSession(
 }
 
 export function bookingComplete(slots: BookingSlots): boolean {
-  return Boolean(slots.name && slots.email && slots.dateText && slots.timeText && slots.timezone && slots.agenda);
+  return Boolean(slots.name && slots.email && slots.dateText && slots.timeText);
 }
 
 export function missingBookingFields(slots: BookingSlots): string[] {
   const missing: string[] = [];
   if (!slots.dateText) missing.push('preferred date');
   if (!slots.timeText) missing.push('preferred time');
-  if (!slots.timezone) missing.push('timezone (US Eastern)');
-  if (!slots.agenda) missing.push('what you want to discuss');
   return missing;
 }
 
-export function formatWhen(slots: BookingSlots): string {
-  const bits = [slots.dateText, slots.timeText ? `at ${slots.timeText}` : '', slots.timezone].filter(Boolean);
+export function formatWhen(slots: BookingSlots, assumeEastern = false): string {
+  const timezone = slots.timezone || (assumeEastern && slots.dateText && slots.timeText ? 'US Eastern' : '');
+  const bits = [slots.dateText, slots.timeText ? `at ${slots.timeText}` : '', timezone].filter(Boolean);
   return bits.join(' ');
+}
+
+export function bookingRequestMessage(slots: BookingSlots): string {
+  return [
+    'Meeting request from RAGX',
+    `Name: ${slots.name || 'Unknown'}`,
+    `Email: ${slots.email || 'Unknown'}`,
+    `When: ${formatWhen(slots, true) || 'Not captured'}`,
+    `Agenda: ${slots.agenda || 'Appointment'}`,
+  ].join('\n');
 }
 
 export function formatSessionState(slots: BookingSlots, historyCount: number): string {
@@ -196,7 +254,7 @@ export function formatSessionState(slots: BookingSlots, historyCount: number): s
   return [
     `Turns already in this session: ${historyCount}. Use them. Do not restart the conversation.`,
     known.length ? `Known booking fields:\n${known.map((line) => `- ${line}`).join('\n')}` : 'Known booking fields: name and email from the visitor block. Date/time/agenda still open.',
-    missing.length ? `Ask ONLY for: ${missing.join(', ')}. Never re-ask a known field.` : 'All booking fields are known. Do not ask for date, time, timezone, or agenda again.',
+    missing.length ? `Ask ONLY for: ${missing.join(' and ')}. Never re-ask a known field.` : 'Date and time are known. Send the meeting request. Do not ask for them again.',
   ].join('\n');
 }
 
@@ -213,40 +271,32 @@ export function resolveBookingReply(opts: {
       : 'That meeting request is already with Musharraf. He will confirm the schedule shortly.';
   }
 
-  const bookingTurn = isBookingQuery(query) || Boolean(slots.dateText || slots.timeText || slots.agenda);
+  const bookingTurn = isBookingQuery(query) || Boolean(slots.dateText || slots.timeText);
   if (!bookingTurn) return null;
 
-  if (bookingComplete(slots) && (looksLikeConfirmation(query) || isBookingQuery(query))) {
-    return channel === 'voice'
-      ? `${MEETING_SENT} I have ${formatWhen(slots)} for ${slots.agenda}.`
-      : MEETING_SENT;
+  if (!slots.dateText && !slots.timeText) {
+    return 'I can book an appointment with Musharraf. What date and time do you prefer?';
   }
 
   if (bookingComplete(slots)) {
+    const when = formatWhen(slots, true);
     return channel === 'voice'
-      ? `I have ${formatWhen(slots)} to discuss ${slots.agenda}. Say yes and I will send the meeting request.`
-      : `I have ${formatWhen(slots)} to discuss ${slots.agenda}. Reply yes and I will send the meeting request.`;
+      ? `${MEETING_SENT} I have ${when}.`
+      : MEETING_SENT;
   }
 
   const missing = missingBookingFields(slots);
   if (!missing.length) return null;
-  if (!slots.dateText && !slots.timeText && !isBookingQuery(query)) return null;
-
   const known = formatWhen(slots);
-  const ask = missing[0];
+  const ask = missing.length > 1 ? 'preferred date and time' : missing[0];
   if (channel === 'voice') {
-    return known
-      ? `I have ${known}. I still need ${ask}.`
-      : `I can book a twenty-minute discovery call. What ${ask} works in US Eastern?`;
+    return known ? `I have ${known}. What ${ask} works for you?` : `What ${ask} works for you?`;
   }
-  return known
-    ? `Noted: ${known}${slots.agenda ? ` — ${slots.agenda}` : ''}. I still need ${ask}.`
-    : `A twenty-minute discovery call is the fastest way to start. What ${ask} works for you?`;
+  return known ? `Noted: ${known}. What ${ask} works for you?` : `What ${ask} works for you?`;
 }
 
 export function formatBookingEmail(slots: BookingSlots, history: ChatTurn[], latest: string): string {
-  const transcript = history
-    .concat(latest ? [{ role: 'user', content: latest }] : [])
+  const transcript = mergeHistories(history, latest ? [{ role: 'user', content: latest }] : [])
     .map((turn) => `${turn.role === 'user' ? 'Visitor' : 'RAGX'}: ${turn.content}`)
     .join('\n\n');
   return [

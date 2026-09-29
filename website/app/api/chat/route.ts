@@ -62,6 +62,51 @@ export async function POST(req: NextRequest) {
     const priorTurns = sanitizeClientMessages(data.messages);
     const hasThread = priorTurns.length > 0;
 
+    const {
+      resolveBookingReply,
+      slotsFromSession,
+      bookingRequestMessage,
+      mergeHistories,
+    } = await import('@/lib/rag/session-memory');
+    const bookingSlots = slotsFromSession(priorTurns, data.message, visitorInfo);
+    const bookingReply = resolveBookingReply({
+      slots: bookingSlots,
+      query: data.message,
+      history: priorTurns,
+      channel: 'text',
+    });
+
+    if (bookingReply) {
+      const { ragMemory } = await import('@/lib/rag/memory');
+      const { recordTtft } = await import('@/lib/rag/metrics');
+      const ttftMs = Date.now() - requestStart;
+      recordTtft(ttftMs);
+      await ragMemory.saveUserMessage(data.conversationId, data.message).catch(console.error);
+      await ragMemory.saveAssistantMessage(data.conversationId, bookingReply).catch(console.error);
+
+      if (/meeting request has been sent/i.test(bookingReply)) {
+        const { emailService } = await import('@/lib/email/resend');
+        const conversation = mergeHistories(priorTurns, [{ role: 'user', content: data.message }]);
+        emailService.sendContactNotification({
+          name: visitorInfo.name,
+          email: visitorInfo.email,
+          projectType: 'Booking Request',
+          channel: 'RAGX chat',
+          source: 'RAGX booking',
+          message: bookingRequestMessage(bookingSlots),
+          conversation,
+        }).catch(console.error);
+      }
+
+      return successResponse({
+        content: bookingReply,
+        citations: [],
+        modelUsed: 'booking-state',
+        ttftMs,
+        tokenUsage: { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+      });
+    }
+
     if (data.message.toLowerCase().includes('hire') || data.message.toLowerCase().includes('meet')) {
       const { leadScoring } = await import('@/lib/services/LeadScoringService');
       const { emailService } = await import('@/lib/email/resend');
@@ -73,7 +118,7 @@ export async function POST(req: NextRequest) {
           projectType: "RAGX Lead",
           channel: "RAGX chat",
           source: "RAGX hire/meet intent",
-          conversation: [...priorTurns, { role: "user", content: data.message }],
+          conversation: mergeHistories(priorTurns, [{ role: "user", content: data.message }]),
         }).catch(console.error);
       }
     }
@@ -120,21 +165,6 @@ export async function POST(req: NextRequest) {
       visitorInfo,
       messages: priorTurns,
     });
-
-    if (response.answer && /meeting request has been sent/i.test(response.answer)) {
-      const { emailService } = await import('@/lib/email/resend');
-      const { formatBookingEmail, slotsFromSession } = await import('@/lib/rag/session-memory');
-      const slots = slotsFromSession(priorTurns, data.message, visitorInfo);
-      emailService.sendContactNotification({
-        name: visitorInfo.name,
-        email: visitorInfo.email,
-        projectType: 'Booking Request',
-        channel: 'RAGX chat',
-        source: 'RAGX booking',
-        message: formatBookingEmail(slots, priorTurns, data.message),
-        conversation: [...priorTurns, { role: 'user', content: data.message }],
-      }).catch(console.error);
-    }
 
     return successResponse({
       content: response.answer,
